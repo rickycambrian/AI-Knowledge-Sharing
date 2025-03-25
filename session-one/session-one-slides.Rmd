@@ -18,6 +18,17 @@ output:
 - Enables creation of autonomous agents with defined goals
 - Supports asynchronous execution and multi-agent communication
 
+## OpenAI Agents SDK - Handoffs
+
+```{python}
+from agents import Agent, handoff
+# example specialized billing and refund agents
+billing_agent = Agent(name="Billing agent")
+refund_agent = Agent(name="Refund agent")
+# Triage agent that can handoff to billing and refund agents
+triage_agent = Agent(name="Triage agent", handoffs=[billing_agent, handoff(refund_agent)])
+```
+
 ## OpenAI Real Time Voice
 ```{r}
 knitr::include_url("http://localhost:3000/")
@@ -83,21 +94,119 @@ knitr::include_url("http://localhost:3000/")
 - Discovers context newer than model's training data
 - Easy installation via Claude Code or JSON config
 - Optional specialized search tools in unofficial versions
+- GitHub: https://github.com/ppl-ai/modelcontextprotocol
+
+<details>
+<summary>Installation Commands</summary>
+
+Claude Code:
+```bash
+claude mcp add perplexity-ask npx -- -y @modelcontextprotocol/server-perplexity-ask \
+  -e PERPLEXITY_API_KEY=YOUR_API_KEY_HERE
+```
+
+.json configuration:
+```json
+"perplexity-ask": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-perplexity-ask"
+      ],
+      "env": {
+        "PERPLEXITY_API_KEY": "YOUR_API_KEY_HERE"
+      }
+    }
+```
+</details>
 
 ## Firecrawl
 - Extracts text content from websites
 - Configurable parameters for performance optimization
 - Robust scraping capabilities
+- GitHub: https://github.com/mendableai/firecrawl-mcp-server
+
+<details>
+<summary>Installation Commands</summary>
+
+Claude Code:
+```bash
+claude mcp add mcp-server-firecrawl npx -- -y firecrawl-mcp
+```
+
+.json configuration:
+```json
+"firecrawl-webscraper": {
+    "command": "npx",
+    "args": [
+      "-y",
+      "firecrawl-mcp"
+    ],
+    "env": {
+      "FIRECRAWL_API_KEY": "your-api-key-here"
+    }
+  }
+```
+
+Additional configuration parameters:
+- FIRECRAWL_RETRY_MAX_ATTEMPTS
+- FIRECRAWL_RETRY_INITIAL_DELAY
+- FIRECRAWL_RETRY_MAX_DELAY
+- FIRECRAWL_RETRY_BACKOFF_FACTOR
+- FIRECRAWL_CREDIT_WARNING_THRESHOLD
+- FIRECRAWL_CREDIT_CRITICAL_THRESHOLD
+</details>
 
 ## AgentQL
 - Advanced web scraping with format-first approach
 - Adapts to structural website changes
 - Extracts precisely the data you need
 
+<details>
+<summary>Installation Commands</summary>
+
+Claude Code:
+```bash
+claude mcp add agentql npx -- -y agentql-mcp -e AGENTQL_API_KEY=YOUR_API_KEY
+```
+
+.json configuration:
+```json
+"agentql": {
+    "command": "npx",
+    "args": ["-y", "agentql-mcp"],
+    "env": {
+      "AGENTQL_API_KEY": "YOUR_API_KEY"
+    }
+  }
+```
+</details>
+
 ## Repomix
 - Intelligent navigation of GitHub repositories
 - Token-efficient code exploration
 - Available as web interface and MCP server
+
+<details>
+<summary>Installation Commands</summary>
+
+Claude Code:
+```bash
+claude mcp add repomix npx -- -y repomix --mcp
+```
+
+.json configuration:
+```json
+"repomix": {
+    "command": "npx",
+    "args": [
+      "-y",
+      "repomix",
+      "--mcp"
+    ]
+  }
+```
+</details>
 
 # MCP Directories & Sandboxes
 
