@@ -1,0 +1,11 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+/r-markdown-templates/session-one-data-focused_files
+/r-markdown-templates/session-one-interactive_files
+/r-markdown-templates/session-one-minimalist_files
+/r-markdown-templates/session-one-modern_files
+session-one/.DS_Store
+.DS_Store
+AI-Knowledge-Sharing.Rproj
