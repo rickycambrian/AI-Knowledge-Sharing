@@ -6,8 +6,6 @@ output:
     theme: dark
 ---
 
-![](../cambrian_logo.jpg)
-
 # Agenda
 
 Outline goals and plans with these sessions
@@ -137,13 +135,13 @@ There are two main categories of use-cases for you to want to use an MCP server 
 Useful for giving LLM the ability to discover context newer than what it was trained on. https://github.com/ppl-ai/modelcontextprotocol
 
 Claude Code:
-```{bash}
+```{bash, eval=FALSE}
 claude mcp add perplexity-ask npx -- -y @modelcontextprotocol/server-perplexity-ask \
   -e PERPLEXITY_API_KEY=YOUR_API_KEY_HERE
 ```
 
 .json configuration:
-```{json}
+```{json, eval=FALSE}
 "perplexity-ask": {
       "command": "npx",
       "args": [
@@ -166,12 +164,12 @@ In general you will find unofficial versions that have different sets of feature
 Allows LLM to get a website's text content. https://github.com/mendableai/firecrawl-mcp-server
 
 Claude Code:
-```{bash}
+```{bash, eval=FALSE}
 claude mcp add mcp-server-firecrawl npx -- -y firecrawl-mcp
 ```
 
 .json configuration:
-```{json}
+```{json, eval=FALSE}
   "firecrawl-webscraper": {
       "command": "npx",
       "args": [
@@ -192,12 +190,12 @@ FIRECRAWL_RETRY_MAX_ATTEMPTS, FIRECRAWL_RETRY_INITIAL_DELAY, FIRECRAWL_RETRY_MAX
 AgentQL is an amazing web scraping tool, you start with the data you care about and the format, and the tool is always able to figure out how to extract it from the web page, even as the website structurally changes. Really good tool, if I was web scraping anything this is the use I would use today.
 
 Claude Code:
-```{bash}
+```{bash, eval=FALSE}
 claude mcp add agentql npx -- -y agentql-mcp -e AGENTQL_API_KEY=YOUR_API_KEY
 ```
 
 .json configuration:
-```{json}
+```{json, eval=FALSE}
     "agentql": {
       "command": "npx",
       "args": ["-y", "agentql-mcp"],
@@ -216,12 +214,12 @@ This tool is very useful for navigating GitHub repositories and their code in a 
 ## Repomix - install
 
 Claude Code:
-```text
+```{bash, eval=FALSE}
 claude mcp add repomix npx -- -y repomix --mcp
 ```
 
 .json configuration:
-```text
+```{json, eval=FALSE}
   "repomix": {
       "command": "npx",
       "args": [
@@ -240,7 +238,10 @@ There are several websites that function as MCP directories, and also allow you 
 - https://mcp.so/
 - https://glama.ai
 
-/Users/riccardoesclapon/Movies/Omi Screen Recorder/Screen-2025-03-25-112315(1).mp4
+## Sandbox
+
+![](/Users/riccardoesclapon/Documents/github/AI-Knowledge-Sharing/session-one/images/glama_sandbox_video.mp4)
+
 
 
 # Interesting Extension
