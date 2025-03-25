@@ -208,7 +208,7 @@ export default function App() {
         
         // Send a welcome message from the user
         setTimeout(() => {
-          sendTextMessage("Hi! I'd love to learn about the most exciting AI tools and workflows from the Knowledge Sharing session. What are the game-changing techniques I should know about?");
+          sendTextMessage("Hey there! I'm SO ready to learn about the coolest AI tools from the Knowledge Sharing session! What are the absolute MUST-KNOW techniques that will change my life? I'm excited to get started!");
         }, 500);
       });
     }
