@@ -43,7 +43,7 @@ Dify 1.0 release, agentic workflows, marketplace, other features TODO
 
 # Claude Code - Latest Usage Tips
 
-Claude Code is what I tend to use the most and get the best balance between good results, right level of thinking, and most effective tool calling (built-in + MCP). More capable than other tools in thinking hieraarchically about tasks and tool executions for each sub-task. I consider this to be the best interface for my work, so here are some helpful tips 
+Claude Code is what I tend to use the most and get the best balance between good results, right level of thinking, and most effective tool calling (built-in + MCP). More capable than other tools in thinking hieraarchically about tasks and parallel tool executions for each sub-task which other tools do not do. I consider this to be the best interface for my work, so here are some helpful tips 
 
 ## Tip 1 - Easily Reset Context
 
@@ -108,6 +108,10 @@ Think about the division of labor between what you should do and what the AI wor
 
 Similarly I think if any of us put in real effort in a piece of writing, it would consistently be better than an LLM generated answer, so whenever you are trying to capture someone's attention with a piece of content like a presentation or anything else, use these tools to accelerate your own original ideas and writing.
 
+## Tip 6 - Try to have fun
+
+Try to find opportunities to discover the more interesting and fun sides of your interests. When exploring tools, pivot often and early, and stick to what feels right and is giving you the desired results.
+
 
 # Working with MCP Servers
 
@@ -128,45 +132,46 @@ There are two main categories of use-cases for you to want to use an MCP server 
 
 # Recommended MCP Servers
 
+## Perplexity 
 
-## Perplexity
-
-Useful for giving LLM the ability to discover context newer than what it was trained on.
+Useful for giving LLM the ability to discover context newer than what it was trained on. https://github.com/ppl-ai/modelcontextprotocol
 
 Claude Code:
-```text
-claude mcp add perplexity-mcp -e PERPLEXITY_API_KEY=your-api-key-here -e PERPLEXITY_MODEL=sonar-pro -- uvx perplexity-mcp
+```{bash}
+claude mcp add perplexity-ask npx -- -y @modelcontextprotocol/server-perplexity-ask \
+  -e PERPLEXITY_API_KEY=YOUR_API_KEY_HERE
 ```
 
 .json configuration:
-```text
-  "perplexity-mcp": {
-    "env": {
-      "PERPLEXITY_API_KEY": "your-api-key-here",
-      "PERPLEXITY_MODEL": "sonar"
-    },
-    "command": "uvx",
-    "args": [
-      "perplexity-mcp"
-    ]
-  }
+```{json}
+"perplexity-ask": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-perplexity-ask"
+      ],
+      "env": {
+        "PERPLEXITY_API_KEY": "YOUR_API_KEY_HERE"
+      }
+    }
 ```
-Can set model to `sonar` or `sonar-pro`. 
-<br>
-Model options and pricing: https://docs.perplexity.ai/guides/pricing
+
+## Perplexity - unofficial
+
+In general you will find unofficial versions that have different sets of features than the official one and might be pretty useful sometimes. This one for example includes specialized search tools to find API endpoints: https://github.com/DaInfernalCoder/perplexity-mcp
 
 
 ## Firecrawl
 
-Allows LLM to get a website's text content.
+Allows LLM to get a website's text content. https://github.com/mendableai/firecrawl-mcp-server
 
 Claude Code:
-```text
+```{bash}
 claude mcp add mcp-server-firecrawl npx -- -y firecrawl-mcp
 ```
 
 .json configuration:
-```text
+```{json}
   "firecrawl-webscraper": {
       "command": "npx",
       "args": [
@@ -180,8 +185,27 @@ claude mcp add mcp-server-firecrawl npx -- -y firecrawl-mcp
 ```
 
 Can also set these additional configuration parameters:
-FIRECRAWL_RETRY_MAX_ATTEMPTS, FIRECRAWL_RETRY_INITIAL_DELAY, FIRECRAWL_RETRY_MAX_DELAY, FIRECRAWL_RETRY_BACKOFF_FACTOR, FIRECRAWL_CREDIT_WARNING_THRESHOLD, FIRECRAWL_CREDIT_CRITICAL_THRESHOLD
+FIRECRAWL_RETRY_MAX_ATTEMPTS, FIRECRAWL_RETRY_INITIAL_DELAY, FIRECRAWL_RETRY_MAX_DELAY, FIRECRAWL_RETRY_BACKOFF_FACTOR, FIRECRAWL_CREDIT_WARNING_THRESHOLD, FIRECRAWL_CREDIT_CRITICAL_THRESHOLD (learn more here: https://github.com/mendableai/firecrawl-mcp-server).
 
+## AgentQL
+
+AgentQL is an amazing web scraping tool, you start with the data you care about and the format, and the tool is always able to figure out how to extract it from the web page, even as the website structurally changes. Really good tool, if I was web scraping anything this is the use I would use today.
+
+Claude Code:
+```{bash}
+claude mcp add agentql npx -- -y agentql-mcp -e AGENTQL_API_KEY=YOUR_API_KEY
+```
+
+.json configuration:
+```{json}
+    "agentql": {
+      "command": "npx",
+      "args": ["-y", "agentql-mcp"],
+      "env": {
+        "AGENTQL_API_KEY": "YOUR_API_KEY"
+      }
+    }
+```
 
 ## Repomix
 
@@ -209,6 +233,21 @@ claude mcp add repomix npx -- -y repomix --mcp
 ```
 
 
+# Websites - MCP Directories + Sandbox
+
+There are several websites that function as MCP directories, and also allow you to test the MCP tools in a sandbox environment before installing.
+
+- https://mcp.so/
+- https://glama.ai
+
+/Users/riccardoesclapon/Movies/Omi Screen Recorder/Screen-2025-03-25-112315(1).mp4
+
+
+# Interesting Extension
+
+If anyone is going to be using the OpenAI Agents SDK, I saw a fork someone made that enables MCP server usage on OpenAI Agents SDK: https://github.com/lastmile-ai/openai-agents-mcp
+
+This also highlights how highly competitive the current environment is, where you can combine the two latest open source innovations from the two leading closed source model providers in Anthropic and OpenAI. It really shows how much they both value positioning themselves well within the open source tools people use.
 
 # Challenges and Opportunities
 
@@ -492,6 +531,15 @@ OLD
 ## Recommendation: workflow adaptations
 
 - Create AI workflows that operate and enhance existing workflows, try not to replace or force adoption of tools in non-organic and useful ways. This takes time and effort, but most worthwhile path for things that stick.
+
+
+# Agents
+
+We can dive more specifically into agents in a future session, but there are some foundational takeaways:
+
+- agents should generally function as single python script plugins that can work as MCP tools. This creates a high degreee of re-usability 
+
+
 
 
 # GitHub Repository
