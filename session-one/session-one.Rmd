@@ -1,9 +1,7 @@
 ---
 title: "AI Knowledge Sharing Session"
 date: March 25, 2005
-output:
-  revealjs::revealjs_presentation:
-    theme: dark
+output: ioslides_presentation
 ---
 
 # Agenda
@@ -18,12 +16,19 @@ Outline goals and plans with these sessions
 
 Which tools I am using, and why
 
-## OpenAI 
+## OpenAI Agents SDK
 
 - agents sdk
 
-- real time voice
+## OpenAI Real Time Voice
 
+```{r}
+knitr::include_url("http://localhost:3000/")
+```
+
+## OpenAI Responses
+
+- moved away from chat interface
 
 ## OpenAI - Continued
 
