@@ -41,7 +41,7 @@ Dify 1.0 release, agentic workflows, marketplace, other features TODO
 
 # Claude Code - Latest Usage Tips
 
-Claude Code is what I tend to use the most and get the best balance between good results, right level of thinking, and most effective tool calling (built-in + MCP). More capable than other tools in thinking hieraarchically about tasks and parallel tool executions for each sub-task which other tools do not do. I consider this to be the best interface for my work, so here are some helpful tips 
+Of all the tools, Claude Code is what I tend to use the most and get the best balance between good results, right level of thinking, and most effective tool calling (built-in + MCP). More capable than other tools in thinking hieraarchically about tasks and parallel tool executions for each sub-task which other tools do not do. I consider this to be the best interface for my work, so here are some helpful tips 
 
 ## Tip 1 - Easily Reset Context
 
@@ -433,11 +433,11 @@ What can we do to create extremely minimal context usage in the right parts of o
 
 ## Fine-tuning
 
-- [ see if I can find photos of slides from the event showing fine tuned model results]
+- While at SF events, saw some really strong results people have shown in the scientific community creating fine tuned models.
 
-- only bounded by compute, can generally create synthetic data to accomplish certain tasks
+- only bounded by compute, can generally create synthetic data to accomplish certain tasks, and over time we will be able to get more and more value out of those datasets if they are high quality and reflect tasks we care about and how we overcame those hurdles.
 
-- idea: MCP server integrated with our stack (CLAUDE.md defaults) 
+- idea: MCP server integrated with our stack (CLAUDE.md defaults) that automatically creates datasets that can be used for fine-tuning. Minimal disruption to workflows, just an extra step when the workflow makes updates to CLAUDE.md it can also bring those updates to a central repository where the results are used for creating fine-tuned datasets as well as adding to a long term memory knowledge graph for our agents
 
 
 ## Continuous improvement
