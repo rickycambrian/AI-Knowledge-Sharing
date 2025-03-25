@@ -8,33 +8,69 @@ output:
 
 ![](../cambrian_logo.jpg)
 
-# ABC
+# Agenda
 
-![](../cambrian_logo.jpg)
+Outline goals and plans with these sessions
 
-# Tools
+- concrete tips and recommendations for you as individuals as well as our organizations
+
+- what solutions should we start thinking about implementing as organizations and individuals right away, and what ares should we allocate future time and resources to?
+
+# New Tools and Updates
 
 Which tools I am using, and why
 
-## Dify
-
-Dify 1.0 release, agentic workflows, marketplace, other features TODO
-
 ## OpenAI 
+
+- agents sdk
+
+- real time voice
+
+
+## OpenAI - Continued
+
+My experiences with:
 
 - Deep Research
 
 - ChatGPT 4.5 not good for coding
 
-# Claude Code
 
-Claude Code is what I tend to use the most and get the best balance between good results, right level of thinking, and most effective tool calling (built-in + MCP)
+## Dify
 
-## TODO add here
+Dify 1.0 release, agentic workflows, marketplace, other features TODO
 
-## Failure Modes to Avoid
 
-Sonnet 3.7 loves to create mock data and invent workarounds to arrive at the needed solution. Start by adding something similar to this to `CLAUDE.md` file:
+# Claude Code - Latest Usage Tips
+
+Claude Code is what I tend to use the most and get the best balance between good results, right level of thinking, and most effective tool calling (built-in + MCP). More capable than other tools in thinking hieraarchically about tasks and tool executions for each sub-task. I consider this to be the best interface for my work, so here are some helpful tips 
+
+## Tip 1 - Easily Reset Context
+
+Claude Code does not give you infinite context like Cline and other tools. But this is actually very beneficial because you are directly aware of all the information the LLM currently has access to and what it doesn't know about. Not having a good understanding of the LLM's lost context can be one of the easiest ways to start having a lot of accuracy and task prioritization problems.
+
+There are three main places I recommend leveraging for context:
+- README.md: project level documentation
+- CLAUDE.md: Claude Code specific instructions
+- ai_docs (optional): if it's warranted you can make an additional folder to store any other relevant documentation. Keep it consistent to one name and put it all in one folder to achieve consistency for the next step.
+
+## Tip 1 - Continued
+
+Assuming you contain the structure of README.md, CLAUDE.md, and an optional additional folder with any other documentation, you can start off a fresh session with something like:
+```text
+Read README.md, CLAUDE.md, ai_docs folder contents to understand the codebase.
+```
+This allows you to easily reset context, and we can configure CLAUDE.md in a way that can keep us on track between context resets.
+
+## Tip 2 - CLAUDE.md configuration
+
+You can initialize the `CLAUDE.md` file using `/init` from Claude Code chat. This will auto-generate the file based on the code repository. 
+
+However I would also encourage coming up with the rules to this file manually, as taking two minutes to create the right system instructions for the project can save you a lot of time later on. The next tip gives you a recommendation of something you could add to CLAUDE.md, but it's always a good idea to think about the behavior you want for your specific project.
+
+## Tip 3 - Failure Modes to Avoid
+
+Sonnet 3.7 loves to create mock data and invent workarounds to arrive at the needed solution. Later we will talk about a much better way for us to solve this problem, but for now we can start by adding something similar to this to `CLAUDE.md` file:
 ```
 ### CRITICAL IMPLEMENTATION RULES
 
@@ -59,21 +95,54 @@ Sonnet 3.7 loves to create mock data and invent workarounds to arrive at the nee
    - Test in the production environment with real data
 ```
 
+## Tip 4 - Reset context 
+
+Claude Code will auto-reset context before it runs out, but it's better to find a good place to run the `/compact` command before getting below 20%
+
+![](/Users/riccardoesclapon/Documents/github/AI-Knowledge-Sharing/session-one/images/claude-code-context-reset.jpg)
+
+
+## Tip 5 - Division of Labor
+
+Think about the division of labor between what you should do and what the AI workflows should be doing. For example I do not recommend letting an agentic workflow do automated github commits in the same repo you're working out of. Within my workflows github is where I manually push an update that has meaningfully moved something forward in a good way compared to where we were in the previous commit.
+
+Similarly I think if any of us put in real effort in a piece of writing, it would consistently be better than an LLM generated answer, so whenever you are trying to capture someone's attention with a piece of content like a presentation or anything else, use these tools to accelerate your own original ideas and writing.
+
+
+# Working with MCP Servers
+
+The way you setup MCP servers depends on the chat interface you are using. Each interface like Claude Desktop, Cline, Cursor, etc... have their own .json configuration. This configuration runs a command that initializes the MCP servers for the chat you are having and exposes them as available tools. In order to install a new MCP server you need to add a command, mapped to a name to recognize the MCP server by.
+
+Below are some examples of valuable MCP servers that can greatly increase your LLM's ability to find the information it needs better.
+
+## How to think about MCP servers
+
+There are two main categories of use-cases for you to want to use an MCP server through a chat interface:
+
+1. Get information that's not available in the LLM's trained context.
+
+2. Interact with an external service
+
+
+
 
 # Recommended MCP Servers
 
+
 ## Perplexity
+
+Useful for giving LLM the ability to discover context newer than what it was trained on.
 
 Claude Code:
 ```text
-claude mcp add perplexity-mcp -e PERPLEXITY_API_KEY=your-key-here -e PERPLEXITY_MODEL=sonar-pro -- uvx perplexity-mcp
+claude mcp add perplexity-mcp -e PERPLEXITY_API_KEY=your-api-key-here -e PERPLEXITY_MODEL=sonar-pro -- uvx perplexity-mcp
 ```
 
 .json configuration:
 ```text
   "perplexity-mcp": {
     "env": {
-      "PERPLEXITY_API_KEY": "XXXXXXXXXXXXXXXXXXXX",
+      "PERPLEXITY_API_KEY": "your-api-key-here",
       "PERPLEXITY_MODEL": "sonar"
     },
     "command": "uvx",
@@ -84,33 +153,227 @@ claude mcp add perplexity-mcp -e PERPLEXITY_API_KEY=your-key-here -e PERPLEXITY_
 ```
 Can set model to `sonar` or `sonar-pro`. 
 <br>
-Model Pricing: https://docs.perplexity.ai/guides/pricing
+Model options and pricing: https://docs.perplexity.ai/guides/pricing
+
+
+## Firecrawl
+
+Allows LLM to get a website's text content.
+
+Claude Code:
+```text
+claude mcp add mcp-server-firecrawl npx -- -y firecrawl-mcp
+```
+
+.json configuration:
+```text
+  "firecrawl-webscraper": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "firecrawl-mcp"
+      ],
+      "env": {
+        "FIRECRAWL_API_KEY": "your-api-key-here"
+      }
+    }
+```
+
+Can also set these additional configuration parameters:
+FIRECRAWL_RETRY_MAX_ATTEMPTS, FIRECRAWL_RETRY_INITIAL_DELAY, FIRECRAWL_RETRY_MAX_DELAY, FIRECRAWL_RETRY_BACKOFF_FACTOR, FIRECRAWL_CREDIT_WARNING_THRESHOLD, FIRECRAWL_CREDIT_CRITICAL_THRESHOLD
+
+
+## Repomix
+
+This tool is very useful for navigating GitHub repositories and their code in a way where tokens can be more intelligently managed. Installation instructions on the next slide. The easiest way to try it is on their website manually:
+
+![](/Users/riccardoesclapon/Documents/github/AI-Knowledge-Sharing/session-one/images/repomix-interface.jpg)
+
+## Repomix - install
+
+Claude Code:
+```text
+claude mcp add repomix npx -- -y repomix --mcp
+```
+
+.json configuration:
+```text
+  "repomix": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "repomix",
+        "--mcp"
+      ]
+    }
+```
 
 
 
 # Challenges and Opportunities
 
-These are the main challenges I think we 
+I see these generalized MCP servers as a helpful step, but ultimately there are challenges and opportunities that I think warrant more specialized workflows.
 
-1. Context 
+These are the main challenges I think we need to address as organizations because no product will come along that will solve these in a way that maximizes the benefits we can get:
 
-2. Fine-tuning
+1. Context management
 
-3. Continuous improvement
+2. Fine-tuning datasets
+
+3. Continuous improvement and internal benchmarks
 
 
-# Opportunities - Documentation Helpers
+# Context management challenge
 
-- common use case to have to feed documentation to LLMs
+It's challenging to provide specific context and documentation into our LLM conversations, and do so in a way that doesn't bring up the amount of context by a large amount of tokens, and cause us to have to provide that information again.
 
-- documentation helpers allow us to answer questions much better, without having to load the information as context within the chat. Expensive and time consuming, requires much more frequent context resets.
+One example opportunity this gives us, is we can create agents that function as MCP servers that are specialized in answering questions given certain sets of context and tools to explore that context further.
+
+If every chat was accompanied by tools that can retrieve all the right information without adding any tokens into the context, this would be a big win for how quickly and effectively we can work through problems and accelerate our work.
+
+Important takeaway: what we want to do incrementally and consistently as organizations is take how we currently use these tools and figure out how we can get more from the LLMs for less work on our end
 
 - we can create systems that we all individually use, but feed into a single view of the collection of the best information we uncovered using those interfaces
 
 
 ## Proposed Architecture
 
-[ here mermaid diagram with proposed architecture]
+[ here mermaid diagram with proposed architecture - take from app I'm working on]
+
+here add voice use cases - meetings assistants and personal brainstorming chat
+
+```{r architecture-diagram, echo=FALSE, fig.width=10, fig.height=8}
+library(DiagrammeR)
+mermaid('
+flowchart TB
+    subgraph "Knowledge Acquisition Layer"
+        RawInput[Raw Information Input]
+        QueryRefine[Query Refinement]
+        InfoExtract[Information Extraction]
+        StructForm[Structural Formalization]
+    end
+
+    subgraph "Knowledge Organization Layer"
+        EntityForm[Entity Formation]
+        RelationDisc[Relationship Discovery]
+        TemporalCtx[Temporal Contextualization]
+        PatternRec[Pattern Recognition]
+    end
+
+    subgraph "Cognitive Processing Layer"
+        ReasonEngine[Reasoning Engine]
+        InferGen[Inference Generation]
+        HypoForm[Hypothesis Formation]
+        FactValid[Fact Validation]
+    end
+
+    subgraph "Knowledge Synthesis Layer"
+        KnowGraph[Knowledge Graph]
+        MemIndex[Memory Indexing]
+        SemanticNet[Semantic Network]
+        ConceptMap[Conceptual Mapping]
+    end
+
+    subgraph "Application Layer"
+        QueryResp[Query Response]
+        InsightGen[Insight Generation]
+        RecSystem[Recommendation System]
+        ExpInterface[Explanatory Interface]
+    end
+
+    subgraph "Feedback & Evolution Layer"
+        UserFeedback[User Feedback]
+        SelfEval[Self-Evaluation]
+        ConfScoring[Confidence Scoring]
+        KnowRefine[Knowledge Refinement]
+    end
+
+    %% Main knowledge flow
+    RawInput --> InfoExtract
+    InfoExtract --> StructForm
+    StructForm --> EntityForm
+    EntityForm --> RelationDisc
+    RelationDisc --> TemporalCtx
+    TemporalCtx --> KnowGraph
+    KnowGraph --> ReasonEngine
+
+    %% Reasoning processes
+    ReasonEngine --> InferGen
+    ReasonEngine --> HypoForm
+    HypoForm --> FactValid
+    FactValid --> KnowGraph
+
+    %% Memory processes
+    KnowGraph --> MemIndex
+    KnowGraph --> SemanticNet
+    SemanticNet --> ConceptMap
+
+    %% Application processes
+    KnowGraph --> QueryResp
+    SemanticNet --> InsightGen
+    ConceptMap --> RecSystem
+    ReasonEngine --> ExpInterface
+
+    %% Self-improvement loops
+    QueryResp --> UserFeedback
+    UserFeedback --> SelfEval
+    SelfEval --> ConfScoring
+    ConfScoring --> KnowRefine
+    KnowRefine --> KnowGraph
+
+    %% Query refinement loop
+    QueryResp --> QueryRefine
+    QueryRefine --> RawInput
+
+    %% Pattern recognition feedback
+    MemIndex --> PatternRec
+    PatternRec --> RelationDisc
+
+    %% Dashed connections for implicit relationships
+    InferGen -.-> KnowRefine
+    PatternRec -.-> HypoForm
+    SelfEval -.-> ReasonEngine
+
+    %% Highlighting knowledge evolution paths
+    KnowRefine ==> EntityForm
+    KnowRefine ==> RelationDisc
+    UserFeedback ==> InfoExtract
+
+    %% Styling
+    classDef input fill:#6366f1,color:white,stroke:black
+    classDef process fill:#0ea5e9,color:white,stroke:black
+    classDef knowledge fill:#10b981,color:white,stroke:black
+    classDef output fill:#f59e0b,color:white,stroke:black
+    classDef feedback fill:#ec4899,color:white,stroke:black
+
+    class RawInput,QueryRefine input
+    class InfoExtract,StructForm,EntityForm,RelationDisc,TemporalCtx,PatternRec,ReasonEngine,InferGen,HypoForm,FactValid process
+    class KnowGraph,MemIndex,SemanticNet,ConceptMap knowledge
+    class QueryResp,InsightGen,RecSystem,ExpInterface output
+    class UserFeedback,SelfEval,ConfScoring,KnowRefine feedback
+')
+```
+
+^ does not currently show it correctly
+
+## Usage Path
+
+... TODO ADD DETAILS
+
+## Integration Path
+
+... TODO ADD DETAILS
+
+
+# Another Challenge and Opportunity
+
+Sonnet 3.7 has been really good for coding overall, but it has a pretty frequent and bad failure mode where it stops solving the problem you asked it to solve in the correct way, and it starts to put things like mock data to make it work, which I have never found to be a desireable thing to do.
+
+Opportunity: When framing a problem to an LLM/agent, we can start by designing tests we want it to be able to pass. If we can frame its objective in this way with reasonable guardrails, we should be able to solve problems and accomplish tasks at the rate at which we can design tests for new problems we want the agentic systems to solve, and arriving at those solutions can be orchestrated and scaled without bottlenecks.
+
+
+note: can handoffs and guardrails in OpenAI agents sdk help with this challenge?
+
 
 
 # Key Question
@@ -148,4 +411,100 @@ IMPORTANT: Internal benchmarks on problems we care about
 
 
 
+
+
+# Note taking
+
+## Personal Work Notes
+
+I think it's very important to capture your notes in an Obsidian compatible format.
+
+- Creating relations in notes helps us navigate and discover the context better as both humans and agents
+
+Goal: have instant access to any information of anything you worked on over the past several years with no added overhead for your ideal note-taking method
+
+## My note taking method - 1
+
+I personally use Reflect.app and that's what screenshots show, but it's the same way I think about notes in Obsidian or other note taking apps. 
+
+I like to have an infinite scroll view of my daily notes to start, with calendar view to navigate dates.
+
+![](/Users/riccardoesclapon/Documents/github/AI-Knowledge-Sharing/session-one/images/reflect1.jpg)
+
+## My note taking method - 2
+
+- As you write your notes, whenever you want to tie a piece of information to an entity, you can mention it as [[entity]] which will create a connection between that information and that entity. Each time you create an [[entity]] this creates a new page that can have its own notes, and allows for hierchical structure good for navigation.
+
+- I write down bulleted lists in my daily notes as I work on different things, wrapping certain text as an [[entity]], and creating hierarchical structure that allows me to store things like versions of code for a project in a way that doesn't take up room in my notes but is still easy to find.
+
+- Optionally can add an extra tag to something, for example sometimes I use #prompt, or #P0 for important tasks to better triangulate certain information.
+
+- All I need to remember is the project or any single connection that would put that information in the general path of my search.
+
+## My note taking method - 3
+
+There should always be a clear path that always result in being able to find the right information.
+
+In most cases I am working on a specific [[project]] that I frequently mention in my notes. So I can almost always just click into the [[project]] or related [[entity]] from my notes and see a targeted chronological history of my relevant notes:
+
+![](/Users/riccardoesclapon/Documents/github/AI-Knowledge-Sharing/session-one/images/reflect-backlinks.jpg)
+
+## My note taking method - 4
+
+If I'm not sure about the entity/page the information was referencing, I can do a more fuzzy search including some text and only matching notes from the past couple days or anything else that helps narrow it down:
+
+![](/Users/riccardoesclapon/Documents/github/AI-Knowledge-Sharing/session-one/images/reflect-search.jpg)
+
+## My note taking method - 5
+
+Once the results are narrowed down via search, I can initialize an LLM that can help me pinpoint the exact information I'm looking for in my notes with hyperlinks:
+
+![](/Users/riccardoesclapon/Documents/github/AI-Knowledge-Sharing/session-one/images/reflect-chat.jpg)
+
+
+## Notes - Future bets as individuals
+
+There are very effective ways for humans to retrieve content with these systems, and use agentic workflows to our advantage.
+
+I am making a future bet on the obsidian format of entities that create new pages as being the future standard interface for knowledge that people will start to converge to in a similar way to what happened with MCP. There will be more tools that effectively leverage knowledge graphs to bridge the gap between the human context and the agentic workflows better than we do today.
+
+- Future bet rooted in competitive risk: there will be power users who have AI that can perfectly navigate years of well curated information who will have a strong competitive advantage, compared to not having a good personal knowledge base will become a competitive disadvantage.
+    
+
+
+## Organization Note Taking
+
+1. Capture important meetings, and give your organization perfect recall on anything that was discussed
+    - this reduces blockers employees can't resolve independently
+2. After calls, save meeting transcripts
+    - I like timeOS, well connected to meeting apps for recording transcripts, and google drive for storage that's easy to access with scripting
+3. Take meeting transcripts and bring into company knowledge base
+    - Zapier makes it easy to automate this connection for reasonable cost ($20 a month)
+4. Make company knowledge base available via LLM interface
+    - Depends on what your organization uses. If you use Notion, you can use Notion AI, as well as experiment with your own tools like custom MCP servers that leverage Notion API (we use Notion and have done both).
+    - How can your organization build a competitive advantage over the next two years, and what things need to start being put into motion and by who?
+    
+    
+
+OLD
+- First determine if your organization allows usage of one of OpenAI, Google, Anthropic.
+
+## Recommendation: workflow adaptations
+
+- Create AI workflows that operate and enhance existing workflows, try not to replace or force adoption of tools in non-organic and useful ways. This takes time and effort, but most worthwhile path for things that stick.
+
+
+# GitHub Repository
+
+This presentation: https://github.com/rickycambrian/AI-Knowledge-Sharing
+
+TODO - any kind of AI generated tldr with links? Main thing is advanced voice interface!
+
+
+
+
+# FINAL THINGS TO DO
+
+- Can I create an advanced voice interface that comes loaded with knowledge and tools related to this session that people can chat with and ask questions to and learn from? And follows my proposed architecture
+- ^should be very easy to create a demo of advanced voice that covers any of the content from the .Rmd as context, with additional tool for perplexity search to clarify on any specific code snippets
 
