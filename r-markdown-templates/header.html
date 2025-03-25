@@ -1,0 +1,27 @@
+<!-- Custom header file for modern theme -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<script>
+  // Add a custom function for toggling concept explanations
+  document.addEventListener('DOMContentLoaded', function() {
+    // This will be executed when the page loads
+    console.log('Custom header loaded');
+  });
+  
+  function toggleExplanation(id) {
+    var explanation = document.getElementById(id);
+    if (explanation.style.display === "block") {
+      explanation.style.display = "none";
+    } else {
+      explanation.style.display = "block";
+    }
+  }
+</script>
+
+<!-- Add meta tags for better presentation -->
+<meta name="description" content="AI Knowledge Sharing Session">
+<meta name="author" content="Riccardo Esclapon">
+
+<!-- Open Graph tags for social sharing -->
+<meta property="og:title" content="AI Knowledge Sharing">
+<meta property="og:description" content="An interactive session on AI fundamentals and applications">
+<meta property="og:type" content="website">

@@ -1,0 +1,1309 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Riccardo Esclapon" />
+  <meta name="dcterms.date" content="2025-03-24" />
+  <title>AI Knowledge Sharing</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="session-one-data-focused_files/reveal.js-3.3.0.1/css/reveal.css"/>
+
+
+
+<link rel="stylesheet" href="session-one-data-focused_files/reveal.js-3.3.0.1/css/theme/simple.css" id="theme">
+
+
+  <!-- some tweaks to reveal css -->
+  <style type="text/css">
+    .reveal h1 { font-size: 2.0em; }
+    .reveal h2 { font-size: 1.5em;  }
+    .reveal h3 { font-size: 1.25em;	}
+    .reveal h4 { font-size: 1em;	}
+
+    .reveal .slides>section,
+    .reveal .slides>section>section {
+      padding: 0px 0px;
+    }
+
+
+
+    .reveal table {
+      border-width: 1px;
+      border-spacing: 2px;
+      border-style: dotted;
+      border-color: gray;
+      border-collapse: collapse;
+      font-size: 0.7em;
+    }
+
+    .reveal table th {
+      border-width: 1px;
+      padding-left: 10px;
+      padding-right: 25px;
+      font-weight: bold;
+      border-style: dotted;
+      border-color: gray;
+    }
+
+    .reveal table td {
+      border-width: 1px;
+      padding-left: 10px;
+      padding-right: 25px;
+      border-style: dotted;
+      border-color: gray;
+    }
+
+
+  </style>
+
+    <style type="text/css">code{white-space: pre;}</style>
+
+    <link rel="stylesheet" href="data-focused.css"/>
+
+<!-- Printing and PDF exports -->
+<script id="paper-css" type="application/dynamic-css">
+
+/* Default Print Stylesheet Template
+   by Rob Glazebrook of CSSnewbie.com
+   Last Updated: June 4, 2008
+
+   Feel free (nay, compelled) to edit, append, and
+   manipulate this file as you see fit. */
+
+
+@media print {
+
+	/* SECTION 1: Set default width, margin, float, and
+	   background. This prevents elements from extending
+	   beyond the edge of the printed page, and prevents
+	   unnecessary background images from printing */
+	html {
+		background: #fff;
+		width: auto;
+		height: auto;
+		overflow: visible;
+	}
+	body {
+		background: #fff;
+		font-size: 20pt;
+		width: auto;
+		height: auto;
+		border: 0;
+		margin: 0 5%;
+		padding: 0;
+		overflow: visible;
+		float: none !important;
+	}
+
+	/* SECTION 2: Remove any elements not needed in print.
+	   This would include navigation, ads, sidebars, etc. */
+	.nestedarrow,
+	.controls,
+	.fork-reveal,
+	.share-reveal,
+	.state-background,
+	.reveal .progress,
+	.reveal .backgrounds {
+		display: none !important;
+	}
+
+	/* SECTION 3: Set body font face, size, and color.
+	   Consider using a serif font for readability. */
+	body, p, td, li, div {
+		font-size: 20pt!important;
+		font-family: Georgia, "Times New Roman", Times, serif !important;
+		color: #000;
+	}
+
+	/* SECTION 4: Set heading font face, sizes, and color.
+	   Differentiate your headings from your body text.
+	   Perhaps use a large sans-serif for distinction. */
+	h1,h2,h3,h4,h5,h6 {
+		color: #000!important;
+		height: auto;
+		line-height: normal;
+		font-family: Georgia, "Times New Roman", Times, serif !important;
+		text-shadow: 0 0 0 #000 !important;
+		text-align: left;
+		letter-spacing: normal;
+	}
+	/* Need to reduce the size of the fonts for printing */
+	h1 { font-size: 28pt !important;  }
+	h2 { font-size: 24pt !important; }
+	h3 { font-size: 22pt !important; }
+	h4 { font-size: 22pt !important; font-variant: small-caps; }
+	h5 { font-size: 21pt !important; }
+	h6 { font-size: 20pt !important; font-style: italic; }
+
+	/* SECTION 5: Make hyperlinks more usable.
+	   Ensure links are underlined, and consider appending
+	   the URL to the end of the link for usability. */
+	a:link,
+	a:visited {
+		color: #000 !important;
+		font-weight: bold;
+		text-decoration: underline;
+	}
+	/*
+	.reveal a:link:after,
+	.reveal a:visited:after {
+		content: " (" attr(href) ") ";
+		color: #222 !important;
+		font-size: 90%;
+	}
+	*/
+
+
+	/* SECTION 6: more reveal.js specific additions by @skypanther */
+	ul, ol, div, p {
+		visibility: visible;
+		position: static;
+		width: auto;
+		height: auto;
+		display: block;
+		overflow: visible;
+		margin: 0;
+		text-align: left !important;
+	}
+	.reveal pre,
+	.reveal table {
+		margin-left: 0;
+		margin-right: 0;
+	}
+	.reveal pre code {
+		padding: 20px;
+		border: 1px solid #ddd;
+	}
+	.reveal blockquote {
+		margin: 20px 0;
+	}
+	.reveal .slides {
+		position: static !important;
+		width: auto !important;
+		height: auto !important;
+
+		left: 0 !important;
+		top: 0 !important;
+		margin-left: 0 !important;
+		margin-top: 0 !important;
+		padding: 0 !important;
+		zoom: 1 !important;
+
+		overflow: visible !important;
+		display: block !important;
+
+		text-align: left !important;
+		-webkit-perspective: none;
+		   -moz-perspective: none;
+		    -ms-perspective: none;
+		        perspective: none;
+
+		-webkit-perspective-origin: 50% 50%;
+		   -moz-perspective-origin: 50% 50%;
+		    -ms-perspective-origin: 50% 50%;
+		        perspective-origin: 50% 50%;
+	}
+	.reveal .slides section {
+		visibility: visible !important;
+		position: static !important;
+		width: auto !important;
+		height: auto !important;
+		display: block !important;
+		overflow: visible !important;
+
+		left: 0 !important;
+		top: 0 !important;
+		margin-left: 0 !important;
+		margin-top: 0 !important;
+		padding: 60px 20px !important;
+		z-index: auto !important;
+
+		opacity: 1 !important;
+
+		page-break-after: always !important;
+
+		-webkit-transform-style: flat !important;
+		   -moz-transform-style: flat !important;
+		    -ms-transform-style: flat !important;
+		        transform-style: flat !important;
+
+		-webkit-transform: none !important;
+		   -moz-transform: none !important;
+		    -ms-transform: none !important;
+		        transform: none !important;
+
+		-webkit-transition: none !important;
+		   -moz-transition: none !important;
+		    -ms-transition: none !important;
+		        transition: none !important;
+	}
+	.reveal .slides section.stack {
+		padding: 0 !important;
+	}
+	.reveal section:last-of-type {
+		page-break-after: avoid !important;
+	}
+	.reveal section .fragment {
+		opacity: 1 !important;
+		visibility: visible !important;
+
+		-webkit-transform: none !important;
+		   -moz-transform: none !important;
+		    -ms-transform: none !important;
+		        transform: none !important;
+	}
+	.reveal section img {
+		display: block;
+		margin: 15px 0px;
+		background: rgba(255,255,255,1);
+		border: 1px solid #666;
+		box-shadow: none;
+	}
+
+	.reveal section small {
+		font-size: 0.8em;
+	}
+
+}  
+</script>
+
+
+<script id="pdf-css" type="application/dynamic-css">
+    
+/**
+ * This stylesheet is used to print reveal.js
+ * presentations to PDF.
+ *
+ * https://github.com/hakimel/reveal.js#pdf-export
+ */
+
+* {
+	-webkit-print-color-adjust: exact;
+}
+
+body {
+	margin: 0 auto !important;
+	border: 0;
+	padding: 0;
+	float: none !important;
+	overflow: visible;
+}
+
+html {
+	width: 100%;
+	height: 100%;
+	overflow: visible;
+}
+
+/* Remove any elements not needed in print. */
+.nestedarrow,
+.reveal .controls,
+.reveal .progress,
+.reveal .playback,
+.reveal.overview,
+.fork-reveal,
+.share-reveal,
+.state-background {
+	display: none !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	text-shadow: 0 0 0 #000 !important;
+}
+
+.reveal pre code {
+	overflow: hidden !important;
+	font-family: Courier, 'Courier New', monospace !important;
+}
+
+ul, ol, div, p {
+	visibility: visible;
+	position: static;
+	width: auto;
+	height: auto;
+	display: block;
+	overflow: visible;
+	margin: auto;
+}
+.reveal {
+	width: auto !important;
+	height: auto !important;
+	overflow: hidden !important;
+}
+.reveal .slides {
+	position: static;
+	width: 100%;
+	height: auto;
+
+	left: auto;
+	top: auto;
+	margin: 0 !important;
+	padding: 0 !important;
+
+	overflow: visible;
+	display: block;
+
+	-webkit-perspective: none;
+	   -moz-perspective: none;
+	    -ms-perspective: none;
+	        perspective: none;
+
+	-webkit-perspective-origin: 50% 50%; /* there isn't a none/auto value but 50-50 is the default */
+	   -moz-perspective-origin: 50% 50%;
+	    -ms-perspective-origin: 50% 50%;
+	        perspective-origin: 50% 50%;
+}
+
+.reveal .slides section {
+	page-break-after: always !important;
+
+	visibility: visible !important;
+	position: relative !important;
+	display: block !important;
+	position: relative !important;
+
+	margin: 0 !important;
+	padding: 0 !important;
+	box-sizing: border-box !important;
+	min-height: 1px;
+
+	opacity: 1 !important;
+
+	-webkit-transform-style: flat !important;
+	   -moz-transform-style: flat !important;
+	    -ms-transform-style: flat !important;
+	        transform-style: flat !important;
+
+	-webkit-transform: none !important;
+	   -moz-transform: none !important;
+	    -ms-transform: none !important;
+	        transform: none !important;
+}
+
+.reveal section.stack {
+	margin: 0 !important;
+	padding: 0 !important;
+	page-break-after: avoid !important;
+	height: auto !important;
+	min-height: auto !important;
+}
+
+.reveal img {
+	box-shadow: none;
+}
+
+.reveal .roll {
+	overflow: visible;
+	line-height: 1em;
+}
+
+/* Slide backgrounds are placed inside of their slide when exporting to PDF */
+.reveal section .slide-background {
+	display: block !important;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	z-index: -1;
+}
+
+/* All elements should be above the slide-background */
+.reveal section>* {
+	position: relative;
+	z-index: 1;
+}
+
+/* Display slide speaker notes when 'showNotes' is enabled */
+.reveal .speaker-notes-pdf {
+	display: block;
+	width: 100%;
+	max-height: none;
+	left: auto;
+	top: auto;
+	z-index: 100;
+}
+
+/* Display slide numbers when 'slideNumber' is enabled */
+.reveal .slide-number-pdf {
+	display: block;
+	position: absolute;
+	font-size: 14px;
+}
+
+</script>
+
+
+<script>
+var style = document.createElement( 'style' );
+style.type = 'text/css';
+var style_script_id = window.location.search.match( /print-pdf/gi ) ? 'pdf-css' : 'paper-css';
+var style_script = document.getElementById(style_script_id).text;
+style.innerHTML = style_script;
+document.getElementsByTagName('head')[0].appendChild(style);
+</script>
+
+    <script src="session-one-data-focused_files/header-attrs-2.28/header-attrs.js"></script>
+    <script src="session-one-data-focused_files/kePrint-0.0.1/kePrint.js"></script>
+    <link href="session-one-data-focused_files/lightable-0.0.1/lightable.css" rel="stylesheet" />
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section>
+    <h1 class="title">AI Knowledge Sharing</h1>
+  <h1 class="subtitle">Session One: Data-Driven Insights</h1>
+    <h2 class="author">Riccardo Esclapon</h2>
+    <h3 class="date">March 24, 2025</h3>
+</section>
+
+<section>
+<section id="understanding-ai-adoption" class="title-slide slide level1"
+data-background="#f8f9fa">
+<h1 data-background="#f8f9fa">Understanding AI Adoption</h1>
+
+</section>
+<section id="current-landscape" class="slide level2 section-header">
+<h2 class="section-header">Current Landscape</h2>
+<p>This section examines the <strong>objective data</strong> behind AI
+adoption trends across industries.</p>
+<p><img src="session-one-data-focused_files/figure-revealjs/adoption-trends-1.png" width="960" /></p>
+<aside class="notes">
+<p>Key observations from this chart: - Technology sector leads adoption,
+followed by Finance and Healthcare - All industries show accelerating
+adoption rates - COVID-19 (2020-2021) appears to have accelerated
+adoption in many sectors - The gap between leading and lagging
+industries is widening</p>
+</aside>
+</section>
+<section id="investment-vs.-roi" class="slide level2 data-analysis">
+<h2 class="data-analysis">Investment vs. ROI</h2>
+<p><img src="session-one-data-focused_files/figure-revealjs/investment-roi-1.png" width="960" /></p>
+<div class="side-commentary">
+<h4>
+Key Insights
+</h4>
+<ul>
+<li>
+Investment does not perfectly correlate with ROI
+</li>
+<li>
+Several industries show promising returns despite lower investment
+</li>
+<li>
+Technology sector shows diminishing returns at highest investment levels
+</li>
+</ul>
+</div>
+</section>
+<section id="industry-impact-matrix"
+class="slide level2 data-comparison">
+<h2 class="data-comparison">Industry Impact Matrix</h2>
+<table class="table table-striped table-hover table-condensed" style="color: black; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+AI Impact Metrics by Industry (2023)
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;font-weight: bold;background-color: rgba(240, 240, 240, 255) !important;">
+Industry
+</th>
+<th style="text-align:center;font-weight: bold;background-color: rgba(240, 240, 240, 255) !important;">
+Productivity Gain (%)
+</th>
+<th style="text-align:center;font-weight: bold;background-color: rgba(240, 240, 240, 255) !important;">
+Jobs Automated (%)
+</th>
+<th style="text-align:center;font-weight: bold;background-color: rgba(240, 240, 240, 255) !important;">
+Skills Gap (1-10)
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+Technology
+</td>
+<td style="text-align:center;width: 150px; ">
+7.7
+</td>
+<td style="text-align:center;width: 150px; ">
+5.4
+</td>
+<td style="text-align:center;width: 150px; ">
+9.2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+Media
+</td>
+<td style="text-align:center;width: 150px; ">
+7.4
+</td>
+<td style="text-align:center;width: 150px; ">
+3.3
+</td>
+<td style="text-align:center;width: 150px; ">
+9.2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+Retail
+</td>
+<td style="text-align:center;width: 150px; ">
+7.2
+</td>
+<td style="text-align:center;width: 150px; ">
+3.6
+</td>
+<td style="text-align:center;width: 150px; ">
+8.7
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+Finance
+</td>
+<td style="text-align:center;width: 150px; ">
+6.6
+</td>
+<td style="text-align:center;width: 150px; ">
+4.2
+</td>
+<td style="text-align:center;width: 150px; ">
+9.1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+Healthcare
+</td>
+<td style="text-align:center;width: 150px; ">
+6.2
+</td>
+<td style="text-align:center;width: 150px; ">
+3.5
+</td>
+<td style="text-align:center;width: 150px; ">
+9.4
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+Transportation
+</td>
+<td style="text-align:center;width: 150px; ">
+5.5
+</td>
+<td style="text-align:center;width: 150px; ">
+3.1
+</td>
+<td style="text-align:center;width: 150px; ">
+8.8
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+Energy
+</td>
+<td style="text-align:center;width: 150px; ">
+4.5
+</td>
+<td style="text-align:center;width: 150px; ">
+2.5
+</td>
+<td style="text-align:center;width: 150px; ">
+9.1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+Manufacturing
+</td>
+<td style="text-align:center;width: 150px; ">
+4.1
+</td>
+<td style="text-align:center;width: 150px; ">
+3.0
+</td>
+<td style="text-align:center;width: 150px; ">
+9.9
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+Education
+</td>
+<td style="text-align:center;width: 150px; ">
+2.8
+</td>
+<td style="text-align:center;width: 150px; ">
+1.7
+</td>
+<td style="text-align:center;width: 150px; ">
+9.6
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+Agriculture
+</td>
+<td style="text-align:center;width: 150px; ">
+2.0
+</td>
+<td style="text-align:center;width: 150px; ">
+1.2
+</td>
+<td style="text-align:center;width: 150px; ">
+9.2
+</td>
+</tr>
+</tbody>
+</table>
+<div class="data-insights">
+<p>
+The matrix reveals three critical patterns:
+</p>
+<ol>
+<li>
+Productivity gains roughly correlate with automation rates
+</li>
+<li>
+Skills gap severity is highest in industries with rapid adoption
+</li>
+<li>
+Manufacturing shows balanced metrics across all three dimensions
+</li>
+</ol>
+</div>
+</section>
+<section id="growth-trends" class="slide level2 trend-analysis">
+<h2 class="trend-analysis">Growth Trends</h2>
+<p><img src="session-one-data-focused_files/figure-revealjs/growth-trends-1.png" width="960" /></p>
+<div class="trend-notes">
+<p>
+Key trend insights:
+</p>
+<ul>
+<li>
+Technology sector leads with highest adoption rates (~70%)
+</li>
+<li>
+Healthcare showing steep growth trajectory
+</li>
+<li>
+Manufacturing maintaining steady growth
+</li>
+<li>
+Agriculture adoption starting from a lower base but accelerating
+</li>
+</ul>
+</div>
+</section></section>
+<section>
+<section id="ai-capabilities-evolution" class="title-slide slide level1"
+data-background="#edf2fb">
+<h1 data-background="#edf2fb">AI Capabilities Evolution</h1>
+
+</section>
+<section id="technical-advancement" class="slide level2 multi-metric">
+<h2 class="multi-metric">Technical Advancement</h2>
+<p><img src="session-one-data-focused_files/figure-revealjs/capabilities-1.png" width="960" /></p>
+</section>
+<section id="leading-ai-models" class="slide level2 comparison-table">
+<h2 class="comparison-table">Leading AI Models</h2>
+<table style="width:100%;">
+<caption>Comparison of Leading AI Models (2022-2023)</caption>
+<colgroup>
+<col style="width: 18%" />
+<col style="width: 11%" />
+<col style="width: 13%" />
+<col style="width: 12%" />
+<col style="width: 15%" />
+<col style="width: 14%" />
+<col style="width: 12%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Model</th>
+<th style="text-align: left;">Type</th>
+<th style="text-align: center;">Performance</th>
+<th style="text-align: center;">Parameters</th>
+<th style="text-align: center;">Training Cost</th>
+<th style="text-align: center;">Release Year</th>
+<th style="text-align: center;">Energy Use</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">GPT-4</td>
+<td style="text-align: left;">Text</td>
+<td style="text-align: center;">95%</td>
+<td style="text-align: center;">1700B</td>
+<td style="text-align: center;">$100M</td>
+<td style="text-align: center;">2023</td>
+<td style="text-align: center;">Very High</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Gemini</td>
+<td style="text-align: left;">Multimodal</td>
+<td style="text-align: center;">94%</td>
+<td style="text-align: center;">320B</td>
+<td style="text-align: center;">$60M</td>
+<td style="text-align: center;">2023</td>
+<td style="text-align: center;">Very High</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Claude 2</td>
+<td style="text-align: left;">Text</td>
+<td style="text-align: center;">92%</td>
+<td style="text-align: center;">137B</td>
+<td style="text-align: center;">$30M</td>
+<td style="text-align: center;">2023</td>
+<td style="text-align: center;">High</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">DALL-E 3</td>
+<td style="text-align: left;">Image</td>
+<td style="text-align: center;">90%</td>
+<td style="text-align: center;">5B</td>
+<td style="text-align: center;">$10M</td>
+<td style="text-align: center;">2023</td>
+<td style="text-align: center;">Medium</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">PaLM</td>
+<td style="text-align: left;">Text</td>
+<td style="text-align: center;">89%</td>
+<td style="text-align: center;">540B</td>
+<td style="text-align: center;">$80M</td>
+<td style="text-align: center;">2022</td>
+<td style="text-align: center;">Very High</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Midjourney</td>
+<td style="text-align: left;">Image</td>
+<td style="text-align: center;">88%</td>
+<td style="text-align: center;">2B</td>
+<td style="text-align: center;">$8M</td>
+<td style="text-align: center;">2022</td>
+<td style="text-align: center;">Medium</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Stable Diffusion</td>
+<td style="text-align: left;">Image</td>
+<td style="text-align: center;">85%</td>
+<td style="text-align: center;">1B</td>
+<td style="text-align: center;">$5M</td>
+<td style="text-align: center;">2022</td>
+<td style="text-align: center;">Low</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">GPT-3.5</td>
+<td style="text-align: left;">Text</td>
+<td style="text-align: center;">82%</td>
+<td style="text-align: center;">175B</td>
+<td style="text-align: center;">$20M</td>
+<td style="text-align: center;">2022</td>
+<td style="text-align: center;">High</td>
+</tr>
+</tbody>
+</table>
+<div class="model-insights">
+<p>
+Observed trade-offs across models:
+</p>
+<ul>
+<li>
+Higher parameter counts generally correlate with better performance
+</li>
+<li>
+Specialized models (image-focused) can achieve high performance with
+fewer parameters
+</li>
+<li>
+Energy consumption remains a significant challenge for large models
+</li>
+</ul>
+</div>
+</section>
+<section id="performance-vs.-resources"
+class="slide level2 scatter-analysis">
+<h2 class="scatter-analysis">Performance vs. Resources</h2>
+<p><img src="session-one-data-focused_files/figure-revealjs/models-scatter-1.png" width="960" /></p>
+<div class="analysis-insight">
+<p>
+The logarithmic scaling reveals diminishing returns in the relationship
+between parameter count and performance.
+</p>
+<p>
+Multimodal models like Gemini achieve strong performance with moderate
+parameter counts.
+</p>
+</div>
+</section></section>
+<section>
+<section id="economic-impact" class="title-slide slide level1"
+data-background="#e2eafc">
+<h1 data-background="#e2eafc">Economic Impact</h1>
+
+</section>
+<section id="job-transformation"
+class="slide level2 transformation-analysis">
+<h2 class="transformation-analysis">Job Transformation</h2>
+<p><img src="session-one-data-focused_files/figure-revealjs/jobs-1.png" width="960" /></p>
+<div class="job-insights-box">
+<h4>
+Employment Transformation Insights
+</h4>
+<ul>
+<li>
+Technology and Finance show positive net job creation despite high
+automation
+</li>
+<li>
+Manufacturing and Agriculture face the greatest net job displacement
+</li>
+<li>
+Education sector shows nearly neutral impact
+</li>
+</ul>
+<p>
+Key challenge: Jobs created often require different skills than those
+automated
+</p>
+</div>
+</section>
+<section id="productivity-and-skills-gap"
+class="slide level2 correlation-analysis">
+<h2 class="correlation-analysis">Productivity and Skills Gap</h2>
+<p><img src="session-one-data-focused_files/figure-revealjs/productivity-skills-1.png" width="960" /></p>
+<div class="interpretation-box">
+<h4>
+Interpreting Correlations
+</h4>
+<p>
+Strong positive correlations (&gt;0.8):
+</p>
+<ul>
+<li>
+Adoption rate and productivity gains
+</li>
+<li>
+Investment levels and new jobs created
+</li>
+</ul>
+<p>
+Strong negative correlations (&lt; -0.5):
+</p>
+<ul>
+<li>
+None observed
+</li>
+</ul>
+<p>
+Weak correlations (near 0):
+</p>
+<ul>
+<li>
+ROI percentage and skills gap severity
+</li>
+<li>
+Productivity gain and investment
+</li>
+</ul>
+</div>
+</section>
+<section id="industry-specific-roi" class="slide level2 roi-analysis">
+<h2 class="roi-analysis">Industry-Specific ROI</h2>
+<p><img src="session-one-data-focused_files/figure-revealjs/roi-trends-1.png" width="960" /></p>
+<div class="roi-patterns">
+<h4>
+ROI Growth Patterns
+</h4>
+<ul>
+<li>
+<strong>Steady Growth:</strong> Finance, Retail, Technology
+</li>
+<li>
+<strong>Accelerating:</strong> Healthcare, Education
+</li>
+<li>
+<strong>Volatile:</strong> Energy, Transportation
+</li>
+<li>
+<strong>Late Bloomer:</strong> Agriculture
+</li>
+</ul>
+</div>
+</section></section>
+<section>
+<section id="action-strategies" class="title-slide slide level1"
+data-background="#fefae0">
+<h1 data-background="#fefae0">Action Strategies</h1>
+
+</section>
+<section id="strategic-framework" class="slide level2 decision-matrix">
+<h2 class="decision-matrix">Strategic Framework</h2>
+<table style="width:100%;">
+<caption>AI Implementation Strategy Matrix</caption>
+<colgroup>
+<col style="width: 13%" />
+<col style="width: 34%" />
+<col style="width: 26%" />
+<col style="width: 26%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Adoption.Level</th>
+<th style="text-align: left;">Wait…Learn</th>
+<th style="text-align: left;">Selective.Implementation</th>
+<th style="text-align: left;">Full.Integration</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Nascent (&lt;10%)</td>
+<td style="text-align: left;">Focus on foundational data
+infrastructure</td>
+<td style="text-align: left;">Limited pilots with clear ROI</td>
+<td style="text-align: left;">Not recommended at this stage</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Growing (10-40%)</td>
+<td style="text-align: left;">Monitor developments</td>
+<td style="text-align: left;">Target high-value use cases</td>
+<td style="text-align: left;">Begin planning full integration</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Mature (&gt;40%)</td>
+<td style="text-align: left;">Limited exploration</td>
+<td style="text-align: left;">Build cross-functional AI teams</td>
+<td style="text-align: left;">Enterprise-wide AI strategy</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="implementation-roadmap" class="slide level2 roadmap">
+<h2 class="roadmap">Implementation Roadmap</h2>
+<div class="timeline-container">
+<div class="timeline-phase">
+<pre><code>&lt;div class=&quot;phase-header&quot; style=&quot;background-color: #4361ee;&quot;&gt;Phase 1: Foundation&lt;/div&gt;
+&lt;div class=&quot;phase-duration&quot;&gt;3-6 months&lt;/div&gt;
+&lt;ul class=&quot;phase-activities&quot;&gt;
+  &lt;li&gt;Data infrastructure assessment&lt;/li&gt;
+  &lt;li&gt;Skills inventory &amp; gap analysis&lt;/li&gt;
+  &lt;li&gt;Use case prioritization&lt;/li&gt;
+  &lt;li&gt;ROI measurement framework&lt;/li&gt;
+&lt;/ul&gt;</code></pre>
+</div>
+<div class="timeline-phase">
+<pre><code>&lt;div class=&quot;phase-header&quot; style=&quot;background-color: #3a0ca3;&quot;&gt;Phase 2: Pilot&lt;/div&gt;
+&lt;div class=&quot;phase-duration&quot;&gt;6-12 months&lt;/div&gt;
+&lt;ul class=&quot;phase-activities&quot;&gt;
+  &lt;li&gt;Implement 2-3 high-value use cases&lt;/li&gt;
+  &lt;li&gt;Establish AI center of excellence&lt;/li&gt;
+  &lt;li&gt;Develop governance framework&lt;/li&gt;
+  &lt;li&gt;Initial reskilling programs&lt;/li&gt;
+&lt;/ul&gt;</code></pre>
+</div>
+<div class="timeline-phase">
+<pre><code>&lt;div class=&quot;phase-header&quot; style=&quot;background-color: #7209b7;&quot;&gt;Phase 3: Scale&lt;/div&gt;
+&lt;div class=&quot;phase-duration&quot;&gt;12-24 months&lt;/div&gt;
+&lt;ul class=&quot;phase-activities&quot;&gt;
+  &lt;li&gt;Enterprise-wide AI strategy&lt;/li&gt;
+  &lt;li&gt;Automated ML pipelines&lt;/li&gt;
+  &lt;li&gt;Comprehensive reskilling&lt;/li&gt;
+  &lt;li&gt;AI-driven innovation program&lt;/li&gt;
+&lt;/ul&gt;</code></pre>
+</div>
+</div>
+<div class="success-metrics">
+<h4>
+Key Success Metrics
+</h4>
+<div class="metrics-grid">
+<div class="metric">
+<pre><code>&lt;div class=&quot;metric-name&quot;&gt;Time to value&lt;/div&gt;
+&lt;div class=&quot;metric-target&quot;&gt;&lt; 6 months for pilots&lt;/div&gt;</code></pre>
+</div>
+<div class="metric">
+<pre><code>&lt;div class=&quot;metric-name&quot;&gt;ROI&lt;/div&gt;
+&lt;div class=&quot;metric-target&quot;&gt;3-5x for initial use cases&lt;/div&gt;</code></pre>
+</div>
+<div class="metric">
+<pre><code>&lt;div class=&quot;metric-name&quot;&gt;Adoption rate&lt;/div&gt;
+&lt;div class=&quot;metric-target&quot;&gt;30% YoY increase&lt;/div&gt;</code></pre>
+</div>
+<div class="metric">
+<pre><code>&lt;div class=&quot;metric-name&quot;&gt;Skill development&lt;/div&gt;
+&lt;div class=&quot;metric-target&quot;&gt;50% of relevant staff&lt;/div&gt;</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section id="critical-success-factors" class="slide level2 factor-grid">
+<h2 class="factor-grid">Critical Success Factors</h2>
+<div class="success-factors">
+<div class="factor">
+<pre><code>&lt;div class=&quot;factor-name&quot;&gt;Executive Sponsorship&lt;/div&gt;
+&lt;div class=&quot;factor-description&quot;&gt;
+  &lt;p&gt;AI initiatives require C-level commitment with dedicated resources and long-term vision.&lt;/p&gt;
+  &lt;div class=&quot;factor-data&quot;&gt;81% of successful AI initiatives have C-suite sponsors&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+</div>
+<div class="factor">
+<pre><code>&lt;div class=&quot;factor-name&quot;&gt;Data Quality &amp; Governance&lt;/div&gt;
+&lt;div class=&quot;factor-description&quot;&gt;
+  &lt;p&gt;Structured approach to data management and standardization across the organization.&lt;/p&gt;
+  &lt;div class=&quot;factor-data&quot;&gt;76% of failed AI projects cite data quality issues&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+</div>
+<div class="factor">
+<pre><code>&lt;div class=&quot;factor-name&quot;&gt;Cross-functional Teams&lt;/div&gt;
+&lt;div class=&quot;factor-description&quot;&gt;
+  &lt;p&gt;Integration of domain experts, data scientists, engineers, and business analysts.&lt;/p&gt;
+  &lt;div class=&quot;factor-data&quot;&gt;3.4x higher success rate with cross-functional teams&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+</div>
+<div class="factor">
+<pre><code>&lt;div class=&quot;factor-name&quot;&gt;Ethics &amp; Responsible AI&lt;/div&gt;
+&lt;div class=&quot;factor-description&quot;&gt;
+  &lt;p&gt;Frameworks for bias detection, explainability, and continuous monitoring.&lt;/p&gt;
+  &lt;div class=&quot;factor-data&quot;&gt;65% of consumers prioritize ethical AI practices&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+</div>
+</div>
+</section></section>
+<section>
+<section id="qa" class="title-slide slide level1"
+data-background="#fef9ef">
+<h1 data-background="#fef9ef">Q&amp;A</h1>
+
+</section>
+<section id="discussion-topics" class="slide level2 discussion-panel">
+<h2 class="discussion-panel">Discussion Topics</h2>
+<div class="discussion-container">
+<div id="topic1" class="discussion-topic">
+<pre><code>&lt;div class=&quot;topic-heading&quot;&gt;Industry-Specific Challenges&lt;/div&gt;
+&lt;div class=&quot;topic-description&quot;&gt;
+  What unique barriers does your industry face in AI adoption, and how do they compare to the trends we&#39;ve examined?
+&lt;/div&gt;</code></pre>
+</div>
+<div id="topic2" class="discussion-topic">
+<pre><code>&lt;div class=&quot;topic-heading&quot;&gt;ROI Measurement&lt;/div&gt;
+&lt;div class=&quot;topic-description&quot;&gt;
+  How is your organization measuring returns on AI investments? Are there metrics beyond financial returns that should be considered?
+&lt;/div&gt;</code></pre>
+</div>
+<div id="topic3" class="discussion-topic">
+<pre><code>&lt;div class=&quot;topic-heading&quot;&gt;Skills Development&lt;/div&gt;
+&lt;div class=&quot;topic-description&quot;&gt;
+  What approach is most effective for addressing the skills gap: hiring, reskilling, or partnerships?
+&lt;/div&gt;</code></pre>
+</div>
+<div id="topic4" class="discussion-topic">
+<pre><code>&lt;div class=&quot;topic-heading&quot;&gt;Ethical Considerations&lt;/div&gt;
+&lt;div class=&quot;topic-description&quot;&gt;
+  How should organizations balance innovation speed with responsible AI deployment?
+&lt;/div&gt;</code></pre>
+</div>
+</div>
+<div class="data-reference">
+<p>
+Contact for dataset references &amp; methodology: <a
+href="mailto:riccardo@example.com"
+class="email">riccardo@example.com</a>
+</p>
+</div>
+</section>
+<section id="next-session-preview" class="slide level2 next-session">
+<h2 class="next-session">Next Session Preview</h2>
+<div class="next-session-container">
+<h3>
+Session Two: Advanced Models &amp; Architectures
+</h3>
+<div class="session-date">
+April 14, 2025
+</div>
+<div class="session-topics">
+<pre><code>&lt;div class=&quot;topic-preview&quot;&gt;
+  &lt;div class=&quot;topic-name&quot;&gt;Technical Deep Dive&lt;/div&gt;
+  &lt;div class=&quot;topic-detail&quot;&gt;
+    &lt;ul&gt;
+      &lt;li&gt;Transformer architectures&lt;/li&gt;
+      &lt;li&gt;Attention mechanisms&lt;/li&gt;
+      &lt;li&gt;Parameter efficiency techniques&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;topic-preview&quot;&gt;
+  &lt;div class=&quot;topic-name&quot;&gt;Model Selection Framework&lt;/div&gt;
+  &lt;div class=&quot;topic-detail&quot;&gt;
+    &lt;ul&gt;
+      &lt;li&gt;Task-specific requirements&lt;/li&gt;
+      &lt;li&gt;Resource constraints analysis&lt;/li&gt;
+      &lt;li&gt;Build vs. buy decision matrix&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;topic-preview&quot;&gt;
+  &lt;div class=&quot;topic-name&quot;&gt;Case Studies&lt;/div&gt;
+  &lt;div class=&quot;topic-detail&quot;&gt;
+    &lt;ul&gt;
+      &lt;li&gt;Large language model deployment&lt;/li&gt;
+      &lt;li&gt;Computer vision at scale&lt;/li&gt;
+      &lt;li&gt;Multimodal systems&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+</div>
+<div class="preparation-materials">
+<pre><code>&lt;h4&gt;Preparation Materials&lt;/h4&gt;
+&lt;p&gt;Session materials will be available one week before the session at:&lt;/p&gt;
+&lt;div class=&quot;materials-link&quot;&gt;github.com/riccardo/ai-knowledge-sharing&lt;/div&gt;</code></pre>
+</div>
+</div>
+</section></section>
+<section>
+<section id="thank-you" class="title-slide slide level1"
+data-background="#f8f9fa">
+<h1 data-background="#f8f9fa">Thank You</h1>
+
+</section>
+<section id="contact-resources" class="slide level2">
+<h2>Contact &amp; Resources</h2>
+<div class="contact-container">
+<div class="contact-info">
+<pre><code>&lt;h3&gt;Riccardo Esclapon&lt;/h3&gt;
+&lt;p class=&quot;title&quot;&gt;AI Knowledge Specialist&lt;/p&gt;
+&lt;p class=&quot;email&quot;&gt;riccardo@example.com&lt;/p&gt;
+&lt;div class=&quot;social-links&quot;&gt;
+  &lt;span class=&quot;social-link&quot;&gt;LinkedIn: /in/riccardo&lt;/span&gt;
+  &lt;span class=&quot;social-link&quot;&gt;Twitter: @riccardo&lt;/span&gt;
+  &lt;span class=&quot;social-link&quot;&gt;GitHub: /riccardo&lt;/span&gt;
+&lt;/div&gt;</code></pre>
+</div>
+<div class="resources-section">
+<pre><code>&lt;h4&gt;Additional Resources&lt;/h4&gt;
+&lt;div class=&quot;resource-grid&quot;&gt;
+  &lt;div class=&quot;resource-item&quot;&gt;
+    &lt;div class=&quot;resource-title&quot;&gt;AI Adoption Playbook&lt;/div&gt;
+    &lt;div class=&quot;resource-link&quot;&gt;example.com/playbook&lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class=&quot;resource-item&quot;&gt;
+    &lt;div class=&quot;resource-title&quot;&gt;ROI Calculator Template&lt;/div&gt;
+    &lt;div class=&quot;resource-link&quot;&gt;example.com/roi-template&lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class=&quot;resource-item&quot;&gt;
+    &lt;div class=&quot;resource-title&quot;&gt;Implementation Framework&lt;/div&gt;
+    &lt;div class=&quot;resource-link&quot;&gt;example.com/framework&lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class=&quot;resource-item&quot;&gt;
+    &lt;div class=&quot;resource-title&quot;&gt;Case Study Library&lt;/div&gt;
+    &lt;div class=&quot;resource-link&quot;&gt;example.com/case-studies&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+</div>
+</div>
+<div class="session-materials">
+<p>
+Session slides and data are available at:
+github.com/riccardo/ai-knowledge-sharing
+</p>
+</div>
+</section></section>
+    </div>
+  </div>
+
+  <script src="session-one-data-focused_files/reveal.js-3.3.0.1/lib/js/head.min.js"></script>
+  <script src="session-one-data-focused_files/reveal.js-3.3.0.1/js/reveal.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        // Display controls in the bottom right corner
+        controls: true,
+        // Display a presentation progress bar
+        progress: true,
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+        // Push each slide change to the browser history
+        history: true,
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+        // Enable the slide overview mode
+        overview: true,
+        // Vertical centering of slides
+        center: false,
+        // Enables touch navigation on devices with touch input
+        touch: true,
+        // Turns fragments on and off globally
+        fragments: true,
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+        // Transition style
+        transition: 'none', // none/fade/slide/convex/concave/zoom
+        // Transition speed
+        transitionSpeed: 'default', // default/fast/slow
+        // Transition style for full page slide backgrounds
+        backgroundTransition: 'default', // none/fade/slide/convex/concave/zoom
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1200,
+        height: 800,
+
+
+
+        // Optional reveal.js plugins
+        dependencies: [
+          { src: 'session-one-data-focused_files/reveal.js-3.3.0.1/plugin/notes/notes.js', async: true },
+          { src: 'session-one-data-focused_files/reveal.js-3.3.0.1/plugin/search/search.js', async: true },
+        ]
+      });
+    </script>
+  <!-- dynamically load mathjax for compatibility with self-contained -->
+  <script>
+    (function () {
+      var script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+      document.getElementsByTagName("head")[0].appendChild(script);
+    })();
+  </script>
+
+<script>
+  (function() {
+    if (window.jQuery) {
+      Reveal.addEventListener( 'slidechanged', function(event) {  
+        window.jQuery(event.previousSlide).trigger('hidden');
+        window.jQuery(event.currentSlide).trigger('shown');
+      });
+    }
+  })();
+</script>
+
+
+  </body>
+</html>

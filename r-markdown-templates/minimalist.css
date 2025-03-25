@@ -1,0 +1,353 @@
+/* Minimalist theme - Use with session-one-minimalist.Rmd */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+:root {
+  --text-color: #333;
+  --background-color: #fff;
+  --accent-color: #1a73e8;
+}
+
+body {
+  background-color: var(--background-color);
+}
+
+.reveal {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 28px;
+  color: var(--text-color);
+}
+
+.reveal h1, .reveal h2, .reveal h3 {
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 1em;
+  color: #000;
+}
+
+.reveal h1 {
+  font-size: 2.2em;
+}
+
+.reveal h2 {
+  font-size: 1.6em;
+}
+
+.reveal h3 {
+  font-size: 1.3em;
+  margin-bottom: 0.5em;
+}
+
+.reveal a {
+  color: var(--accent-color);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-bottom-color 0.2s ease;
+}
+
+.reveal a:hover {
+  border-bottom-color: var(--accent-color);
+}
+
+/* Typography */
+.large-text {
+  font-size: 2em;
+  line-height: 1.2;
+  display: block;
+  margin-bottom: 0.5em;
+}
+
+.highlight {
+  color: var(--accent-color);
+  font-weight: 500;
+}
+
+.attribution {
+  font-size: 0.7em;
+  color: #777;
+  margin-top: 3em;
+  position: absolute;
+  bottom: 1em;
+  right: 1em;
+}
+
+/* Timeline */
+.timeline-minimal {
+  display: flex;
+  justify-content: space-between;
+  margin: 3em 0;
+  position: relative;
+}
+
+.timeline-minimal::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background-color: #ddd;
+  z-index: -1;
+}
+
+.time-period {
+  background-color: white;
+  padding: 0.5em 1em;
+  border: 1px solid #ddd;
+  font-size: 0.8em;
+}
+
+.quote {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 1.5em;
+  max-width: 80%;
+  margin: 2em auto;
+  text-align: center;
+  line-height: 1.4;
+}
+
+.author {
+  font-size: 0.6em;
+  display: block;
+  margin-top: 1em;
+  color: #777;
+}
+
+/* Principles */
+.principles {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 2em 0;
+}
+
+.principle {
+  margin: 0.5em;
+  padding: 1em 2em;
+  background-color: #f5f5f5;
+  border-radius: 3px;
+  font-weight: 500;
+}
+
+.three-cols {
+  display: flex;
+  justify-content: space-between;
+  margin: 2em 0;
+}
+
+.col {
+  flex: 0 0 30%;
+  padding: 0 1em;
+}
+
+.col h3 {
+  font-size: 1.1em;
+  margin-bottom: 0.5em;
+}
+
+.col p {
+  font-size: 0.9em;
+  line-height: 1.4;
+}
+
+/* Transformation grid */
+.transformation-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 10px;
+  margin: 2em 0;
+}
+
+.t-item {
+  padding: 1em;
+  background-color: #f5f5f5;
+  text-align: center;
+  border: 1px solid #ddd;
+  font-weight: 500;
+}
+
+.micro-note {
+  font-size: 0.7em;
+  text-align: center;
+  margin-top: 1em;
+  color: #777;
+}
+
+.case-study {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 15px;
+  margin: 2em 0;
+}
+
+.cs-item {
+  padding: 1em;
+  background-color: #f5f5f5;
+  text-align: center;
+  border-left: 3px solid var(--accent-color);
+}
+
+.citation {
+  font-size: 0.7em;
+  color: #777;
+  text-align: right;
+  margin-top: 1em;
+}
+
+.large-list {
+  font-size: 1.2em;
+  line-height: 1.8;
+}
+
+.large-list li {
+  margin-bottom: 0.8em;
+}
+
+/* Ethics section (with dark background) */
+.white-text {
+  color: white !important;
+}
+
+.white-text h1, .white-text h2, .white-text h3 {
+  color: white !important;
+}
+
+.big-question {
+  font-size: 1.6em;
+  margin: 1em 0;
+  font-weight: 500;
+}
+
+.ethics-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 2em 0;
+}
+
+.ethics-item {
+  padding: 1em 2em;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+  margin: 0.5em 0;
+  min-width: 200px;
+  text-align: center;
+}
+
+.connecting-line {
+  height: 30px;
+  width: 1px;
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+/* Path visualization */
+.path-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 3em 0;
+  flex-wrap: wrap;
+}
+
+.path-step {
+  padding: 1em 1.5em;
+  background-color: #f5f5f5;
+  border: 1px solid #ddd;
+  margin: 0.5em;
+}
+
+.path-arrow {
+  font-weight: bold;
+  font-size: 1.5em;
+  margin: 0 0.5em;
+  color: #777;
+}
+
+.resources-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 15px;
+  margin: 2em 0;
+}
+
+.resource-item {
+  padding: 1em;
+  background-color: #f5f5f5;
+  border: 1px solid #ddd;
+}
+
+.resource-title {
+  font-weight: bold;
+  margin-bottom: 0.3em;
+}
+
+.resource-desc {
+  font-size: 0.8em;
+  color: #555;
+}
+
+.next-session {
+  margin: 2em 0;
+  padding: 2em;
+  background-color: #f5f5f5;
+  border: 1px solid #ddd;
+  text-align: center;
+}
+
+.ns-date {
+  font-size: 1.2em;
+  font-weight: bold;
+  margin-bottom: 0.5em;
+}
+
+.ns-title {
+  font-size: 1.5em;
+  margin-bottom: 1em;
+}
+
+.ns-topics {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.ns-topics li {
+  display: inline-block;
+  margin: 0.3em;
+  padding: 0.5em 1em;
+  background-color: white;
+  border: 1px solid #ddd;
+  font-size: 0.8em;
+}
+
+/* Thank you slide */
+.contact-info {
+  text-align: center;
+  margin: 3em 0;
+  font-size: 1.2em;
+}
+
+/* Slides */
+.reveal .slides {
+  text-align: left;
+}
+
+.reveal .slides section {
+  padding: 0 60px;
+}
+
+.reveal .progress {
+  height: 4px;
+}
+
+.reveal .controls {
+  color: var(--text-color);
+}
+
+/* Print specific */
+@media print {
+  .reveal .slides {
+    margin: 0 auto !important;
+  }
+}

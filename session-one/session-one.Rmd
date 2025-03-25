@@ -1,0 +1,151 @@
+---
+title: "AI Knowledge Sharing Session"
+date: March 25, 2005
+output:
+  revealjs::revealjs_presentation:
+    theme: dark
+---
+
+![](../cambrian_logo.jpg)
+
+# ABC
+
+![](../cambrian_logo.jpg)
+
+# Tools
+
+Which tools I am using, and why
+
+## Dify
+
+Dify 1.0 release, agentic workflows, marketplace, other features TODO
+
+## OpenAI 
+
+- Deep Research
+
+- ChatGPT 4.5 not good for coding
+
+# Claude Code
+
+Claude Code is what I tend to use the most and get the best balance between good results, right level of thinking, and most effective tool calling (built-in + MCP)
+
+## TODO add here
+
+## Failure Modes to Avoid
+
+Sonnet 3.7 loves to create mock data and invent workarounds to arrive at the needed solution. Start by adding something similar to this to `CLAUDE.md` file:
+```
+### CRITICAL IMPLEMENTATION RULES
+
+1. **ALWAYS WORK WITH PRODUCTION SYSTEMS AND DATA**
+   - Never create temporary or simplified test versions of the system
+   - All changes must work with the real production environment
+   - Code should always integrate with real databases and APIs
+
+2. **NO ISOLATED TESTING SCRIPTS OR WORKAROUNDS**
+   - Don't create standalone test scripts that bypass the main system
+   - Don't add workarounds that deviate from the intended architecture
+   - All testing should be done with the actual system components
+
+3. **MAINTAIN ARCHITECTURAL INTEGRITY**
+   - Follow the established architecture without shortcuts
+   - Properly handle imports and dependencies in the actual codebase
+   - Fix root causes rather than creating workarounds
+
+4. **PRODUCTION-FIRST MENTALITY**
+   - All changes must be production-ready
+   - Focus on robustness and integration with real systems
+   - Test in the production environment with real data
+```
+
+
+# Recommended MCP Servers
+
+## Perplexity
+
+Claude Code:
+```text
+claude mcp add perplexity-mcp -e PERPLEXITY_API_KEY=your-key-here -e PERPLEXITY_MODEL=sonar-pro -- uvx perplexity-mcp
+```
+
+.json configuration:
+```text
+  "perplexity-mcp": {
+    "env": {
+      "PERPLEXITY_API_KEY": "XXXXXXXXXXXXXXXXXXXX",
+      "PERPLEXITY_MODEL": "sonar"
+    },
+    "command": "uvx",
+    "args": [
+      "perplexity-mcp"
+    ]
+  }
+```
+Can set model to `sonar` or `sonar-pro`. 
+<br>
+Model Pricing: https://docs.perplexity.ai/guides/pricing
+
+
+
+# Challenges and Opportunities
+
+These are the main challenges I think we 
+
+1. Context 
+
+2. Fine-tuning
+
+3. Continuous improvement
+
+
+# Opportunities - Documentation Helpers
+
+- common use case to have to feed documentation to LLMs
+
+- documentation helpers allow us to answer questions much better, without having to load the information as context within the chat. Expensive and time consuming, requires much more frequent context resets.
+
+- we can create systems that we all individually use, but feed into a single view of the collection of the best information we uncovered using those interfaces
+
+
+## Proposed Architecture
+
+[ here mermaid diagram with proposed architecture]
+
+
+# Key Question
+
+What can we do to create extremely minimal context usage in the right parts of our workflows?
+- context and documentation helpers (what we just talked about)
+- code editing agents
+- ... anything else?
+
+
+# Key Problem: continued progress
+
+
+
+## Context
+
+
+## Fine-tuning
+
+- [ see if I can find photos of slides from the event showing fine tuned model results]
+
+- only bounded by compute, can generally create synthetic data to accomplish certain tasks
+
+- idea: MCP server integrated with our stack (CLAUDE.md defaults) 
+
+
+## Continuous improvement
+
+IMPORTANT: Internal benchmarks on problems we care about
+
+- every day we are creating a huge amount of useful data which one day will improve our models, that we aren't currently able to take advandage of. Maybe MCP server that acts as memory layer?
+
+
+## Competitive Landscape
+
+
+
+

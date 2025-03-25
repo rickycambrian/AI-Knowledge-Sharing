@@ -1,0 +1,254 @@
+---
+title: "AI Knowledge Sharing"
+subtitle: "Session One: Fundamentals & Applications"
+author: "Riccardo Esclapon"
+date: "`r format(Sys.Date(), '%B %d, %Y')`"
+output:
+  revealjs::revealjs_presentation:
+    theme: night
+    highlight: pygments
+    transition: slide
+    center: true
+    css: custom.css
+    self_contained: false
+    includes:
+      in_header: header.html
+    reveal_plugins: ["notes", "search", "zoom", "chalkboard"]
+    reveal_options:
+      slideNumber: true
+      previewLinks: true
+      progress: true
+      chalkboard:
+        theme: whiteboard
+        toggleNotesButton: false
+      menu:
+        numbers: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+library(tidyverse)
+library(gganimate)
+library(plotly)
+library(htmlwidgets)
+```
+
+# Welcome {data-background="linear-gradient(to bottom right, #222, #0088cc)"}
+
+## About This Series {.emphasized}
+
+<div class="columns">
+<div class="column" width="60%">
+
+This session is the first in our AI Knowledge Sharing series.
+
+- Fundamental concepts in modern AI
+- Applications across industries
+- Ethical considerations
+- Hands-on demonstrations
+
+</div>
+<div class="column" width="40%">
+<img src="https://via.placeholder.com/400x300" alt="AI Knowledge Sharing">
+</div>
+</div>
+
+<aside class="notes">
+Speaker notes:
+- Welcome everyone to our first session
+- Explain the goals of the series
+- Mention the experience level expected
+</aside>
+
+# Fundamentals {data-background-color="#3a0ca3"}
+
+## Evolution of AI {data-transition="zoom"}
+
+<div class="timeline">
+<div class="container left">
+  <div class="content">
+    <h3>1950s</h3>
+    <p>The term "Artificial Intelligence" is coined</p>
+  </div>
+</div>
+<div class="container right">
+  <div class="content">
+    <h3>1980s</h3>
+    <p>Expert systems emerge</p>
+  </div>
+</div>
+<div class="container left">
+  <div class="content">
+    <h3>2010s</h3>
+    <p>Deep learning revolution</p>
+  </div>
+</div>
+<div class="container right">
+  <div class="content">
+    <h3>Present</h3>
+    <p>Large language models and multimodal AI</p>
+  </div>
+</div>
+</div>
+
+## Key Concepts {data-transition="slide-in fade-out"}
+
+<div class="concepts">
+  <div class="concept-item" onclick="toggleExplanation('ml')">
+    <h3>Machine Learning</h3>
+    <div id="ml" class="explanation">Systems that learn from data without explicit programming</div>
+  </div>
+  <div class="concept-item" onclick="toggleExplanation('dl')">
+    <h3>Deep Learning</h3>
+    <div id="dl" class="explanation">Neural networks with multiple layers that can learn complex patterns</div>
+  </div>
+  <div class="concept-item" onclick="toggleExplanation('nlp')">
+    <h3>NLP</h3>
+    <div id="nlp" class="explanation">Natural Language Processing enables computers to understand human language</div>
+  </div>
+</div>
+
+```{js, echo=FALSE}
+function toggleExplanation(id) {
+  var x = document.getElementById(id);
+  if (x.style.display === "block") {
+    x.style.display = "none";
+  } else {
+    x.style.display = "block";
+  }
+}
+```
+
+# Applications {data-background="#f72585"}
+
+## Interactive Data Visualization {.interactive}
+
+```{r interactive-plot, echo=FALSE}
+# Create an interactive plot
+p <- ggplot(mpg, aes(displ, hwy, color = class)) +
+  geom_point() +
+  labs(title = "Engine Displacement vs Highway MPG",
+       x = "Engine Displacement (L)",
+       y = "Highway MPG")
+
+ggplotly(p) %>%
+  layout(title = list(text = "Interactive Data Visualization"))
+```
+
+## AI in Healthcare {data-transition="convex"}
+
+<div class="box-highlight">
+<h3>Impact Areas</h3>
+<ul>
+  <li class="fragment fade-in">Disease diagnosis from medical imagery</li>
+  <li class="fragment fade-in">Drug discovery acceleration</li>
+  <li class="fragment fade-in">Personalized treatment plans</li>
+  <li class="fragment fade-in">Hospital workflow optimization</li>
+</ul>
+</div>
+
+<p class="citation">Source: Stanford AI Index Report 2023</p>
+
+# Demonstrations {data-background="#560bad"}
+
+## Real-time AI Analysis {data-state="dynamic"}
+
+<div class="demo-container">
+  <div class="demo-input">
+    <textarea id="user-input" placeholder="Enter text for analysis..."></textarea>
+    <button onclick="analyzeText()">Analyze</button>
+  </div>
+  <div class="demo-output" id="analysis-result">
+    Results will appear here...
+  </div>
+</div>
+
+```{js, echo=FALSE}
+function analyzeText() {
+  var text = document.getElementById('user-input').value;
+  // This is a mock analysis - in a real presentation, this could connect to an API
+  var result = "Sentiment: " + (Math.random() > 0.5 ? "Positive" : "Negative") + "<br>";
+  result += "Key entities: " + ["AI", "technology", "data", "learning"].sort(() => .5 - Math.random()).slice(0,2).join(", ");
+  document.getElementById('analysis-result').innerHTML = result;
+}
+```
+
+## Animated ML Process {.animated}
+
+```{r animated-chart, echo=FALSE}
+# Create a basic animation of a machine learning process
+set.seed(123)
+df <- data.frame(
+  x = c(rnorm(50, 2, 1), rnorm(50, 4, 1)),
+  y = c(rnorm(50, 2, 1), rnorm(50, 4, 1)),
+  class = factor(rep(c("A", "B"), each = 50))
+)
+
+# Create decision boundary animation
+anim <- ggplot(df, aes(x, y, color = class)) +
+  geom_point() +
+  labs(title = "Decision Boundary Evolution: Iteration {frame} of 20") +
+  theme_minimal() +
+  transition_states(
+    states = 1:20,
+    transition_length = 2,
+    state_length = 1
+  ) +
+  enter_fade() +
+  exit_fade() +
+  shadow_mark(alpha = 0.3)
+
+# In a real presentation, we would use animate() to save this
+# For now, we'll just show the static plot
+ggplot(df, aes(x, y, color = class)) +
+  geom_point() +
+  labs(title = "Decision Boundary Example") +
+  theme_minimal()
+```
+
+# Discussion {data-background="#4361ee"}
+
+## Ethical Considerations {data-transition="fade"}
+
+<div class="grid-layout">
+  <div class="grid-item" id="ethics-1">Bias & Fairness</div>
+  <div class="grid-item" id="ethics-2">Privacy Concerns</div>
+  <div class="grid-item" id="ethics-3">Transparency</div>
+  <div class="grid-item" id="ethics-4">Accountability</div>
+</div>
+
+<div class="quote-box">
+"With great power comes great responsibility."
+</div>
+
+## Q&A Session {.centered data-background="#7209b7"}
+
+<div class="question-box">
+  <h3>Questions?</h3>
+  <p>Use the QR code to submit anonymous questions</p>
+  <div class="qr-placeholder">[QR CODE PLACEHOLDER]</div>
+</div>
+
+# Thank You {data-background-image="https://via.placeholder.com/1920x1080" data-background-opacity="0.3"}
+
+## Next Sessions {.final-slide}
+
+<div class="next-sessions">
+  <div class="session">
+    <h3>Session 2</h3>
+    <p>Advanced Models & Architectures</p>
+    <p class="date">April 14, 2025</p>
+  </div>
+  <div class="session">
+    <h3>Session 3</h3>
+    <p>Practical Implementation Strategies</p>
+    <p class="date">May 12, 2025</p>
+  </div>
+  <div class="session">
+    <h3>Session 4</h3>
+    <p>Future Trends & Opportunities</p>
+    <p class="date">June 16, 2025</p>
+  </div>
+</div>
+
+<p class="contact">Contact: riccardo@example.com | @riccardo</p>

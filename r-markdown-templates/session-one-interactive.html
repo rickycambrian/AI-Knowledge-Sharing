@@ -1,0 +1,1176 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Riccardo Esclapon" />
+  <meta name="dcterms.date" content="2025-03-24" />
+  <title>AI Knowledge Sharing</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="session-one-interactive_files/reveal.js-3.3.0.1/css/reveal.css"/>
+
+
+
+<link rel="stylesheet" href="session-one-interactive_files/reveal.js-3.3.0.1/css/theme/solarized.css" id="theme">
+
+
+  <!-- some tweaks to reveal css -->
+  <style type="text/css">
+    .reveal h1 { font-size: 2.0em; }
+    .reveal h2 { font-size: 1.5em;  }
+    .reveal h3 { font-size: 1.25em;	}
+    .reveal h4 { font-size: 1em;	}
+
+    .reveal .slides>section,
+    .reveal .slides>section>section {
+      padding: 0px 0px;
+    }
+
+
+
+    .reveal table {
+      border-width: 1px;
+      border-spacing: 2px;
+      border-style: dotted;
+      border-color: gray;
+      border-collapse: collapse;
+      font-size: 0.7em;
+    }
+
+    .reveal table th {
+      border-width: 1px;
+      padding-left: 10px;
+      padding-right: 25px;
+      font-weight: bold;
+      border-style: dotted;
+      border-color: gray;
+    }
+
+    .reveal table td {
+      border-width: 1px;
+      padding-left: 10px;
+      padding-right: 25px;
+      border-style: dotted;
+      border-color: gray;
+    }
+
+    .reveal .slide-menu-button {
+      left: 105px !important;
+    }
+
+  </style>
+
+    <style type="text/css">code{white-space: pre;}</style>
+
+    <link rel="stylesheet" href="interactive.css"/>
+
+<!-- Printing and PDF exports -->
+<script id="paper-css" type="application/dynamic-css">
+
+/* Default Print Stylesheet Template
+   by Rob Glazebrook of CSSnewbie.com
+   Last Updated: June 4, 2008
+
+   Feel free (nay, compelled) to edit, append, and
+   manipulate this file as you see fit. */
+
+
+@media print {
+
+	/* SECTION 1: Set default width, margin, float, and
+	   background. This prevents elements from extending
+	   beyond the edge of the printed page, and prevents
+	   unnecessary background images from printing */
+	html {
+		background: #fff;
+		width: auto;
+		height: auto;
+		overflow: visible;
+	}
+	body {
+		background: #fff;
+		font-size: 20pt;
+		width: auto;
+		height: auto;
+		border: 0;
+		margin: 0 5%;
+		padding: 0;
+		overflow: visible;
+		float: none !important;
+	}
+
+	/* SECTION 2: Remove any elements not needed in print.
+	   This would include navigation, ads, sidebars, etc. */
+	.nestedarrow,
+	.controls,
+	.fork-reveal,
+	.share-reveal,
+	.state-background,
+	.reveal .progress,
+	.reveal .backgrounds {
+		display: none !important;
+	}
+
+	/* SECTION 3: Set body font face, size, and color.
+	   Consider using a serif font for readability. */
+	body, p, td, li, div {
+		font-size: 20pt!important;
+		font-family: Georgia, "Times New Roman", Times, serif !important;
+		color: #000;
+	}
+
+	/* SECTION 4: Set heading font face, sizes, and color.
+	   Differentiate your headings from your body text.
+	   Perhaps use a large sans-serif for distinction. */
+	h1,h2,h3,h4,h5,h6 {
+		color: #000!important;
+		height: auto;
+		line-height: normal;
+		font-family: Georgia, "Times New Roman", Times, serif !important;
+		text-shadow: 0 0 0 #000 !important;
+		text-align: left;
+		letter-spacing: normal;
+	}
+	/* Need to reduce the size of the fonts for printing */
+	h1 { font-size: 28pt !important;  }
+	h2 { font-size: 24pt !important; }
+	h3 { font-size: 22pt !important; }
+	h4 { font-size: 22pt !important; font-variant: small-caps; }
+	h5 { font-size: 21pt !important; }
+	h6 { font-size: 20pt !important; font-style: italic; }
+
+	/* SECTION 5: Make hyperlinks more usable.
+	   Ensure links are underlined, and consider appending
+	   the URL to the end of the link for usability. */
+	a:link,
+	a:visited {
+		color: #000 !important;
+		font-weight: bold;
+		text-decoration: underline;
+	}
+	/*
+	.reveal a:link:after,
+	.reveal a:visited:after {
+		content: " (" attr(href) ") ";
+		color: #222 !important;
+		font-size: 90%;
+	}
+	*/
+
+
+	/* SECTION 6: more reveal.js specific additions by @skypanther */
+	ul, ol, div, p {
+		visibility: visible;
+		position: static;
+		width: auto;
+		height: auto;
+		display: block;
+		overflow: visible;
+		margin: 0;
+		text-align: left !important;
+	}
+	.reveal pre,
+	.reveal table {
+		margin-left: 0;
+		margin-right: 0;
+	}
+	.reveal pre code {
+		padding: 20px;
+		border: 1px solid #ddd;
+	}
+	.reveal blockquote {
+		margin: 20px 0;
+	}
+	.reveal .slides {
+		position: static !important;
+		width: auto !important;
+		height: auto !important;
+
+		left: 0 !important;
+		top: 0 !important;
+		margin-left: 0 !important;
+		margin-top: 0 !important;
+		padding: 0 !important;
+		zoom: 1 !important;
+
+		overflow: visible !important;
+		display: block !important;
+
+		text-align: left !important;
+		-webkit-perspective: none;
+		   -moz-perspective: none;
+		    -ms-perspective: none;
+		        perspective: none;
+
+		-webkit-perspective-origin: 50% 50%;
+		   -moz-perspective-origin: 50% 50%;
+		    -ms-perspective-origin: 50% 50%;
+		        perspective-origin: 50% 50%;
+	}
+	.reveal .slides section {
+		visibility: visible !important;
+		position: static !important;
+		width: auto !important;
+		height: auto !important;
+		display: block !important;
+		overflow: visible !important;
+
+		left: 0 !important;
+		top: 0 !important;
+		margin-left: 0 !important;
+		margin-top: 0 !important;
+		padding: 60px 20px !important;
+		z-index: auto !important;
+
+		opacity: 1 !important;
+
+		page-break-after: always !important;
+
+		-webkit-transform-style: flat !important;
+		   -moz-transform-style: flat !important;
+		    -ms-transform-style: flat !important;
+		        transform-style: flat !important;
+
+		-webkit-transform: none !important;
+		   -moz-transform: none !important;
+		    -ms-transform: none !important;
+		        transform: none !important;
+
+		-webkit-transition: none !important;
+		   -moz-transition: none !important;
+		    -ms-transition: none !important;
+		        transition: none !important;
+	}
+	.reveal .slides section.stack {
+		padding: 0 !important;
+	}
+	.reveal section:last-of-type {
+		page-break-after: avoid !important;
+	}
+	.reveal section .fragment {
+		opacity: 1 !important;
+		visibility: visible !important;
+
+		-webkit-transform: none !important;
+		   -moz-transform: none !important;
+		    -ms-transform: none !important;
+		        transform: none !important;
+	}
+	.reveal section img {
+		display: block;
+		margin: 15px 0px;
+		background: rgba(255,255,255,1);
+		border: 1px solid #666;
+		box-shadow: none;
+	}
+
+	.reveal section small {
+		font-size: 0.8em;
+	}
+
+}  
+</script>
+
+
+<script id="pdf-css" type="application/dynamic-css">
+    
+/**
+ * This stylesheet is used to print reveal.js
+ * presentations to PDF.
+ *
+ * https://github.com/hakimel/reveal.js#pdf-export
+ */
+
+* {
+	-webkit-print-color-adjust: exact;
+}
+
+body {
+	margin: 0 auto !important;
+	border: 0;
+	padding: 0;
+	float: none !important;
+	overflow: visible;
+}
+
+html {
+	width: 100%;
+	height: 100%;
+	overflow: visible;
+}
+
+/* Remove any elements not needed in print. */
+.nestedarrow,
+.reveal .controls,
+.reveal .progress,
+.reveal .playback,
+.reveal.overview,
+.fork-reveal,
+.share-reveal,
+.state-background {
+	display: none !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	text-shadow: 0 0 0 #000 !important;
+}
+
+.reveal pre code {
+	overflow: hidden !important;
+	font-family: Courier, 'Courier New', monospace !important;
+}
+
+ul, ol, div, p {
+	visibility: visible;
+	position: static;
+	width: auto;
+	height: auto;
+	display: block;
+	overflow: visible;
+	margin: auto;
+}
+.reveal {
+	width: auto !important;
+	height: auto !important;
+	overflow: hidden !important;
+}
+.reveal .slides {
+	position: static;
+	width: 100%;
+	height: auto;
+
+	left: auto;
+	top: auto;
+	margin: 0 !important;
+	padding: 0 !important;
+
+	overflow: visible;
+	display: block;
+
+	-webkit-perspective: none;
+	   -moz-perspective: none;
+	    -ms-perspective: none;
+	        perspective: none;
+
+	-webkit-perspective-origin: 50% 50%; /* there isn't a none/auto value but 50-50 is the default */
+	   -moz-perspective-origin: 50% 50%;
+	    -ms-perspective-origin: 50% 50%;
+	        perspective-origin: 50% 50%;
+}
+
+.reveal .slides section {
+	page-break-after: always !important;
+
+	visibility: visible !important;
+	position: relative !important;
+	display: block !important;
+	position: relative !important;
+
+	margin: 0 !important;
+	padding: 0 !important;
+	box-sizing: border-box !important;
+	min-height: 1px;
+
+	opacity: 1 !important;
+
+	-webkit-transform-style: flat !important;
+	   -moz-transform-style: flat !important;
+	    -ms-transform-style: flat !important;
+	        transform-style: flat !important;
+
+	-webkit-transform: none !important;
+	   -moz-transform: none !important;
+	    -ms-transform: none !important;
+	        transform: none !important;
+}
+
+.reveal section.stack {
+	margin: 0 !important;
+	padding: 0 !important;
+	page-break-after: avoid !important;
+	height: auto !important;
+	min-height: auto !important;
+}
+
+.reveal img {
+	box-shadow: none;
+}
+
+.reveal .roll {
+	overflow: visible;
+	line-height: 1em;
+}
+
+/* Slide backgrounds are placed inside of their slide when exporting to PDF */
+.reveal section .slide-background {
+	display: block !important;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	z-index: -1;
+}
+
+/* All elements should be above the slide-background */
+.reveal section>* {
+	position: relative;
+	z-index: 1;
+}
+
+/* Display slide speaker notes when 'showNotes' is enabled */
+.reveal .speaker-notes-pdf {
+	display: block;
+	width: 100%;
+	max-height: none;
+	left: auto;
+	top: auto;
+	z-index: 100;
+}
+
+/* Display slide numbers when 'slideNumber' is enabled */
+.reveal .slide-number-pdf {
+	display: block;
+	position: absolute;
+	font-size: 14px;
+}
+
+</script>
+
+
+<script>
+var style = document.createElement( 'style' );
+style.type = 'text/css';
+var style_script_id = window.location.search.match( /print-pdf/gi ) ? 'pdf-css' : 'paper-css';
+var style_script = document.getElementById(style_script_id).text;
+style.innerHTML = style_script;
+document.getElementsByTagName('head')[0].appendChild(style);
+</script>
+
+    <script src="session-one-interactive_files/header-attrs-2.28/header-attrs.js"></script>
+    <link href="session-one-interactive_files/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+    <link href="session-one-interactive_files/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
+    <link href="session-one-interactive_files/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet" />
+    <script src="session-one-interactive_files/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+    <script src="session-one-interactive_files/plotly-binding-4.10.4/plotly.js"></script>
+    <script src="session-one-interactive_files/typedarray-0.1/typedarray.min.js"></script>
+    <script src="session-one-interactive_files/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+    <link href="session-one-interactive_files/crosstalk-1.2.1/css/crosstalk.min.css" rel="stylesheet" />
+    <script src="session-one-interactive_files/crosstalk-1.2.1/js/crosstalk.min.js"></script>
+    <link href="session-one-interactive_files/plotly-htmlwidgets-css-2.11.1/plotly-htmlwidgets.css" rel="stylesheet" />
+    <script src="session-one-interactive_files/plotly-main-2.11.1/plotly-latest.min.js"></script>
+    <link href="session-one-interactive_files/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
+    <script src="session-one-interactive_files/datatables-binding-0.33/datatables.js"></script>
+    <link href="session-one-interactive_files/dt-core-1.13.6/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <link href="session-one-interactive_files/dt-core-1.13.6/css/jquery.dataTables.extra.css" rel="stylesheet" />
+    <script src="session-one-interactive_files/dt-core-1.13.6/js/jquery.dataTables.min.js"></script>
+    <link href="session-one-interactive_files/dt-ext-buttons-1.13.6/css/buttons.dataTables.min.css" rel="stylesheet" />
+    <script src="session-one-interactive_files/dt-ext-buttons-1.13.6/js/dataTables.buttons.min.js"></script>
+    <script src="session-one-interactive_files/dt-ext-buttons-1.13.6/js/buttons.html5.min.js"></script>
+    <script src="session-one-interactive_files/dt-ext-buttons-1.13.6/js/buttons.colVis.min.js"></script>
+    <script src="session-one-interactive_files/dt-ext-buttons-1.13.6/js/buttons.print.min.js"></script>
+    <link href="session-one-interactive_files/leaflet-1.3.1/leaflet.css" rel="stylesheet" />
+    <script src="session-one-interactive_files/leaflet-1.3.1/leaflet.js"></script>
+    <link href="session-one-interactive_files/leafletfix-1.0.0/leafletfix.css" rel="stylesheet" />
+    <script src="session-one-interactive_files/proj4-2.6.2/proj4.min.js"></script>
+    <script src="session-one-interactive_files/Proj4Leaflet-1.0.1/proj4leaflet.js"></script>
+    <link href="session-one-interactive_files/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet" />
+    <script src="session-one-interactive_files/leaflet-binding-2.2.2/leaflet.js"></script>
+    <link href="session-one-interactive_files/leaflet-easybutton-1.3.1/easy-button.css" rel="stylesheet" />
+    <script src="session-one-interactive_files/leaflet-easybutton-1.3.1/easy-button.js"></script>
+    <script src="session-one-interactive_files/leaflet-easybutton-1.3.1/EasyButton-binding.js"></script>
+    <link href="session-one-interactive_files/leaflet-locationfilter2-0.1.1/locationfilter.css" rel="stylesheet" />
+    <script src="session-one-interactive_files/leaflet-locationfilter2-0.1.1/locationfilter.js"></script>
+    <script src="session-one-interactive_files/leaflet-locationfilter2-0.1.1/locationfilter-bindings.js"></script>
+    <link href="session-one-interactive_files/ionicons-2.0.1/ionicons.min.css" rel="stylesheet" />
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section>
+    <h1 class="title">AI Knowledge Sharing</h1>
+  <h1 class="subtitle">Interactive Session One</h1>
+    <h2 class="author">Riccardo Esclapon</h2>
+    <h3 class="date">March 24, 2025</h3>
+</section>
+
+<section>
+<section id="welcome" class="title-slide slide level1"
+data-background="#073b4c">
+<h1 data-background="#073b4c">Welcome</h1>
+
+</section>
+<section id="interactive-learning-experience" class="slide level2"
+data-state="interactive-header">
+<h2 data-state="interactive-header">Interactive Learning Experience</h2>
+<div class="header-box">
+<h3>
+Today’s Goals
+</h3>
+<ul class="goal-list">
+<li class="fragment highlight-current-blue">
+Understand AI fundamentals through interactive displays
+</li>
+<li class="fragment highlight-current-blue">
+Explore real-time data visualizations
+</li>
+<li class="fragment highlight-current-blue">
+Participate in live AI demonstrations
+</li>
+<li class="fragment highlight-current-blue">
+Build a shared knowledge framework
+</li>
+</ul>
+</div>
+<aside class="notes">
+<p>This presentation uses several advanced revealjs features: -
+Interactive elements using JS and crosstalk - Chalkboard for live
+annotations (press C to activate) - Speaker notes visible here (press S
+to show speaker view) - Multimedia integration</p>
+</aside>
+</section>
+<section id="how-to-participate" class="slide level2"
+data-transition="zoom">
+<h2 data-transition="zoom">How To Participate</h2>
+<div class="participation-container">
+<div class="participation-method">
+<pre><code>&lt;i class=&quot;fas fa-hand-paper&quot;&gt;&lt;/i&gt;
+&lt;h4&gt;Raise Hand&lt;/h4&gt;
+&lt;p&gt;Questions welcome anytime&lt;/p&gt;</code></pre>
+</div>
+<div class="participation-method">
+<pre><code>&lt;i class=&quot;fas fa-mobile-alt&quot;&gt;&lt;/i&gt;
+&lt;h4&gt;Mobile Response&lt;/h4&gt;
+&lt;p&gt;Poll code: AI2023&lt;/p&gt;</code></pre>
+</div>
+<div class="participation-method">
+<pre><code>&lt;i class=&quot;fas fa-comment&quot;&gt;&lt;/i&gt;
+&lt;h4&gt;Chat&lt;/h4&gt;
+&lt;p&gt;Use the session chat&lt;/p&gt;</code></pre>
+</div>
+<div class="participation-method">
+<pre><code>&lt;i class=&quot;fas fa-pencil-alt&quot;&gt;&lt;/i&gt;
+&lt;h4&gt;Annotations&lt;/h4&gt;
+&lt;p&gt;Collaborative notes&lt;/p&gt;</code></pre>
+</div>
+</div>
+</section></section>
+<section>
+<section id="ai-timeline" class="title-slide slide level1"
+data-background-gradient="linear-gradient(to bottom, #06d6a0, #118ab2)">
+<h1
+data-background-gradient="linear-gradient(to bottom, #06d6a0, #118ab2)">AI
+Timeline</h1>
+
+</section>
+<section id="evolution-of-ai" class="slide level2"
+data-transition="slide-in fade-out">
+<h2 data-transition="slide-in fade-out">Evolution of AI</h2>
+<div>
+<div style="display: flex; flex-wrap: wrap;">
+<div style="width: 100%;">
+<div class="plotly html-widget html-fill-item" id="htmlwidget-46cdf9e03c9382807e74" style="width:100%;height:400px;"></div>
+<script type="application/json" data-for="htmlwidget-46cdf9e03c9382807e74">{"x":{"visdat":{"137463afaf01":["function () ","plotlyVisDat"]},"cur_data":"137463afaf01","attrs":{"137463afaf01":{"x":{},"y":{},"mode":"markers","text":{},"color":{},"size":{},"colors":["#ff9f1c","#ffbf69","#2ec4b6","#cbf3f0"],"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"title":"AI Milestones by Significance","xaxis":{"domain":[0,1],"automargin":true,"title":"Year"},"yaxis":{"domain":[0,1],"automargin":true,"title":"Historical Significance (1-10)"},"dragmode":"zoom","hovermode":"closest","showlegend":true},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":[2012],"y":[9],"mode":"markers","text":"AlexNet Breakthrough","type":"scatter","key":["5"],"set":"SharedDatacd61cc41","name":"Computer Vision","marker":{"color":"rgba(255,159,28,1)","size":[70],"sizemode":"area","line":{"color":"rgba(255,159,28,1)"}},"textfont":{"color":"rgba(255,159,28,1)","size":70},"error_y":{"color":"rgba(255,159,28,1)","width":70},"error_x":{"color":"rgba(255,159,28,1)","width":70},"line":{"color":"rgba(255,159,28,1)","width":70},"xaxis":"x","yaxis":"y","_isSimpleKey":true,"_isNestedKey":false,"frame":null},{"x":[1950,1956],"y":[9,8],"mode":"markers","text":["Turing Test Proposed","Dartmouth Conference"],"type":"scatter","key":["1","2"],"set":"SharedDatacd61cc41","name":"Foundation","marker":{"color":"rgba(255,183,88,1)","size":[70,40],"sizemode":"area","line":{"color":"rgba(255,183,88,1)"}},"textfont":{"color":"rgba(255,183,88,1)","size":[70,40]},"error_y":{"color":"rgba(255,183,88,1)","width":[]},"error_x":{"color":"rgba(255,183,88,1)","width":[]},"line":{"color":"rgba(255,183,88,1)"},"xaxis":"x","yaxis":"y","_isNestedKey":false,"frame":null},{"x":[1997,2017],"y":[9,8],"mode":"markers","text":["Deep Blue Beats Kasparov","AlphaGo Defeats Lee Sedol"],"type":"scatter","key":["3","7"],"set":"SharedDatacd61cc41","name":"Gaming","marker":{"color":"rgba(181,195,145,1)","size":[70,40],"sizemode":"area","line":{"color":"rgba(181,195,145,1)"}},"textfont":{"color":"rgba(181,195,145,1)","size":[70,40]},"error_y":{"color":"rgba(181,195,145,1)","width":[]},"error_x":{"color":"rgba(181,195,145,1)","width":[]},"line":{"color":"rgba(181,195,145,1)"},"xaxis":"x","yaxis":"y","_isNestedKey":false,"frame":null},{"x":[2014,2022],"y":[8,8],"mode":"markers","text":["GANs Introduced","Stable Diffusion & DALL·E 2"],"type":"scatter","key":["6","10"],"set":"SharedDatacd61cc41","name":"Generative AI","marker":{"color":"rgba(100,208,196,1)","size":[40,40],"sizemode":"area","line":{"color":"rgba(100,208,196,1)"}},"textfont":{"color":"rgba(100,208,196,1)","size":40},"error_y":{"color":"rgba(100,208,196,1)","width":40},"error_x":{"color":"rgba(100,208,196,1)","width":40},"line":{"color":"rgba(100,208,196,1)","width":40},"xaxis":"x","yaxis":"y","_isNestedKey":false,"frame":null},{"x":[2011,2018,2020,2023],"y":[7,9,9,10],"mode":"markers","text":["IBM Watson Wins Jeopardy","BERT Transforms NLP","GPT-3 Released","GPT-4 & Claude"],"type":"scatter","key":["4","8","9","11"],"set":"SharedDatacd61cc41","name":"NLP","marker":{"color":"rgba(203,243,240,1)","size":[10,70,70,100],"sizemode":"area","line":{"color":"rgba(203,243,240,1)"}},"textfont":{"color":"rgba(203,243,240,1)","size":[10,70,70,100]},"error_y":{"color":"rgba(203,243,240,1)","width":[]},"error_x":{"color":"rgba(203,243,240,1)","width":[]},"line":{"color":"rgba(203,243,240,1)"},"xaxis":"x","yaxis":"y","_isNestedKey":false,"frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0,"ctGroups":["SharedDatacd61cc41"]},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+<div style="width: 50%; padding: 10px;">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-907b960032a80ee06cbd" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-907b960032a80ee06cbd">{"x":{"crosstalkOptions":{"key":["1","2","3","4","5","6","7","8","9","10","11"],"group":"SharedDatacd61cc41"},"filter":"none","vertical":false,"extensions":["Buttons"],"data":[[1950,1956,1997,2011,2012,2014,2017,2018,2020,2022,2023],["Turing Test Proposed","Dartmouth Conference","Deep Blue Beats Kasparov","IBM Watson Wins Jeopardy","AlexNet Breakthrough","GANs Introduced","AlphaGo Defeats Lee Sedol","BERT Transforms NLP","GPT-3 Released","Stable Diffusion &amp; DALL·E 2","GPT-4 &amp; Claude"],[9,8,9,7,9,8,8,9,9,8,10],["Foundation","Foundation","Gaming","NLP","Computer Vision","Generative AI","Gaming","NLP","NLP","Generative AI","NLP"],[52.2053,43.7044,40.7128,41.1086,43.6532,47.6062,37.5665,37.4275,37.7749,40.7128,37.7749],[0.1218,-72.28870000000001,-74.006,-73.71680000000001,-79.3832,-122.3321,126.978,-122.1697,-122.4194,-74.006,-122.4194]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>year<\/th>\n      <th>event<\/th>\n      <th>significance<\/th>\n      <th>category<\/th>\n      <th>lat<\/th>\n      <th>lng<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"Bfrtip","buttons":["copy","csv"],"pageLength":5,"columnDefs":[{"className":"dt-right","targets":[0,2,4,5]},{"name":"year","targets":0},{"name":"event","targets":1},{"name":"significance","targets":2},{"name":"category","targets":3},{"name":"lat","targets":4},{"name":"lng","targets":5}],"order":[],"autoWidth":false,"orderClasses":false,"lengthMenu":[5,10,25,50,100]},"selection":{"mode":"multiple","selected":null,"target":"row","selectable":null}},"evals":[],"jsHooks":[]}</script>
+</div>
+<div style="width: 50%; height: 300px; padding: 10px;">
+<div class="leaflet html-widget html-fill-item" id="htmlwidget-312a44c1790a24de51b1" style="width:100%;height:400px;"></div>
+<script type="application/json" data-for="htmlwidget-312a44c1790a24de51b1">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addSelect","args":["SharedDatacd61cc41"]},{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org/copyright/\">OpenStreetMap<\/a>,  <a href=\"https://opendatacommons.org/licenses/odbl/\">ODbL<\/a>"}]},{"method":"addMarkers","args":[[52.2053,43.7044,40.7128,41.1086,43.6532,47.6062,37.5665,37.4275,37.7749,40.7128,37.7749],[0.1218,-72.28870000000001,-74.006,-73.71680000000001,-79.3832,-122.3321,126.978,-122.1697,-122.4194,-74.006,-122.4194],null,null,null,{"interactive":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},["<b>Turing Test Proposed<\/b><br>1950","<b>Dartmouth Conference<\/b><br>1956","<b>Deep Blue Beats Kasparov<\/b><br>1997","<b>IBM Watson Wins Jeopardy<\/b><br>2011","<b>AlexNet Breakthrough<\/b><br>2012","<b>GANs Introduced<\/b><br>2014","<b>AlphaGo Defeats Lee Sedol<\/b><br>2017","<b>BERT Transforms NLP<\/b><br>2018","<b>GPT-3 Released<\/b><br>2020","<b>Stable Diffusion & DALL·E 2<\/b><br>2022","<b>GPT-4 & Claude<\/b><br>2023"],null,null,null,["Turing Test Proposed","Dartmouth Conference","Deep Blue Beats Kasparov","IBM Watson Wins Jeopardy","AlexNet Breakthrough","GANs Introduced","AlphaGo Defeats Lee Sedol","BERT Transforms NLP","GPT-3 Released","Stable Diffusion &amp; DALL·E 2","GPT-4 &amp; Claude"],{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},{"ctKey":["1","2","3","4","5","6","7","8","9","10","11"],"ctGroup":"SharedDatacd61cc41"}]}],"limits":{"lat":[37.4275,52.2053],"lng":[-122.4194,126.978]}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</div>
+</section>
+<section id="explore-the-data" class="slide level2"
+data-state="interactivity">
+<h2 data-state="interactivity">Explore the Data</h2>
+<div class="interaction-instructions">
+<div class="instruction-box">
+<pre><code>&lt;h3&gt;Instructions&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;Click on points in the chart to filter the table and map&lt;/li&gt;
+  &lt;li&gt;Hover over points to see milestone details&lt;/li&gt;
+  &lt;li&gt;Use the map to explore the geographic distribution&lt;/li&gt;
+  &lt;li&gt;Sort and filter the table to find patterns&lt;/li&gt;
+&lt;/ul&gt;</code></pre>
+</div>
+</div>
+<div id="significance-explanation" class="popup-info">
+<h4>
+Understanding Significance Scores
+</h4>
+<p>
+Significance scores (1-10) represent the impact of each milestone on AI
+development based on expert consensus.
+</p>
+</div>
+<script>
+// Add interactivity to the explanation box
+document.addEventListener('DOMContentLoaded', function() {
+  const explBox = document.getElementById('significance-explanation');
+  explBox.addEventListener('click', function() {
+    this.classList.toggle('expanded');
+  });
+});
+</script>
+</section></section>
+<section>
+<section id="live-ai-assessment" class="title-slide slide level1"
+data-background="#073b4c">
+<h1 data-background="#073b4c">Live AI Assessment</h1>
+
+</section>
+<section id="sentiment-analysis-demo" class="slide level2"
+data-state="live-demo">
+<h2 data-state="live-demo">Sentiment Analysis Demo</h2>
+<div class="live-demo-container">
+<div class="demo-description">
+<pre><code>&lt;h3&gt;Real-time Sentiment Analysis&lt;/h3&gt;
+&lt;p&gt;Enter text below to analyze its sentiment using our pre-trained model&lt;/p&gt;</code></pre>
+</div>
+<div class="demo-interactive">
+<pre><code>&lt;textarea id=&quot;sentiment-input&quot; placeholder=&quot;Type something here to analyze...&quot;&gt;&lt;/textarea&gt;
+&lt;button id=&quot;analyze-btn&quot; onclick=&quot;analyzeSentiment()&quot;&gt;Analyze&lt;/button&gt;</code></pre>
+</div>
+<div class="demo-results">
+<pre><code>&lt;div id=&quot;sentiment-meter&quot;&gt;
+  &lt;div class=&quot;meter-label negative&quot;&gt;Negative&lt;/div&gt;
+  &lt;div class=&quot;meter&quot;&gt;
+    &lt;div id=&quot;sentiment-gauge&quot; class=&quot;gauge&quot;&gt;&lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class=&quot;meter-label positive&quot;&gt;Positive&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&quot;sentiment-score&quot;&gt;Score: --&lt;/div&gt;
+&lt;div id=&quot;key-phrases&quot;&gt;&lt;/div&gt;</code></pre>
+</div>
+</div>
+<script>
+function analyzeSentiment() {
+  const text = document.getElementById('sentiment-input').value;
+  if (!text.trim()) return;
+  
+  // Mock sentiment analysis (in a real presentation, this would call an API)
+  const sentimentScore = Math.random() * 100; // 0-100 score
+  const gaugeWidth = sentimentScore + '%';
+  
+  // Update visual elements
+  document.getElementById('sentiment-gauge').style.width = gaugeWidth;
+  document.getElementById('sentiment-score').innerHTML = 'Score: ' + sentimentScore.toFixed(1);
+  
+  // Generate mock key phrases
+  const positiveWords = ['excellent', 'amazing', 'good', 'wonderful', 'great'];
+  const negativeWords = ['bad', 'terrible', 'awful', 'disappointing', 'poor'];
+  const neutralWords = ['standard', 'average', 'normal', 'typical'];
+  
+  let selectedWords;
+  if (sentimentScore > 70) {
+    selectedWords = positiveWords;
+    document.getElementById('sentiment-gauge').className = 'gauge positive';
+  } else if (sentimentScore < 30) {
+    selectedWords = negativeWords;
+    document.getElementById('sentiment-gauge').className = 'gauge negative';
+  } else {
+    selectedWords = neutralWords;
+    document.getElementById('sentiment-gauge').className = 'gauge neutral';
+  }
+  
+  // Show 2-3 random words from the appropriate list
+  const wordCount = 2 + Math.floor(Math.random());
+  const displayWords = [];
+  for (let i = 0; i < wordCount; i++) {
+    const randomIndex = Math.floor(Math.random() * selectedWords.length);
+    displayWords.push(selectedWords[randomIndex]);
+  }
+  
+  document.getElementById('key-phrases').innerHTML = 'Key phrases: ' + displayWords.join(', ');
+}
+</script>
+</section>
+<section id="image-recognition-demo" class="slide level2"
+data-state="image-demo">
+<h2 data-state="image-demo">Image Recognition Demo</h2>
+<div class="image-recognition-demo">
+<div class="demo-controls">
+<pre><code>&lt;div class=&quot;image-options&quot;&gt;
+  &lt;div class=&quot;image-option&quot; onclick=&quot;selectImage(&#39;image1&#39;)&quot;&gt;
+    &lt;img src=&quot;https://via.placeholder.com/100x100?text=Image+1&quot; alt=&quot;Sample Image 1&quot;&gt;
+  &lt;/div&gt;
+  &lt;div class=&quot;image-option&quot; onclick=&quot;selectImage(&#39;image2&#39;)&quot;&gt;
+    &lt;img src=&quot;https://via.placeholder.com/100x100?text=Image+2&quot; alt=&quot;Sample Image 2&quot;&gt;
+  &lt;/div&gt;
+  &lt;div class=&quot;image-option&quot; onclick=&quot;selectImage(&#39;image3&#39;)&quot;&gt;
+    &lt;img src=&quot;https://via.placeholder.com/100x100?text=Image+3&quot; alt=&quot;Sample Image 3&quot;&gt;
+  &lt;/div&gt;
+  &lt;div class=&quot;image-option&quot; onclick=&quot;selectImage(&#39;custom&#39;)&quot;&gt;
+    &lt;div class=&quot;upload-box&quot;&gt;Upload&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;button id=&quot;recognize-btn&quot; onclick=&quot;recognizeImage()&quot;&gt;Recognize&lt;/button&gt;</code></pre>
+</div>
+<div class="demo-display">
+<pre><code>&lt;div class=&quot;selected-image&quot;&gt;
+  &lt;img id=&quot;main-image&quot; src=&quot;https://via.placeholder.com/400x300?text=Select+an+Image&quot; alt=&quot;Main image for recognition&quot;&gt;
+&lt;/div&gt;
+&lt;div class=&quot;recognition-results&quot; id=&quot;image-results&quot;&gt;
+  &lt;p&gt;Recognition results will appear here...&lt;/p&gt;
+&lt;/div&gt;</code></pre>
+</div>
+</div>
+<script>
+function selectImage(imageId) {
+  // In a real demo, this would handle actual image selection
+  document.getElementById('main-image').src = 
+    "https://via.placeholder.com/400x300?text=" + imageId.replace('image', 'Sample+') + "+Selected";
+}
+
+function recognizeImage() {
+  // Mock image recognition results
+  const possibleObjects = [
+    ["person", "table", "chair", "laptop", "cup"],
+    ["dog", "cat", "sofa", "window", "plant"],
+    ["car", "road", "tree", "building", "sign"],
+    ["beach", "ocean", "palm tree", "sand", "umbrella"]
+  ];
+  
+  const selectedList = possibleObjects[Math.floor(Math.random() * possibleObjects.length)];
+  const results = [];
+  
+  // Create 3-5 "recognition results" with confidence scores
+  const resultCount = 3 + Math.floor(Math.random() * 3);
+  let remainingConfidence = 100;
+  
+  for (let i = 0; i < resultCount && i < selectedList.length; i++) {
+    // Generate random confidence scores that add up to less than 100%
+    let confidence;
+    if (i === resultCount - 1 || i === selectedList.length - 1) {
+      confidence = remainingConfidence;
+    } else {
+      confidence = Math.floor(Math.random() * (remainingConfidence - (resultCount - i - 1)));
+    }
+    remainingConfidence -= confidence;
+    
+    results.push({
+      label: selectedList[i],
+      confidence: confidence
+    });
+  }
+  
+  // Sort by confidence (highest first)
+  results.sort((a, b) => b.confidence - a.confidence);
+  
+  // Display results
+  let resultsHTML = '<h4>Recognition Results</h4><ul>';
+  results.forEach(result => {
+    resultsHTML += `<li><span class="result-label">${result.label}</span>: <span class="result-confidence">${result.confidence}%</span>
+                    <div class="confidence-bar"><div class="bar-fill" style="width: ${result.confidence}%"></div></div>
+                    </li>`;
+  });
+  resultsHTML += '</ul>';
+  
+  document.getElementById('image-results').innerHTML = resultsHTML;
+}
+</script>
+</section></section>
+<section>
+<section id="group-activity" class="title-slide slide level1"
+data-background="#118ab2">
+<h1 data-background="#118ab2">Group Activity</h1>
+
+</section>
+<section id="collaborative-canvas" class="slide level2"
+data-state="collaborative">
+<h2 data-state="collaborative">Collaborative Canvas</h2>
+<div class="activity-instructions">
+<h3>
+AI Impact Mapping
+</h3>
+<p>
+Use the chalkboard below to map AI’s impact on your industry:
+</p>
+<ol>
+<li>
+Press <kbd>C</kbd> to activate the canvas
+</li>
+<li>
+Draw connections between AI technologies and use cases
+</li>
+<li>
+Use different colors for positive and negative impacts
+</li>
+<li>
+Add sticky notes with <kbd>S</kbd> for questions
+</li>
+</ol>
+</div>
+<div class="chalkboard-placeholder">
+<p>[Interactive Chalkboard Here - Press C to Activate]</p>
+</div>
+</section>
+<section id="discussion-points" class="slide level2"
+data-transition="convex">
+<h2 data-transition="convex">Discussion Points</h2>
+<div class="discussion-grid">
+<div id="item1" class="discussion-item"
+onclick="expandTopic(&#39;item1&#39;)">
+<pre><code>&lt;h4&gt;Current Limitations&lt;/h4&gt;
+&lt;div class=&quot;discussion-expand&quot;&gt;
+  &lt;ul&gt;
+    &lt;li&gt;Bias in training data&lt;/li&gt;
+    &lt;li&gt;Explainability challenges&lt;/li&gt;
+    &lt;li&gt;Energy consumption&lt;/li&gt;
+    &lt;li&gt;Skills gap for implementation&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/div&gt;</code></pre>
+</div>
+<div id="item2" class="discussion-item"
+onclick="expandTopic(&#39;item2&#39;)">
+<pre><code>&lt;h4&gt;Emerging Solutions&lt;/h4&gt;
+&lt;div class=&quot;discussion-expand&quot;&gt;
+  &lt;ul&gt;
+    &lt;li&gt;Synthetic data generation&lt;/li&gt;
+    &lt;li&gt;Federated learning&lt;/li&gt;
+    &lt;li&gt;Energy-efficient architectures&lt;/li&gt;
+    &lt;li&gt;AutoML tools&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/div&gt;</code></pre>
+</div>
+<div id="item3" class="discussion-item"
+onclick="expandTopic(&#39;item3&#39;)">
+<pre><code>&lt;h4&gt;Future Directions&lt;/h4&gt;
+&lt;div class=&quot;discussion-expand&quot;&gt;
+  &lt;ul&gt;
+    &lt;li&gt;Multimodal integration&lt;/li&gt;
+    &lt;li&gt;Self-supervised learning&lt;/li&gt;
+    &lt;li&gt;AI-human collaboration&lt;/li&gt;
+    &lt;li&gt;Domain-specific models&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/div&gt;</code></pre>
+</div>
+<div id="item4" class="discussion-item"
+onclick="expandTopic(&#39;item4&#39;)">
+<pre><code>&lt;h4&gt;Organizational Impact&lt;/h4&gt;
+&lt;div class=&quot;discussion-expand&quot;&gt;
+  &lt;ul&gt;
+    &lt;li&gt;Workflow transformation&lt;/li&gt;
+    &lt;li&gt;Skill requirements&lt;/li&gt;
+    &lt;li&gt;Decision-making processes&lt;/li&gt;
+    &lt;li&gt;Ethical frameworks&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/div&gt;</code></pre>
+</div>
+</div>
+<script>
+function expandTopic(itemId) {
+  const allItems = document.querySelectorAll('.discussion-item');
+  allItems.forEach(item => {
+    if (item.id !== itemId) {
+      item.classList.remove('expanded');
+    }
+  });
+  
+  document.getElementById(itemId).classList.toggle('expanded');
+}
+</script>
+</section></section>
+<section>
+<section id="next-steps" class="title-slide slide level1"
+data-background="#06d6a0">
+<h1 data-background="#06d6a0">Next Steps</h1>
+
+</section>
+<section id="learning-resources" class="slide level2"
+data-transition="fade">
+<h2 data-transition="fade">Learning Resources</h2>
+<div class="resources-container">
+<div class="filter-controls">
+<pre><code>&lt;button class=&quot;filter-btn active&quot; onclick=&quot;filterResources(&#39;all&#39;)&quot;&gt;All&lt;/button&gt;
+&lt;button class=&quot;filter-btn&quot; onclick=&quot;filterResources(&#39;beginner&#39;)&quot;&gt;Beginner&lt;/button&gt;
+&lt;button class=&quot;filter-btn&quot; onclick=&quot;filterResources(&#39;intermediate&#39;)&quot;&gt;Intermediate&lt;/button&gt;
+&lt;button class=&quot;filter-btn&quot; onclick=&quot;filterResources(&#39;advanced&#39;)&quot;&gt;Advanced&lt;/button&gt;</code></pre>
+</div>
+<div class="resources-list">
+<pre><code>&lt;div class=&quot;resource-card beginner&quot;&gt;
+  &lt;h4&gt;Elements of AI&lt;/h4&gt;
+  &lt;p&gt;Online introductory course covering AI basics&lt;/p&gt;
+  &lt;span class=&quot;level&quot;&gt;Beginner&lt;/span&gt;
+&lt;/div&gt;
+&lt;div class=&quot;resource-card beginner&quot;&gt;
+  &lt;h4&gt;AI For Everyone&lt;/h4&gt;
+  &lt;p&gt;Andrew Ng&#39;s non-technical AI course on Coursera&lt;/p&gt;
+  &lt;span class=&quot;level&quot;&gt;Beginner&lt;/span&gt;
+&lt;/div&gt;
+&lt;div class=&quot;resource-card intermediate&quot;&gt;
+  &lt;h4&gt;Fast.ai&lt;/h4&gt;
+  &lt;p&gt;Practical deep learning for coders&lt;/p&gt;
+  &lt;span class=&quot;level&quot;&gt;Intermediate&lt;/span&gt;
+&lt;/div&gt;
+&lt;div class=&quot;resource-card intermediate&quot;&gt;
+  &lt;h4&gt;Hugging Face&lt;/h4&gt;
+  &lt;p&gt;NLP model library and community&lt;/p&gt;
+  &lt;span class=&quot;level&quot;&gt;Intermediate&lt;/span&gt;
+&lt;/div&gt;
+&lt;div class=&quot;resource-card advanced&quot;&gt;
+  &lt;h4&gt;CS224n&lt;/h4&gt;
+  &lt;p&gt;Stanford&#39;s NLP with Deep Learning course&lt;/p&gt;
+  &lt;span class=&quot;level&quot;&gt;Advanced&lt;/span&gt;
+&lt;/div&gt;
+&lt;div class=&quot;resource-card advanced&quot;&gt;
+  &lt;h4&gt;Papers with Code&lt;/h4&gt;
+  &lt;p&gt;Latest AI research with implementation&lt;/p&gt;
+  &lt;span class=&quot;level&quot;&gt;Advanced&lt;/span&gt;
+&lt;/div&gt;</code></pre>
+</div>
+</div>
+<script>
+function filterResources(level) {
+  const buttons = document.querySelectorAll('.filter-btn');
+  buttons.forEach(btn => {
+    btn.classList.remove('active');
+    if (btn.textContent.toLowerCase() === level || 
+        (level === 'all' && btn.textContent.toLowerCase() === 'all')) {
+      btn.classList.add('active');
+    }
+  });
+  
+  const cards = document.querySelectorAll('.resource-card');
+  cards.forEach(card => {
+    if (level === 'all' || card.classList.contains(level)) {
+      card.style.display = 'block';
+    } else {
+      card.style.display = 'none';
+    }
+  });
+}
+</script>
+</section>
+<section id="session-feedback" class="slide level2">
+<h2>Session Feedback</h2>
+<div class="feedback-container">
+<div class="qr-code-placeholder">
+<pre><code>[QR Code for Feedback Form]</code></pre>
+</div>
+<div class="feedback-instructions">
+<pre><code>&lt;h4&gt;Share Your Thoughts&lt;/h4&gt;
+&lt;p&gt;Scan the QR code or visit:&lt;/p&gt;
+&lt;div class=&quot;feedback-url&quot;&gt;example.com/ai-feedback&lt;/div&gt;
+&lt;ul class=&quot;feedback-benefits&quot;&gt;
+  &lt;li&gt;Help improve future sessions&lt;/li&gt;
+  &lt;li&gt;Suggest topics you want to explore&lt;/li&gt;
+  &lt;li&gt;Request specific demos&lt;/li&gt;
+  &lt;li&gt;Connect for follow-up questions&lt;/li&gt;
+&lt;/ul&gt;</code></pre>
+</div>
+</div>
+</section>
+<section id="next-session-preview" class="slide level2"
+data-state="preview">
+<h2 data-state="preview">Next Session Preview</h2>
+<div class="next-session-container">
+<h3>
+Advanced Models &amp; Architectures
+</h3>
+<div class="session-date">
+April 14, 2025
+</div>
+<div class="preview-content">
+<pre><code>&lt;div class=&quot;preview-topics&quot;&gt;
+  &lt;h4&gt;Topics&lt;/h4&gt;
+  &lt;ul&gt;
+    &lt;li&gt;Transformer architectures&lt;/li&gt;
+    &lt;li&gt;Multimodal systems&lt;/li&gt;
+    &lt;li&gt;Fine-tuning strategies&lt;/li&gt;
+    &lt;li&gt;Efficient inference&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;preview-activities&quot;&gt;
+  &lt;h4&gt;Hands-on Activities&lt;/h4&gt;
+  &lt;ul&gt;
+    &lt;li&gt;Model visualization&lt;/li&gt;
+    &lt;li&gt;Demo: Custom fine-tuning&lt;/li&gt;
+    &lt;li&gt;Interactive model comparison&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/div&gt;</code></pre>
+</div>
+<div class="preview-action">
+<pre><code>&lt;button id=&quot;calendar-btn&quot; onclick=&quot;addToCalendar()&quot;&gt;Add to Calendar&lt;/button&gt;
+&lt;div id=&quot;calendar-message&quot;&gt;&lt;/div&gt;</code></pre>
+</div>
+</div>
+<script>
+function addToCalendar() {
+  // In a real presentation, this would integrate with calendar APIs
+  document.getElementById('calendar-message').innerHTML = 
+    'Calendar invitation sent to your email';
+  
+  // Make message disappear after 3 seconds
+  setTimeout(() => {
+    document.getElementById('calendar-message').innerHTML = '';
+  }, 3000);
+}
+</script>
+</section></section>
+<section>
+<section id="thank-you" class="title-slide slide level1"
+data-background="https://via.placeholder.com/1920x1080?text=Thank+You"
+data-background-opacity="0.3">
+<h1
+data-background="https://via.placeholder.com/1920x1080?text=Thank+You"
+data-background-opacity="0.3">Thank You</h1>
+
+</section>
+<section id="contact-connect" class="slide level2" data-state="final">
+<h2 data-state="final">Contact &amp; Connect</h2>
+<div class="contact-container">
+<div class="presenter-info">
+<pre><code>&lt;div class=&quot;presenter-photo-placeholder&quot;&gt;
+  [Photo]
+&lt;/div&gt;
+&lt;div class=&quot;presenter-details&quot;&gt;
+  &lt;h3&gt;Riccardo Esclapon&lt;/h3&gt;
+  &lt;p class=&quot;presenter-title&quot;&gt;AI Knowledge Specialist&lt;/p&gt;
+  &lt;p class=&quot;presenter-email&quot;&gt;riccardo@example.com&lt;/p&gt;
+&lt;/div&gt;</code></pre>
+</div>
+<div class="connect-options">
+<pre><code>&lt;a href=&quot;#&quot; class=&quot;connect-link linkedin&quot;&gt;
+  &lt;i class=&quot;fab fa-linkedin&quot;&gt;&lt;/i&gt;
+  &lt;span&gt;LinkedIn&lt;/span&gt;
+&lt;/a&gt;
+&lt;a href=&quot;#&quot; class=&quot;connect-link twitter&quot;&gt;
+  &lt;i class=&quot;fab fa-twitter&quot;&gt;&lt;/i&gt;
+  &lt;span&gt;Twitter&lt;/span&gt;
+&lt;/a&gt;
+&lt;a href=&quot;#&quot; class=&quot;connect-link github&quot;&gt;
+  &lt;i class=&quot;fab fa-github&quot;&gt;&lt;/i&gt;
+  &lt;span&gt;GitHub&lt;/span&gt;
+&lt;/a&gt;
+&lt;a href=&quot;#&quot; class=&quot;connect-link website&quot;&gt;
+  &lt;i class=&quot;fas fa-globe&quot;&gt;&lt;/i&gt;
+  &lt;span&gt;Website&lt;/span&gt;
+&lt;/a&gt;</code></pre>
+</div>
+<div class="session-materials">
+<pre><code>&lt;h4&gt;Session Materials&lt;/h4&gt;
+&lt;p&gt;All slides and code are available at:&lt;/p&gt;
+&lt;div class=&quot;materials-link&quot;&gt;github.com/riccardo/ai-knowledge-sharing&lt;/div&gt;</code></pre>
+</div>
+</div>
+</section></section>
+    </div>
+  </div>
+
+  <script src="session-one-interactive_files/reveal.js-3.3.0.1/lib/js/head.min.js"></script>
+  <script src="session-one-interactive_files/reveal.js-3.3.0.1/js/reveal.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        // Display controls in the bottom right corner
+        controls: true,
+        // Display a presentation progress bar
+        progress: true,
+        // Display the page number of the current slide
+        slideNumber: true,
+        // Push each slide change to the browser history
+        history: true,
+        // Enable keyboard shortcuts for navigation
+        keyboard: function() { RevealChalkboard.toggleNotesCanvas() },
+        // Enable the slide overview mode
+        overview: true,
+        // Vertical centering of slides
+        center: false,
+        // Enables touch navigation on devices with touch input
+        touch: true,
+        // Turns fragments on and off globally
+        fragments: true,
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+        // Transition style
+        transition: 'slide', // none/fade/slide/convex/concave/zoom
+        // Transition speed
+        transitionSpeed: 'default', // default/fast/slow
+        // Transition style for full page slide backgrounds
+        backgroundTransition: 'default', // none/fade/slide/convex/concave/zoom
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        menu: {
+   
+          numbers: true,
+    
+    
+    
+    
+    
+    
+ 
+          custom: false,
+          themes: false,
+          transitions: false
+        },
+
+
+
+        chalkboard: {
+          toggleNotesButton: true,
+          theme: 'whiteboard',
+        },
+
+        keyboard: {
+          67: function() { RevealChalkboard.toggleNotesCanvas() },    // toggle notes canvas when 'c' is pressed
+          66: function() { RevealChalkboard.toggleChalkboard() }, // toggle chalkboard when 'b' is pressed
+          46: function() { RevealChalkboard.clear() },    // clear chalkboard when 'DEL' is pressed
+           8: function() { RevealChalkboard.reset() },    // reset chalkboard data on current slide when 'BACKSPACE' is pressed
+          68: function() { RevealChalkboard.download() }, // downlad recorded chalkboard drawing when 'd' is pressed
+        },
+
+        // Optional reveal.js plugins
+        dependencies: [
+          { src: 'session-one-interactive_files/reveal.js-3.3.0.1/plugin/notes/notes.js', async: true },
+          { src: 'session-one-interactive_files/reveal.js-3.3.0.1/plugin/search/search.js', async: true },
+          { src: 'session-one-interactive_files/reveal.js-3.3.0.1/plugin/zoom-js/zoom.js', async: true },
+          { src: 'session-one-interactive_files/reveal.js-3.3.0.1/plugin/chalkboard/chalkboard.js', async: true },
+          { src: 'session-one-interactive_files/reveal.js-3.3.0.1/plugin/menu/menu.js', async: true },
+        ]
+      });
+    </script>
+  <!-- dynamically load mathjax for compatibility with self-contained -->
+  <script>
+    (function () {
+      var script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+      document.getElementsByTagName("head")[0].appendChild(script);
+    })();
+  </script>
+
+<script>
+  (function() {
+    if (window.jQuery) {
+      Reveal.addEventListener( 'slidechanged', function(event) {  
+        window.jQuery(event.previousSlide).trigger('hidden');
+        window.jQuery(event.currentSlide).trigger('shown');
+      });
+    }
+  })();
+</script>
+
+
+  </body>
+</html>

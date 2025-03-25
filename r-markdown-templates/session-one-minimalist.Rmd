@@ -1,0 +1,229 @@
+---
+title: "AI Knowledge Sharing"
+subtitle: "Session One"
+author: "Riccardo Esclapon"
+date: "`r format(Sys.Date(), '%B %d, %Y')`"
+output:
+  revealjs::revealjs_presentation:
+    theme: white
+    highlight: zenburn
+    transition: fade
+    center: true
+    css: minimalist.css
+    self_contained: false
+    reveal_plugins: ["zoom"]
+    reveal_options:
+      slideNumber: false
+      controls: false
+      progress: false
+      minScale: 1
+      maxScale: 1
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+library(tidyverse)
+library(palmerpenguins)
+```
+
+# Begin
+
+## Embracing AI
+
+<span class="large-text">Transforming how we</span>
+
+<span class="highlight">work</span> • <span class="highlight">think</span> • <span class="highlight">create</span>
+
+<div class="attribution">
+Session 1/4
+</div>
+
+## Why This Matters
+
+- The AI revolution is accelerating
+- Exponential growth in capabilities
+- Reshaping entire industries
+- Creating new ethical frameworks
+
+<div class="spacer"></div>
+
+Everything changes. Are we ready?
+
+## Evolution of Intelligence
+
+<div class="timeline-minimal">
+<div class="time-period">1950s</div>
+<div class="time-period">1980s</div>
+<div class="time-period">2010s</div>
+<div class="time-period">Now</div>
+</div>
+
+<div class="quote">
+"AI is the new electricity."<br>
+<span class="author">— Andrew Ng</span>
+</div>
+
+# Fundamentals
+
+## Core Principles {data-transition="slide"}
+
+<div class="principles">
+<div class="principle">Data-driven</div>
+<div class="principle">Pattern recognition</div>
+<div class="principle">Adaptive learning</div>
+<div class="principle">Probabilistic reasoning</div>
+</div>
+
+## Visual Simplicity
+
+```{r simple-chart}
+ggplot(data = penguins, aes(x = flipper_length_mm, y = bill_length_mm, color = species)) +
+  geom_point(size = 3, alpha = 0.8) +
+  theme_minimal() +
+  labs(
+    x = "Flipper Length (mm)",
+    y = "Bill Length (mm)",
+    color = "Species",
+    title = NULL
+  ) +
+  theme(
+    legend.position = "bottom",
+    text = element_text(family = "Helvetica", size = 14),
+    axis.title = element_text(size = 12),
+    panel.grid.minor = element_blank()
+  )
+```
+
+## Three Pillars
+
+<div class="three-cols">
+  <div class="col">
+    <h3>Machine Learning</h3>
+    <p>Pattern recognition from data without explicit programming</p>
+  </div>
+  <div class="col">
+    <h3>Deep Learning</h3>
+    <p>Neural networks with multiple layers for complex representations</p>
+  </div>
+  <div class="col">
+    <h3>Reinforcement Learning</h3>
+    <p>Learning optimal actions through environmental feedback</p>
+  </div>
+</div>
+
+# Applications {data-background="#f5f5f5"}
+
+## Transformation Map
+
+<div class="transformation-grid">
+  <div class="t-item">Healthcare</div>
+  <div class="t-item">Finance</div>
+  <div class="t-item">Education</div>
+  <div class="t-item">Transportation</div>
+  <div class="t-item">Manufacturing</div>
+  <div class="t-item">Creative Arts</div>
+  <div class="t-item">Agriculture</div>
+  <div class="t-item">Energy</div>
+  <div class="t-item">Retail</div>
+</div>
+
+<div class="micro-note">Every industry is being reimagined</div>
+
+## Case Study: Healthcare
+
+<div class="case-study">
+  <div class="cs-item">93% accuracy in cancer detection</div>
+  <div class="cs-item">30% reduction in false positives</div>
+  <div class="cs-item">2x faster clinical trials</div>
+  <div class="cs-item">$200B estimated annual impact</div>
+</div>
+
+<div class="citation">Stanford Medicine, 2023</div>
+
+## Success Factors
+
+<ol class="large-list">
+  <li>Quality data</li>
+  <li>Domain expertise</li>
+  <li>Algorithmic innovation</li>
+  <li>Computational resources</li>
+  <li>Ethical frameworks</li>
+</ol>
+
+# Ethics {data-background="#000" data-background-opacity="0.8"}
+
+## Critical Questions {.white-text}
+
+<div class="big-question">Who benefits?</div>
+<div class="big-question">Who decides?</div>
+<div class="big-question">Who is accountable?</div>
+
+## Principles {.white-text}
+
+<div class="ethics-container">
+  <div class="ethics-item">Fairness</div>
+  <div class="connecting-line"></div>
+  <div class="ethics-item">Transparency</div>
+  <div class="connecting-line"></div>
+  <div class="ethics-item">Privacy</div>
+  <div class="connecting-line"></div>
+  <div class="ethics-item">Security</div>
+</div>
+
+<div class="attribution">
+Building responsible AI requires vigilance
+</div>
+
+# Action {data-background-gradient="linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)"}
+
+## Learning Path
+
+<div class="path-container">
+  <div class="path-step">Learn foundations</div>
+  <div class="path-arrow">→</div>
+  <div class="path-step">Apply to your field</div>
+  <div class="path-arrow">→</div>
+  <div class="path-step">Build solutions</div>
+  <div class="path-arrow">→</div>
+  <div class="path-step">Share knowledge</div>
+</div>
+
+## Resources
+
+<div class="resources-grid">
+  <div class="resource-item">
+    <span class="resource-title">FastAI</span>
+    <span class="resource-desc">Practical Deep Learning</span>
+  </div>
+  <div class="resource-item">
+    <span class="resource-title">Stanford CS224n</span>
+    <span class="resource-desc">NLP with Deep Learning</span>
+  </div>
+  <div class="resource-item">
+    <span class="resource-title">DeepLearning.AI</span>
+    <span class="resource-desc">Specializations</span>
+  </div>
+  <div class="resource-item">
+    <span class="resource-title">Hugging Face</span>
+    <span class="resource-desc">NLP Community</span>
+  </div>
+</div>
+
+## Next Session
+
+<div class="next-session">
+  <div class="ns-date">April 14, 2025</div>
+  <div class="ns-title">Advanced Models & Architectures</div>
+  <ul class="ns-topics">
+    <li>Transformer architectures</li>
+    <li>Multimodal learning</li>
+    <li>Generative models</li>
+  </ul>
+</div>
+
+# Thank You {data-background="#fff"}
+
+<div class="contact-info">
+  riccardo@example.com<br>
+  @riccardo
+</div>

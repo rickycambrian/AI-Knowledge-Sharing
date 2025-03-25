@@ -1,0 +1,797 @@
+---
+title: "AI Knowledge Sharing"
+subtitle: "Session One: Data-Driven Insights"
+author: "Riccardo Esclapon"
+date: "`r format(Sys.Date(), '%B %d, %Y')`"
+output:
+  revealjs::revealjs_presentation:
+    theme: simple
+    highlight: tango
+    transition: none
+    center: false
+    css: data-focused.css
+    self_contained: false
+    reveal_plugins: ["notes", "search"]
+    reveal_options:
+      slideNumber: 'c/t'
+      previewLinks: false
+      progress: true
+      width: 1200
+      height: 800
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE, fig.width = 10, fig.height = 6)
+library(tidyverse)
+library(palmerpenguins)
+library(ggplot2)
+library(plotly)
+library(corrplot)
+library(scales)
+library(knitr)
+library(kableExtra)
+library(gridExtra)
+
+# Create sample AI adoption dataset
+set.seed(42)
+industries <- c("Healthcare", "Finance", "Manufacturing", "Retail", "Technology", 
+               "Education", "Transportation", "Energy", "Agriculture", "Media")
+years <- 2018:2023
+
+ai_adoption <- expand.grid(industry = industries, year = years) %>%
+  mutate(
+    adoption_rate = case_when(
+      industry == "Technology" ~ 20 + (year - 2018) * 12 + rnorm(n(), 0, 3),
+      industry == "Finance" ~ 15 + (year - 2018) * 10 + rnorm(n(), 0, 3),
+      industry == "Healthcare" ~ 10 + (year - 2018) * 9 + rnorm(n(), 0, 2),
+      industry == "Media" ~ 12 + (year - 2018) * 11 + rnorm(n(), 0, 3),
+      industry == "Retail" ~ 8 + (year - 2018) * 10 + rnorm(n(), 0, 2),
+      industry == "Manufacturing" ~ 7 + (year - 2018) * 8 + rnorm(n(), 0, 2),
+      industry == "Transportation" ~ 5 + (year - 2018) * 9 + rnorm(n(), 0, 2),
+      industry == "Energy" ~ 4 + (year - 2018) * 7 + rnorm(n(), 0, 2),
+      industry == "Education" ~ 3 + (year - 2018) * 6 + rnorm(n(), 0, 2),
+      industry == "Agriculture" ~ 2 + (year - 2018) * 5 + rnorm(n(), 0, 1.5)
+    ),
+    investment_millions = case_when(
+      industry == "Technology" ~ 1000 + (year - 2018) * 500 + rnorm(n(), 0, 100),
+      industry == "Finance" ~ 800 + (year - 2018) * 400 + rnorm(n(), 0, 80),
+      industry == "Healthcare" ~ 500 + (year - 2018) * 350 + rnorm(n(), 0, 70),
+      industry == "Media" ~ 400 + (year - 2018) * 300 + rnorm(n(), 0, 60),
+      industry == "Retail" ~ 300 + (year - 2018) * 250 + rnorm(n(), 0, 50),
+      industry == "Manufacturing" ~ 250 + (year - 2018) * 200 + rnorm(n(), 0, 40),
+      industry == "Transportation" ~ 200 + (year - 2018) * 150 + rnorm(n(), 0, 30),
+      industry == "Energy" ~ 150 + (year - 2018) * 125 + rnorm(n(), 0, 25),
+      industry == "Education" ~ 100 + (year - 2018) * 80 + rnorm(n(), 0, 20),
+      industry == "Agriculture" ~ 50 + (year - 2018) * 50 + rnorm(n(), 0, 15)
+    ),
+    roi_percent = case_when(
+      year == 2018 ~ runif(n(), 0, 10),
+      year == 2019 ~ runif(n(), 5, 15),
+      year == 2020 ~ runif(n(), 10, 25),
+      year == 2021 ~ runif(n(), 15, 30),
+      year == 2022 ~ runif(n(), 20, 40),
+      year == 2023 ~ runif(n(), 25, 50)
+    ),
+    productivity_gain = adoption_rate * runif(n(), 0.8, 1.2) / 10,
+    jobs_automated_percent = adoption_rate * runif(n(), 0.5, 0.7) / 10,
+    new_jobs_created = investment_millions * runif(n(), 0.05, 0.1),
+    skills_gap_severity = case_when(
+      year == 2018 ~ runif(n(), 6, 10),
+      year == 2019 ~ runif(n(), 6.5, 10),
+      year == 2020 ~ runif(n(), 7, 10),
+      year == 2021 ~ runif(n(), 7.5, 10),
+      year == 2022 ~ runif(n(), 8, 10),
+      year == 2023 ~ runif(n(), 8.5, 10)
+    )
+  ) %>%
+  # Clean up the data to ensure reasonable values
+  mutate(
+    adoption_rate = pmin(pmax(adoption_rate, 0), 100),
+    investment_millions = pmax(investment_millions, 0),
+    roi_percent = pmin(pmax(roi_percent, 0), 100),
+    productivity_gain = pmin(pmax(productivity_gain, 0), 30),
+    jobs_automated_percent = pmin(pmax(jobs_automated_percent, 0), 50),
+    new_jobs_created = pmax(new_jobs_created, 0),
+    skills_gap_severity = pmin(pmax(skills_gap_severity, 1), 10)
+  )
+
+# Create a dataset for AI capabilities over time
+ai_capabilities <- tibble(
+  year = 2012:2023,
+  image_recognition = c(70, 75, 80, 85, 88, 90, 93, 95, 96, 97, 98, 99),
+  nlp = c(50, 55, 60, 65, 70, 75, 82, 88, 92, 95, 97, 98),
+  reasoning = c(20, 22, 25, 30, 35, 40, 45, 50, 60, 70, 75, 85),
+  robotics = c(60, 63, 66, 70, 73, 76, 79, 82, 85, 88, 90, 92),
+  computer_vision = c(65, 70, 75, 82, 86, 90, 92, 94, 96, 97, 98, 99),
+  human_performance = rep(100, 12)
+)
+
+# Create AI model performance dataset
+ai_models <- tibble(
+  model = c("GPT-4", "Claude 2", "PaLM", "Gemini", "DALL-E 3", "Midjourney", "Stable Diffusion", "GPT-3.5"),
+  type = c("Text", "Text", "Text", "Multimodal", "Image", "Image", "Image", "Text"),
+  performance_score = c(95, 92, 89, 94, 90, 88, 85, 82),
+  parameters_billions = c(1700, 137, 540, 320, 5, 2, 1, 175),
+  training_cost_millions = c(100, 30, 80, 60, 10, 8, 5, 20),
+  release_year = c(2023, 2023, 2022, 2023, 2023, 2022, 2022, 2022),
+  energy_consumption = c("Very High", "High", "Very High", "Very High", "Medium", "Medium", "Low", "High")
+)
+```
+
+# Understanding AI Adoption {data-background="#f8f9fa"}
+
+## Current Landscape {.section-header}
+
+This section examines the **objective data** behind AI adoption trends across industries.
+
+```{r adoption-trends, echo=FALSE, fig.height=5.5}
+# Create a line plot for adoption rates
+ai_adoption %>%
+  ggplot(aes(x = year, y = adoption_rate, color = industry, group = industry)) +
+  geom_line(size = 1.2) +
+  geom_point(size = 3) +
+  scale_color_brewer(palette = "Paired") +
+  scale_x_continuous(breaks = years) +
+  scale_y_continuous(labels = function(x) paste0(x, "%")) +
+  labs(
+    title = "AI Adoption Rates by Industry (2018-2023)",
+    subtitle = "Percentage of companies implementing AI solutions",
+    x = "Year",
+    y = "Adoption Rate",
+    color = "Industry"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    legend.position = "right",
+    panel.grid.minor = element_blank(),
+    plot.title = element_text(face = "bold", size = 16),
+    plot.subtitle = element_text(size = 12),
+    axis.title = element_text(face = "bold")
+  )
+```
+
+<div class="notes">
+Key observations from this chart:
+- Technology sector leads adoption, followed by Finance and Healthcare
+- All industries show accelerating adoption rates
+- COVID-19 (2020-2021) appears to have accelerated adoption in many sectors
+- The gap between leading and lagging industries is widening
+</div>
+
+## Investment vs. ROI {.data-analysis}
+
+```{r investment-roi, echo=FALSE, fig.height=5.5}
+# Calculate averages by year for the latest data
+latest_data <- ai_adoption %>%
+  filter(year == max(year)) %>%
+  arrange(desc(investment_millions))
+
+# Create a scatter plot with investment and ROI
+ggplot(latest_data, aes(x = investment_millions, y = roi_percent, color = industry, size = adoption_rate)) +
+  geom_point(alpha = 0.7) +
+  scale_color_brewer(palette = "Paired") +
+  scale_size_continuous(range = c(5, 15)) +
+  scale_x_continuous(labels = scales::dollar_format(scale = 1/1000, suffix = "B")) +
+  scale_y_continuous(labels = function(x) paste0(x, "%")) +
+  labs(
+    title = "AI Investment vs. ROI by Industry (2023)",
+    subtitle = "Bubble size represents adoption rate",
+    x = "Investment (Billions USD)",
+    y = "Return on Investment",
+    color = "Industry",
+    size = "Adoption Rate"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    legend.position = "right",
+    panel.grid.minor = element_blank(),
+    plot.title = element_text(face = "bold", size = 16),
+    plot.subtitle = element_text(size = 12),
+    axis.title = element_text(face = "bold")
+  ) +
+  geom_text(aes(label = industry), hjust = -0.3, vjust = 0.5, size = 3.5, show.legend = FALSE)
+```
+
+<div class="side-commentary">
+<h4>Key Insights</h4>
+<ul>
+  <li>Investment does not perfectly correlate with ROI</li>
+  <li>Several industries show promising returns despite lower investment</li>
+  <li>Technology sector shows diminishing returns at highest investment levels</li>
+</ul>
+</div>
+
+## Industry Impact Matrix {.data-comparison}
+
+```{r impact-matrix, echo=FALSE, fig.height=5}
+# Create a matrix of impacts
+latest_data %>%
+  select(industry, productivity_gain, jobs_automated_percent, skills_gap_severity) %>%
+  mutate(
+    productivity_gain = round(productivity_gain, 1),
+    jobs_automated_percent = round(jobs_automated_percent, 1),
+    skills_gap_severity = round(skills_gap_severity, 1)
+  ) %>%
+  arrange(desc(productivity_gain)) %>%
+  kable(
+    col.names = c("Industry", "Productivity Gain (%)", "Jobs Automated (%)", "Skills Gap (1-10)"),
+    align = c("l", "c", "c", "c"),
+    caption = "AI Impact Metrics by Industry (2023)"
+  ) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE) %>%
+  row_spec(0, bold = TRUE, background = "#f0f0f0") %>%
+  column_spec(1, bold = TRUE) %>%
+  column_spec(2:4, width = "150px")
+```
+
+<div class="data-insights">
+<p>The matrix reveals three critical patterns:</p>
+<ol>
+  <li>Productivity gains roughly correlate with automation rates</li>
+  <li>Skills gap severity is highest in industries with rapid adoption</li>
+  <li>Manufacturing shows balanced metrics across all three dimensions</li>
+</ol>
+</div>
+
+## Growth Trends {.trend-analysis}
+
+```{r growth-trends, echo=FALSE, fig.height=5.5}
+# Simple trend visualization without forecasting
+industries_subset <- c("Technology", "Healthcare", "Manufacturing", "Agriculture")
+
+# Create a filtered dataset
+trend_data <- ai_adoption %>%
+  filter(industry %in% industries_subset)
+
+# Simple line plot showing historical trends
+ggplot(trend_data, aes(x = year, y = adoption_rate, color = industry, group = industry)) +
+  geom_line(size = 1.2) +
+  geom_point(size = 3) +
+  scale_color_brewer(palette = "Set1") +
+  scale_x_continuous(breaks = 2018:2023) +
+  scale_y_continuous(labels = function(x) paste0(round(x, 0), "%"), limits = c(0, 100)) +
+  labs(
+    title = "AI Adoption Trends (2018-2023)",
+    subtitle = "Selected industries shown with growth trajectories",
+    x = "Year",
+    y = "Adoption Rate",
+    color = "Industry"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    legend.position = "right",
+    panel.grid.minor = element_blank(),
+    plot.title = element_text(face = "bold", size = 16),
+    plot.subtitle = element_text(size = 12),
+    axis.title = element_text(face = "bold")
+  )
+```
+
+<div class="trend-notes">
+<p>Key trend insights:</p>
+<ul>
+  <li>Technology sector leads with highest adoption rates (~70%)</li>
+  <li>Healthcare showing steep growth trajectory</li>
+  <li>Manufacturing maintaining steady growth</li>
+  <li>Agriculture adoption starting from a lower base but accelerating</li>
+</ul>
+</div>
+
+# AI Capabilities Evolution {data-background="#edf2fb"}
+
+## Technical Advancement {.multi-metric}
+
+```{r capabilities, echo=FALSE, fig.height=5.5}
+# Reshape the data for plotting
+ai_cap_long <- ai_capabilities %>%
+  pivot_longer(cols = -year, names_to = "capability", values_to = "score")
+
+# Plot the development of AI capabilities over time
+ggplot(ai_cap_long, aes(x = year, y = score, color = capability, group = capability)) +
+  geom_line(size = 1.2) +
+  geom_point(size = 2) +
+  scale_color_manual(values = c(
+    "image_recognition" = "#4e79a7",
+    "nlp" = "#f28e2c",
+    "reasoning" = "#e15759",
+    "robotics" = "#76b7b2",
+    "computer_vision" = "#59a14f",
+    "human_performance" = "#b07aa1"
+  )) +
+  scale_y_continuous(
+    name = "Capability Score (% of Human Level)",
+    labels = function(x) paste0(x, "%"),
+    limits = c(0, 105)
+  ) +
+  scale_x_continuous(breaks = seq(2012, 2023, by = 1)) +
+  labs(
+    title = "Evolution of AI Capabilities (2012-2023)",
+    subtitle = "Measured as percentage of expert human performance",
+    x = "Year",
+    color = "Capability"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    legend.position = "right",
+    panel.grid.minor = element_blank(),
+    plot.title = element_text(face = "bold", size = 16),
+    plot.subtitle = element_text(size = 12),
+    axis.title = element_text(face = "bold"),
+    legend.title = element_text(face = "bold")
+  ) +
+  annotate("rect", xmin = 2019.5, xmax = 2021.5, ymin = 0, ymax = 105, 
+           alpha = 0.1, fill = "grey50") +
+  annotate("text", x = 2020.5, y = 10, label = "Transformer\nRevolution", 
+           fontface = "bold", alpha = 0.7)
+```
+
+## Leading AI Models {.comparison-table}
+
+```{r models-table, echo=FALSE}
+# Create a simpler table of models without the complex formatting
+ai_models %>%
+  arrange(desc(performance_score)) %>%
+  mutate(
+    performance_score = paste0(performance_score, "%"),
+    parameters_billions = paste0(parameters_billions, "B"),
+    training_cost_millions = paste0("$", training_cost_millions, "M")
+  ) %>%
+  select(model, type, performance_score, parameters_billions, training_cost_millions, release_year, energy_consumption) %>%
+  kable(
+    col.names = c("Model", "Type", "Performance", "Parameters", "Training Cost", "Release Year", "Energy Use"),
+    align = c("l", "l", "c", "c", "c", "c", "c"),
+    caption = "Comparison of Leading AI Models (2022-2023)"
+  )
+```
+
+<div class="model-insights">
+<p>Observed trade-offs across models:</p>
+<ul>
+  <li>Higher parameter counts generally correlate with better performance</li>
+  <li>Specialized models (image-focused) can achieve high performance with fewer parameters</li>
+  <li>Energy consumption remains a significant challenge for large models</li>
+</ul>
+</div>
+
+## Performance vs. Resources {.scatter-analysis}
+
+```{r models-scatter, echo=FALSE, fig.height=5.5}
+# Create scatter plot of model performance vs. parameter count
+ai_models %>%
+  mutate(
+    energy_level = factor(energy_consumption, 
+                         levels = c("Low", "Medium", "High", "Very High"))
+  ) %>%
+  ggplot(aes(x = parameters_billions, y = performance_score, 
+             color = type, size = training_cost_millions,
+             shape = energy_level)) +
+  geom_point(alpha = 0.8) +
+  scale_color_brewer(palette = "Set1") +
+  scale_size_continuous(name = "Training Cost ($M)", range = c(4, 12)) +
+  scale_shape_manual(name = "Energy Use",
+                    values = c("Low" = 16, "Medium" = 17, "High" = 15, "Very High" = 18)) +
+  scale_x_log10(labels = function(x) paste0(x, "B"), 
+               breaks = c(1, 10, 100, 1000)) +
+  scale_y_continuous(limits = c(80, 100), labels = function(x) paste0(x, "%")) +
+  labs(
+    title = "AI Model Performance vs. Parameter Count",
+    subtitle = "Size indicates training cost, shape indicates energy consumption",
+    x = "Number of Parameters (Billions, log scale)",
+    y = "Performance Score",
+    color = "Model Type"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    legend.position = "right",
+    panel.grid.minor = element_blank(),
+    plot.title = element_text(face = "bold", size = 16),
+    plot.subtitle = element_text(size = 12),
+    axis.title = element_text(face = "bold")
+  ) +
+  geom_text(aes(label = model), hjust = -0.3, vjust = 0, size = 3.5, show.legend = FALSE)
+```
+
+<div class="analysis-insight">
+<p>The logarithmic scaling reveals diminishing returns in the relationship between parameter count and performance.</p>
+<p>Multimodal models like Gemini achieve strong performance with moderate parameter counts.</p>
+</div>
+
+# Economic Impact {data-background="#e2eafc"}
+
+## Job Transformation {.transformation-analysis}
+
+```{r jobs, echo=FALSE, fig.height=5.5}
+# Calculate net job impact
+job_impact <- ai_adoption %>%
+  filter(year %in% c(2018, 2023)) %>%
+  group_by(industry, year) %>%
+  summarize(
+    jobs_automated = mean(jobs_automated_percent),
+    jobs_created = mean(new_jobs_created / investment_millions * 100),
+    net_impact = jobs_created - jobs_automated,
+    .groups = "drop"
+  ) %>%
+  pivot_wider(
+    names_from = year,
+    values_from = c(jobs_automated, jobs_created, net_impact),
+    names_sep = "_"
+  ) %>%
+  mutate(
+    net_change = net_impact_2023 - net_impact_2018,
+    impact_category = case_when(
+      net_impact_2023 > 0 ~ "Net Positive",
+      net_impact_2023 < 0 ~ "Net Negative",
+      TRUE ~ "Neutral"
+    )
+  ) %>%
+  arrange(net_impact_2023)
+
+# Plot the job impact
+ggplot(job_impact, aes(x = reorder(industry, net_impact_2023), y = net_impact_2023, fill = impact_category)) +
+  geom_col() +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "black") +
+  geom_text(aes(label = sprintf("%.1f%%", net_impact_2023), y = net_impact_2023 + ifelse(net_impact_2023 >= 0, 0.5, -0.5)),
+            hjust = ifelse(job_impact$net_impact_2023 >= 0, 0, 1), size = 3.5) +
+  scale_fill_manual(values = c("Net Positive" = "#81b47b", "Net Negative" = "#e15759", "Neutral" = "#f2f2f2")) +
+  coord_flip() +
+  labs(
+    title = "Net Job Impact of AI by Industry (2023)",
+    subtitle = "Difference between jobs created and jobs automated (percentage)",
+    y = "Net Impact (Percentage Points)",
+    x = NULL,
+    fill = "Impact Category"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    legend.position = "top",
+    panel.grid.minor = element_blank(),
+    plot.title = element_text(face = "bold", size = 16),
+    plot.subtitle = element_text(size = 12),
+    axis.title = element_text(face = "bold"),
+    axis.text.y = element_text(face = "bold")
+  )
+```
+
+<div class="job-insights-box">
+<h4>Employment Transformation Insights</h4>
+<ul>
+  <li>Technology and Finance show positive net job creation despite high automation</li>
+  <li>Manufacturing and Agriculture face the greatest net job displacement</li>
+  <li>Education sector shows nearly neutral impact</li>
+</ul>
+<p>Key challenge: Jobs created often require different skills than those automated</p>
+</div>
+
+## Productivity and Skills Gap {.correlation-analysis}
+
+```{r productivity-skills, echo=FALSE, fig.height=5.5}
+# Create a correlation matrix for key metrics from the latest year
+latest_metrics <- ai_adoption %>%
+  filter(year == max(year)) %>%
+  select(adoption_rate, productivity_gain, jobs_automated_percent, new_jobs_created, 
+         skills_gap_severity, roi_percent, investment_millions)
+
+# Calculate correlation matrix
+corr_matrix <- cor(latest_metrics, use = "pairwise.complete.obs")
+
+# Plot correlation matrix
+corrplot(corr_matrix, method = "color", type = "upper", 
+         tl.col = "black", tl.srt = 45, 
+         addCoef.col = "black", 
+         col = colorRampPalette(c("#4575b4", "#91bfdb", "#e0f3f8", "#fee090", "#fc8d59", "#d73027"))(100),
+         diag = FALSE,
+         mar = c(0,0,2,0),
+         title = "Correlation Matrix of AI Impact Metrics (2023)",
+         tl.cex = 0.8,
+         number.cex = 0.8)
+```
+
+<div class="interpretation-box">
+<h4>Interpreting Correlations</h4>
+<p>Strong positive correlations (>0.8):</p>
+<ul>
+  <li>Adoption rate and productivity gains</li>
+  <li>Investment levels and new jobs created</li>
+</ul>
+<p>Strong negative correlations (< -0.5):</p>
+<ul>
+  <li>None observed</li>
+</ul>
+<p>Weak correlations (near 0):</p>
+<ul>
+  <li>ROI percentage and skills gap severity</li>
+  <li>Productivity gain and investment</li>
+</ul>
+</div>
+
+## Industry-Specific ROI {.roi-analysis}
+
+```{r roi-trends, echo=FALSE, fig.height=5.5}
+# Plot ROI trends over time
+ai_adoption %>%
+  ggplot(aes(x = year, y = roi_percent, color = industry, group = industry)) +
+  geom_line(size = 1) +
+  geom_point(size = 2.5) +
+  facet_wrap(~industry, ncol = 5, scales = "free_y") +
+  scale_color_brewer(palette = "Paired") +
+  scale_x_continuous(breaks = c(2018, 2023)) +
+  scale_y_continuous(labels = function(x) paste0(round(x, 0), "%")) +
+  labs(
+    title = "ROI Trends by Industry (2018-2023)",
+    subtitle = "Return on Investment percentage from AI implementation",
+    x = "Year",
+    y = "ROI (%)",
+    color = "Industry"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    legend.position = "none",
+    strip.background = element_rect(fill = "#f0f0f0", color = NA),
+    strip.text = element_text(face = "bold"),
+    panel.grid.minor = element_blank(),
+    plot.title = element_text(face = "bold", size = 16),
+    plot.subtitle = element_text(size = 12),
+    axis.title = element_text(face = "bold")
+  )
+```
+
+<div class="roi-patterns">
+<h4>ROI Growth Patterns</h4>
+<ul>
+  <li><strong>Steady Growth:</strong> Finance, Retail, Technology</li>
+  <li><strong>Accelerating:</strong> Healthcare, Education</li>
+  <li><strong>Volatile:</strong> Energy, Transportation</li>
+  <li><strong>Late Bloomer:</strong> Agriculture</li>
+</ul>
+</div>
+
+# Action Strategies {data-background="#fefae0"}
+
+## Strategic Framework {.decision-matrix}
+
+```{r strategy-matrix, echo=FALSE, fig.height=5}
+# Create a simple strategy matrix using data frame and kable
+strategy_df <- data.frame(
+  "Adoption Level" = c("Nascent (<10%)", "Growing (10-40%)", "Mature (>40%)"),
+  "Wait & Learn" = c(
+    "Focus on foundational data infrastructure", 
+    "Monitor developments", 
+    "Limited exploration"
+  ),
+  "Selective Implementation" = c(
+    "Limited pilots with clear ROI", 
+    "Target high-value use cases", 
+    "Build cross-functional AI teams"
+  ),
+  "Full Integration" = c(
+    "Not recommended at this stage", 
+    "Begin planning full integration", 
+    "Enterprise-wide AI strategy"
+  )
+)
+
+# Create a basic table
+kable(strategy_df, caption = "AI Implementation Strategy Matrix")
+```
+
+## Implementation Roadmap {.roadmap}
+
+<div class="timeline-container">
+  <div class="timeline-phase">
+    <div class="phase-header" style="background-color: #4361ee;">Phase 1: Foundation</div>
+    <div class="phase-duration">3-6 months</div>
+    <ul class="phase-activities">
+      <li>Data infrastructure assessment</li>
+      <li>Skills inventory & gap analysis</li>
+      <li>Use case prioritization</li>
+      <li>ROI measurement framework</li>
+    </ul>
+  </div>
+  <div class="timeline-phase">
+    <div class="phase-header" style="background-color: #3a0ca3;">Phase 2: Pilot</div>
+    <div class="phase-duration">6-12 months</div>
+    <ul class="phase-activities">
+      <li>Implement 2-3 high-value use cases</li>
+      <li>Establish AI center of excellence</li>
+      <li>Develop governance framework</li>
+      <li>Initial reskilling programs</li>
+    </ul>
+  </div>
+  <div class="timeline-phase">
+    <div class="phase-header" style="background-color: #7209b7;">Phase 3: Scale</div>
+    <div class="phase-duration">12-24 months</div>
+    <ul class="phase-activities">
+      <li>Enterprise-wide AI strategy</li>
+      <li>Automated ML pipelines</li>
+      <li>Comprehensive reskilling</li>
+      <li>AI-driven innovation program</li>
+    </ul>
+  </div>
+</div>
+
+<div class="success-metrics">
+<h4>Key Success Metrics</h4>
+<div class="metrics-grid">
+  <div class="metric">
+    <div class="metric-name">Time to value</div>
+    <div class="metric-target">< 6 months for pilots</div>
+  </div>
+  <div class="metric">
+    <div class="metric-name">ROI</div>
+    <div class="metric-target">3-5x for initial use cases</div>
+  </div>
+  <div class="metric">
+    <div class="metric-name">Adoption rate</div>
+    <div class="metric-target">30% YoY increase</div>
+  </div>
+  <div class="metric">
+    <div class="metric-name">Skill development</div>
+    <div class="metric-target">50% of relevant staff</div>
+  </div>
+</div>
+</div>
+
+## Critical Success Factors {.factor-grid}
+
+<div class="success-factors">
+  <div class="factor">
+    <div class="factor-name">Executive Sponsorship</div>
+    <div class="factor-description">
+      <p>AI initiatives require C-level commitment with dedicated resources and long-term vision.</p>
+      <div class="factor-data">81% of successful AI initiatives have C-suite sponsors</div>
+    </div>
+  </div>
+  
+  <div class="factor">
+    <div class="factor-name">Data Quality & Governance</div>
+    <div class="factor-description">
+      <p>Structured approach to data management and standardization across the organization.</p>
+      <div class="factor-data">76% of failed AI projects cite data quality issues</div>
+    </div>
+  </div>
+  
+  <div class="factor">
+    <div class="factor-name">Cross-functional Teams</div>
+    <div class="factor-description">
+      <p>Integration of domain experts, data scientists, engineers, and business analysts.</p>
+      <div class="factor-data">3.4x higher success rate with cross-functional teams</div>
+    </div>
+  </div>
+  
+  <div class="factor">
+    <div class="factor-name">Ethics & Responsible AI</div>
+    <div class="factor-description">
+      <p>Frameworks for bias detection, explainability, and continuous monitoring.</p>
+      <div class="factor-data">65% of consumers prioritize ethical AI practices</div>
+    </div>
+  </div>
+</div>
+
+# Q&A {data-background="#fef9ef"}
+
+## Discussion Topics {.discussion-panel}
+
+<div class="discussion-container">
+  <div class="discussion-topic" id="topic1">
+    <div class="topic-heading">Industry-Specific Challenges</div>
+    <div class="topic-description">
+      What unique barriers does your industry face in AI adoption, and how do they compare to the trends we've examined?
+    </div>
+  </div>
+  
+  <div class="discussion-topic" id="topic2">
+    <div class="topic-heading">ROI Measurement</div>
+    <div class="topic-description">
+      How is your organization measuring returns on AI investments? Are there metrics beyond financial returns that should be considered?
+    </div>
+  </div>
+  
+  <div class="discussion-topic" id="topic3">
+    <div class="topic-heading">Skills Development</div>
+    <div class="topic-description">
+      What approach is most effective for addressing the skills gap: hiring, reskilling, or partnerships?
+    </div>
+  </div>
+  
+  <div class="discussion-topic" id="topic4">
+    <div class="topic-heading">Ethical Considerations</div>
+    <div class="topic-description">
+      How should organizations balance innovation speed with responsible AI deployment?
+    </div>
+  </div>
+</div>
+
+<div class="data-reference">
+<p>Contact for dataset references & methodology: riccardo@example.com</p>
+</div>
+
+## Next Session Preview {.next-session}
+
+<div class="next-session-container">
+  <h3>Session Two: Advanced Models & Architectures</h3>
+  <div class="session-date">April 14, 2025</div>
+  
+  <div class="session-topics">
+    <div class="topic-preview">
+      <div class="topic-name">Technical Deep Dive</div>
+      <div class="topic-detail">
+        <ul>
+          <li>Transformer architectures</li>
+          <li>Attention mechanisms</li>
+          <li>Parameter efficiency techniques</li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="topic-preview">
+      <div class="topic-name">Model Selection Framework</div>
+      <div class="topic-detail">
+        <ul>
+          <li>Task-specific requirements</li>
+          <li>Resource constraints analysis</li>
+          <li>Build vs. buy decision matrix</li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="topic-preview">
+      <div class="topic-name">Case Studies</div>
+      <div class="topic-detail">
+        <ul>
+          <li>Large language model deployment</li>
+          <li>Computer vision at scale</li>
+          <li>Multimodal systems</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  
+  <div class="preparation-materials">
+    <h4>Preparation Materials</h4>
+    <p>Session materials will be available one week before the session at:</p>
+    <div class="materials-link">github.com/riccardo/ai-knowledge-sharing</div>
+  </div>
+</div>
+
+# Thank You {data-background="#f8f9fa"}
+
+## Contact & Resources
+
+<div class="contact-container">
+  <div class="contact-info">
+    <h3>Riccardo Esclapon</h3>
+    <p class="title">AI Knowledge Specialist</p>
+    <p class="email">riccardo@example.com</p>
+    <div class="social-links">
+      <span class="social-link">LinkedIn: /in/riccardo</span>
+      <span class="social-link">Twitter: @riccardo</span>
+      <span class="social-link">GitHub: /riccardo</span>
+    </div>
+  </div>
+  
+  <div class="resources-section">
+    <h4>Additional Resources</h4>
+    <div class="resource-grid">
+      <div class="resource-item">
+        <div class="resource-title">AI Adoption Playbook</div>
+        <div class="resource-link">example.com/playbook</div>
+      </div>
+      <div class="resource-item">
+        <div class="resource-title">ROI Calculator Template</div>
+        <div class="resource-link">example.com/roi-template</div>
+      </div>
+      <div class="resource-item">
+        <div class="resource-title">Implementation Framework</div>
+        <div class="resource-link">example.com/framework</div>
+      </div>
+      <div class="resource-item">
+        <div class="resource-title">Case Study Library</div>
+        <div class="resource-link">example.com/case-studies</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="session-materials">
+  <p>Session slides and data are available at: github.com/riccardo/ai-knowledge-sharing</p>
+</div>

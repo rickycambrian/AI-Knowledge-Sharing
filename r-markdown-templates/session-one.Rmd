@@ -1,0 +1,49 @@
+---
+title: "AI Knowledge Sharing Session"
+date: March 25, 2005
+output:
+  revealjs::revealjs_presentation:
+    theme: dark
+---
+
+![](../cambrian_logo.jpg)
+
+# ABC
+
+![](../cambrian_logo.jpg)
+
+## Getting up
+
+- Turn off alarm
+- Get out of bed
+
+## Breakfast
+
+- Eat eggs
+- Drink coffee
+
+# Recommended MCP Servers
+
+## Perplexity
+
+Claude Code:
+```text
+claude mcp add perplexity-mcp -e PERPLEXITY_API_KEY=your-key-here -e PERPLEXITY_MODEL=sonar-pro -- uvx perplexity-mcp
+```
+
+.json configuration:
+```text
+  "perplexity-mcp": {
+    "env": {
+      "PERPLEXITY_API_KEY": "XXXXXXXXXXXXXXXXXXXX",
+      "PERPLEXITY_MODEL": "sonar"
+    },
+    "command": "uvx",
+    "args": [
+      "perplexity-mcp"
+    ]
+  }
+```
+Can set model to `sonar` or `sonar-pro`. 
+<br>
+Model Pricing: https://docs.perplexity.ai/guides/pricing

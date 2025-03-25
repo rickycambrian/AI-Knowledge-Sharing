@@ -1,0 +1,589 @@
+---
+title: "AI Knowledge Sharing"
+subtitle: "Interactive Session One"
+author: "Riccardo Esclapon"
+date: "`r format(Sys.Date(), '%B %d, %Y')`"
+output:
+  revealjs::revealjs_presentation:
+    theme: solarized
+    highlight: espresso
+    transition: slide
+    center: false
+    css: interactive.css
+    self_contained: false
+    reveal_plugins: ["notes", "search", "zoom", "chalkboard", "menu"]
+    reveal_options:
+      slideNumber: true
+      previewLinks: false
+      chalkboard:
+        theme: whiteboard
+        toggleNotesButton: true
+      menu:
+        numbers: true
+      keyboard:
+        67: function() { RevealChalkboard.toggleNotesCanvas() } # press 'c' to toggle notes
+      # Comment out multiplex as it requires additional setup
+      # multiplex:
+      #   secret: 'secret_value'
+      #   id: 'socket_id'
+      #   url: 'https://example.com/socket.io'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+library(tidyverse)
+library(plotly)
+library(DT)
+library(leaflet)
+library(crosstalk)
+library(htmlwidgets)
+library(htmltools)  # Add htmltools for div and other HTML functions
+# Load the AI demonstration dataset
+ai_milestones <- tribble(
+  ~year, ~event, ~significance, ~category, ~lat, ~lng,
+  1950, "Turing Test Proposed", 9, "Foundation", 52.2053, 0.1218,
+  1956, "Dartmouth Conference", 8, "Foundation", 43.7044, -72.2887,
+  1997, "Deep Blue Beats Kasparov", 9, "Gaming", 40.7128, -74.0060,
+  2011, "IBM Watson Wins Jeopardy", 7, "NLP", 41.1086, -73.7168,
+  2012, "AlexNet Breakthrough", 9, "Computer Vision", 43.6532, -79.3832,
+  2014, "GANs Introduced", 8, "Generative AI", 47.6062, -122.3321,
+  2017, "AlphaGo Defeats Lee Sedol", 8, "Gaming", 37.5665, 126.9780,
+  2018, "BERT Transforms NLP", 9, "NLP", 37.4275, -122.1697,
+  2020, "GPT-3 Released", 9, "NLP", 37.7749, -122.4194,
+  2022, "Stable Diffusion & DALL·E 2", 8, "Generative AI", 40.7128, -74.0060,
+  2023, "GPT-4 & Claude", 10, "NLP", 37.7749, -122.4194
+)
+```
+
+# Welcome {data-background="#073b4c"}
+
+## Interactive Learning Experience {data-state="interactive-header"}
+
+<div class="header-box">
+  <h3>Today's Goals</h3>
+  <ul class="goal-list">
+    <li class="fragment highlight-current-blue">Understand AI fundamentals through interactive displays</li>
+    <li class="fragment highlight-current-blue">Explore real-time data visualizations</li>
+    <li class="fragment highlight-current-blue">Participate in live AI demonstrations</li>
+    <li class="fragment highlight-current-blue">Build a shared knowledge framework</li>
+  </ul>
+</div>
+
+<div class="notes">
+This presentation uses several advanced revealjs features:
+- Interactive elements using JS and crosstalk
+- Chalkboard for live annotations (press C to activate)
+- Speaker notes visible here (press S to show speaker view)
+- Multimedia integration
+</div>
+
+## How To Participate {data-transition="zoom"}
+
+<div class="participation-container">
+  <div class="participation-method">
+    <i class="fas fa-hand-paper"></i>
+    <h4>Raise Hand</h4>
+    <p>Questions welcome anytime</p>
+  </div>
+  <div class="participation-method">
+    <i class="fas fa-mobile-alt"></i>
+    <h4>Mobile Response</h4>
+    <p>Poll code: AI2023</p>
+  </div>
+  <div class="participation-method">
+    <i class="fas fa-comment"></i>
+    <h4>Chat</h4>
+    <p>Use the session chat</p>
+  </div>
+  <div class="participation-method">
+    <i class="fas fa-pencil-alt"></i>
+    <h4>Annotations</h4>
+    <p>Collaborative notes</p>
+  </div>
+</div>
+
+# AI Timeline {data-background-gradient="linear-gradient(to bottom, #06d6a0, #118ab2)"}
+
+## Evolution of AI {data-transition="slide-in fade-out"}
+
+```{r interactive-timeline, echo=FALSE}
+# Create a shared data object for crosstalk interaction
+shared_data <- SharedData$new(ai_milestones)
+
+# Create an interactive plot
+p <- plot_ly(shared_data, x = ~year, y = ~significance, 
+             type = 'scatter', mode = 'markers',
+             text = ~event, size = ~significance * 3,
+             color = ~category, colors = c("#ff9f1c", "#ffbf69", "#2ec4b6", "#cbf3f0")) %>%
+  layout(title = "AI Milestones by Significance",
+         xaxis = list(title = "Year"),
+         yaxis = list(title = "Historical Significance (1-10)"))
+
+# Create an interactive table
+dt <- datatable(shared_data, 
+                extensions = 'Buttons',
+                options = list(dom = 'Bfrtip',
+                               buttons = c('copy', 'csv'),
+                               pageLength = 5),
+                rownames = FALSE)
+
+# Create an interactive map
+m <- leaflet(shared_data) %>% 
+  addTiles() %>%
+  addMarkers(~lng, ~lat, popup = ~paste0("<b>", event, "</b><br>", year), 
+             label = ~event)
+
+# Display in a flexbox layout - using htmltools functions
+htmltools::div(
+  htmltools::div(style = "display: flex; flex-wrap: wrap;",
+      htmltools::div(style = "width: 100%;", p),
+      htmltools::div(style = "width: 50%; padding: 10px;", dt),
+      htmltools::div(style = "width: 50%; height: 300px; padding: 10px;", m)
+  )
+)
+```
+
+## Explore the Data {data-state="interactivity"}
+
+<div class="interaction-instructions">
+  <div class="instruction-box">
+    <h3>Instructions</h3>
+    <ul>
+      <li>Click on points in the chart to filter the table and map</li>
+      <li>Hover over points to see milestone details</li>
+      <li>Use the map to explore the geographic distribution</li>
+      <li>Sort and filter the table to find patterns</li>
+    </ul>
+  </div>
+</div>
+
+<div id="significance-explanation" class="popup-info">
+  <h4>Understanding Significance Scores</h4>
+  <p>Significance scores (1-10) represent the impact of each milestone on AI development based on expert consensus.</p>
+</div>
+
+<script>
+// Add interactivity to the explanation box
+document.addEventListener('DOMContentLoaded', function() {
+  const explBox = document.getElementById('significance-explanation');
+  explBox.addEventListener('click', function() {
+    this.classList.toggle('expanded');
+  });
+});
+</script>
+
+# Live AI Assessment {data-background="#073b4c"}
+
+## Sentiment Analysis Demo {data-state="live-demo"}
+
+<div class="live-demo-container">
+  <div class="demo-description">
+    <h3>Real-time Sentiment Analysis</h3>
+    <p>Enter text below to analyze its sentiment using our pre-trained model</p>
+  </div>
+  
+  <div class="demo-interactive">
+    <textarea id="sentiment-input" placeholder="Type something here to analyze..."></textarea>
+    <button id="analyze-btn" onclick="analyzeSentiment()">Analyze</button>
+  </div>
+  
+  <div class="demo-results">
+    <div id="sentiment-meter">
+      <div class="meter-label negative">Negative</div>
+      <div class="meter">
+        <div id="sentiment-gauge" class="gauge"></div>
+      </div>
+      <div class="meter-label positive">Positive</div>
+    </div>
+    <div id="sentiment-score">Score: --</div>
+    <div id="key-phrases"></div>
+  </div>
+</div>
+
+<script>
+function analyzeSentiment() {
+  const text = document.getElementById('sentiment-input').value;
+  if (!text.trim()) return;
+  
+  // Mock sentiment analysis (in a real presentation, this would call an API)
+  const sentimentScore = Math.random() * 100; // 0-100 score
+  const gaugeWidth = sentimentScore + '%';
+  
+  // Update visual elements
+  document.getElementById('sentiment-gauge').style.width = gaugeWidth;
+  document.getElementById('sentiment-score').innerHTML = 'Score: ' + sentimentScore.toFixed(1);
+  
+  // Generate mock key phrases
+  const positiveWords = ['excellent', 'amazing', 'good', 'wonderful', 'great'];
+  const negativeWords = ['bad', 'terrible', 'awful', 'disappointing', 'poor'];
+  const neutralWords = ['standard', 'average', 'normal', 'typical'];
+  
+  let selectedWords;
+  if (sentimentScore > 70) {
+    selectedWords = positiveWords;
+    document.getElementById('sentiment-gauge').className = 'gauge positive';
+  } else if (sentimentScore < 30) {
+    selectedWords = negativeWords;
+    document.getElementById('sentiment-gauge').className = 'gauge negative';
+  } else {
+    selectedWords = neutralWords;
+    document.getElementById('sentiment-gauge').className = 'gauge neutral';
+  }
+  
+  // Show 2-3 random words from the appropriate list
+  const wordCount = 2 + Math.floor(Math.random());
+  const displayWords = [];
+  for (let i = 0; i < wordCount; i++) {
+    const randomIndex = Math.floor(Math.random() * selectedWords.length);
+    displayWords.push(selectedWords[randomIndex]);
+  }
+  
+  document.getElementById('key-phrases').innerHTML = 'Key phrases: ' + displayWords.join(', ');
+}
+</script>
+
+## Image Recognition Demo {data-state="image-demo"}
+
+<div class="image-recognition-demo">
+  <div class="demo-controls">
+    <div class="image-options">
+      <div class="image-option" onclick="selectImage('image1')">
+        <img src="https://via.placeholder.com/100x100?text=Image+1" alt="Sample Image 1">
+      </div>
+      <div class="image-option" onclick="selectImage('image2')">
+        <img src="https://via.placeholder.com/100x100?text=Image+2" alt="Sample Image 2">
+      </div>
+      <div class="image-option" onclick="selectImage('image3')">
+        <img src="https://via.placeholder.com/100x100?text=Image+3" alt="Sample Image 3">
+      </div>
+      <div class="image-option" onclick="selectImage('custom')">
+        <div class="upload-box">Upload</div>
+      </div>
+    </div>
+    <button id="recognize-btn" onclick="recognizeImage()">Recognize</button>
+  </div>
+  
+  <div class="demo-display">
+    <div class="selected-image">
+      <img id="main-image" src="https://via.placeholder.com/400x300?text=Select+an+Image" alt="Main image for recognition">
+    </div>
+    <div class="recognition-results" id="image-results">
+      <p>Recognition results will appear here...</p>
+    </div>
+  </div>
+</div>
+
+<script>
+function selectImage(imageId) {
+  // In a real demo, this would handle actual image selection
+  document.getElementById('main-image').src = 
+    "https://via.placeholder.com/400x300?text=" + imageId.replace('image', 'Sample+') + "+Selected";
+}
+
+function recognizeImage() {
+  // Mock image recognition results
+  const possibleObjects = [
+    ["person", "table", "chair", "laptop", "cup"],
+    ["dog", "cat", "sofa", "window", "plant"],
+    ["car", "road", "tree", "building", "sign"],
+    ["beach", "ocean", "palm tree", "sand", "umbrella"]
+  ];
+  
+  const selectedList = possibleObjects[Math.floor(Math.random() * possibleObjects.length)];
+  const results = [];
+  
+  // Create 3-5 "recognition results" with confidence scores
+  const resultCount = 3 + Math.floor(Math.random() * 3);
+  let remainingConfidence = 100;
+  
+  for (let i = 0; i < resultCount && i < selectedList.length; i++) {
+    // Generate random confidence scores that add up to less than 100%
+    let confidence;
+    if (i === resultCount - 1 || i === selectedList.length - 1) {
+      confidence = remainingConfidence;
+    } else {
+      confidence = Math.floor(Math.random() * (remainingConfidence - (resultCount - i - 1)));
+    }
+    remainingConfidence -= confidence;
+    
+    results.push({
+      label: selectedList[i],
+      confidence: confidence
+    });
+  }
+  
+  // Sort by confidence (highest first)
+  results.sort((a, b) => b.confidence - a.confidence);
+  
+  // Display results
+  let resultsHTML = '<h4>Recognition Results</h4><ul>';
+  results.forEach(result => {
+    resultsHTML += `<li><span class="result-label">${result.label}</span>: <span class="result-confidence">${result.confidence}%</span>
+                    <div class="confidence-bar"><div class="bar-fill" style="width: ${result.confidence}%"></div></div>
+                    </li>`;
+  });
+  resultsHTML += '</ul>';
+  
+  document.getElementById('image-results').innerHTML = resultsHTML;
+}
+</script>
+
+# Group Activity {data-background="#118ab2"}
+
+## Collaborative Canvas {data-state="collaborative"}
+
+<div class="activity-instructions">
+  <h3>AI Impact Mapping</h3>
+  <p>Use the chalkboard below to map AI's impact on your industry:</p>
+  <ol>
+    <li>Press <kbd>C</kbd> to activate the canvas</li>
+    <li>Draw connections between AI technologies and use cases</li>
+    <li>Use different colors for positive and negative impacts</li>
+    <li>Add sticky notes with <kbd>S</kbd> for questions</li>
+  </ol>
+</div>
+
+<div class="chalkboard-placeholder">
+  [Interactive Chalkboard Here - Press C to Activate]
+</div>
+
+## Discussion Points {data-transition="convex"}
+
+<div class="discussion-grid">
+  <div class="discussion-item" id="item1" onclick="expandTopic('item1')">
+    <h4>Current Limitations</h4>
+    <div class="discussion-expand">
+      <ul>
+        <li>Bias in training data</li>
+        <li>Explainability challenges</li>
+        <li>Energy consumption</li>
+        <li>Skills gap for implementation</li>
+      </ul>
+    </div>
+  </div>
+  
+  <div class="discussion-item" id="item2" onclick="expandTopic('item2')">
+    <h4>Emerging Solutions</h4>
+    <div class="discussion-expand">
+      <ul>
+        <li>Synthetic data generation</li>
+        <li>Federated learning</li>
+        <li>Energy-efficient architectures</li>
+        <li>AutoML tools</li>
+      </ul>
+    </div>
+  </div>
+  
+  <div class="discussion-item" id="item3" onclick="expandTopic('item3')">
+    <h4>Future Directions</h4>
+    <div class="discussion-expand">
+      <ul>
+        <li>Multimodal integration</li>
+        <li>Self-supervised learning</li>
+        <li>AI-human collaboration</li>
+        <li>Domain-specific models</li>
+      </ul>
+    </div>
+  </div>
+  
+  <div class="discussion-item" id="item4" onclick="expandTopic('item4')">
+    <h4>Organizational Impact</h4>
+    <div class="discussion-expand">
+      <ul>
+        <li>Workflow transformation</li>
+        <li>Skill requirements</li>
+        <li>Decision-making processes</li>
+        <li>Ethical frameworks</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script>
+function expandTopic(itemId) {
+  const allItems = document.querySelectorAll('.discussion-item');
+  allItems.forEach(item => {
+    if (item.id !== itemId) {
+      item.classList.remove('expanded');
+    }
+  });
+  
+  document.getElementById(itemId).classList.toggle('expanded');
+}
+</script>
+
+# Next Steps {data-background="#06d6a0"}
+
+## Learning Resources {data-transition="fade"}
+
+<div class="resources-container">
+  <div class="filter-controls">
+    <button class="filter-btn active" onclick="filterResources('all')">All</button>
+    <button class="filter-btn" onclick="filterResources('beginner')">Beginner</button>
+    <button class="filter-btn" onclick="filterResources('intermediate')">Intermediate</button>
+    <button class="filter-btn" onclick="filterResources('advanced')">Advanced</button>
+  </div>
+  
+  <div class="resources-list">
+    <div class="resource-card beginner">
+      <h4>Elements of AI</h4>
+      <p>Online introductory course covering AI basics</p>
+      <span class="level">Beginner</span>
+    </div>
+    <div class="resource-card beginner">
+      <h4>AI For Everyone</h4>
+      <p>Andrew Ng's non-technical AI course on Coursera</p>
+      <span class="level">Beginner</span>
+    </div>
+    <div class="resource-card intermediate">
+      <h4>Fast.ai</h4>
+      <p>Practical deep learning for coders</p>
+      <span class="level">Intermediate</span>
+    </div>
+    <div class="resource-card intermediate">
+      <h4>Hugging Face</h4>
+      <p>NLP model library and community</p>
+      <span class="level">Intermediate</span>
+    </div>
+    <div class="resource-card advanced">
+      <h4>CS224n</h4>
+      <p>Stanford's NLP with Deep Learning course</p>
+      <span class="level">Advanced</span>
+    </div>
+    <div class="resource-card advanced">
+      <h4>Papers with Code</h4>
+      <p>Latest AI research with implementation</p>
+      <span class="level">Advanced</span>
+    </div>
+  </div>
+</div>
+
+<script>
+function filterResources(level) {
+  const buttons = document.querySelectorAll('.filter-btn');
+  buttons.forEach(btn => {
+    btn.classList.remove('active');
+    if (btn.textContent.toLowerCase() === level || 
+        (level === 'all' && btn.textContent.toLowerCase() === 'all')) {
+      btn.classList.add('active');
+    }
+  });
+  
+  const cards = document.querySelectorAll('.resource-card');
+  cards.forEach(card => {
+    if (level === 'all' || card.classList.contains(level)) {
+      card.style.display = 'block';
+    } else {
+      card.style.display = 'none';
+    }
+  });
+}
+</script>
+
+## Session Feedback
+
+<div class="feedback-container">
+  <div class="qr-code-placeholder">
+    [QR Code for Feedback Form]
+  </div>
+  
+  <div class="feedback-instructions">
+    <h4>Share Your Thoughts</h4>
+    <p>Scan the QR code or visit:</p>
+    <div class="feedback-url">example.com/ai-feedback</div>
+    <ul class="feedback-benefits">
+      <li>Help improve future sessions</li>
+      <li>Suggest topics you want to explore</li>
+      <li>Request specific demos</li>
+      <li>Connect for follow-up questions</li>
+    </ul>
+  </div>
+</div>
+
+## Next Session Preview {data-state="preview"}
+
+<div class="next-session-container">
+  <h3>Advanced Models & Architectures</h3>
+  <div class="session-date">April 14, 2025</div>
+  
+  <div class="preview-content">
+    <div class="preview-topics">
+      <h4>Topics</h4>
+      <ul>
+        <li>Transformer architectures</li>
+        <li>Multimodal systems</li>
+        <li>Fine-tuning strategies</li>
+        <li>Efficient inference</li>
+      </ul>
+    </div>
+    
+    <div class="preview-activities">
+      <h4>Hands-on Activities</h4>
+      <ul>
+        <li>Model visualization</li>
+        <li>Demo: Custom fine-tuning</li>
+        <li>Interactive model comparison</li>
+      </ul>
+    </div>
+  </div>
+  
+  <div class="preview-action">
+    <button id="calendar-btn" onclick="addToCalendar()">Add to Calendar</button>
+    <div id="calendar-message"></div>
+  </div>
+</div>
+
+<script>
+function addToCalendar() {
+  // In a real presentation, this would integrate with calendar APIs
+  document.getElementById('calendar-message').innerHTML = 
+    'Calendar invitation sent to your email';
+  
+  // Make message disappear after 3 seconds
+  setTimeout(() => {
+    document.getElementById('calendar-message').innerHTML = '';
+  }, 3000);
+}
+</script>
+
+# Thank You {data-background="https://via.placeholder.com/1920x1080?text=Thank+You" data-background-opacity="0.3"}
+
+## Contact & Connect {data-state="final"}
+
+<div class="contact-container">
+  <div class="presenter-info">
+    <div class="presenter-photo-placeholder">
+      [Photo]
+    </div>
+    <div class="presenter-details">
+      <h3>Riccardo Esclapon</h3>
+      <p class="presenter-title">AI Knowledge Specialist</p>
+      <p class="presenter-email">riccardo@example.com</p>
+    </div>
+  </div>
+  
+  <div class="connect-options">
+    <a href="#" class="connect-link linkedin">
+      <i class="fab fa-linkedin"></i>
+      <span>LinkedIn</span>
+    </a>
+    <a href="#" class="connect-link twitter">
+      <i class="fab fa-twitter"></i>
+      <span>Twitter</span>
+    </a>
+    <a href="#" class="connect-link github">
+      <i class="fab fa-github"></i>
+      <span>GitHub</span>
+    </a>
+    <a href="#" class="connect-link website">
+      <i class="fas fa-globe"></i>
+      <span>Website</span>
+    </a>
+  </div>
+  
+  <div class="session-materials">
+    <h4>Session Materials</h4>
+    <p>All slides and code are available at:</p>
+    <div class="materials-link">github.com/riccardo/ai-knowledge-sharing</div>
+  </div>
+</div>
