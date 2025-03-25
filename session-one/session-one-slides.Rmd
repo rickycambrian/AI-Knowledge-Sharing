@@ -1,0 +1,190 @@
+---
+title: "AI Knowledge Sharing Session"
+date: March 25, 2025
+output:
+  revealjs::revealjs_presentation:
+    transition: fade
+    background_transition: slide
+---
+
+# Agenda
+
+- Share concrete tips and recommendations for individuals and organizations
+- Identify solutions to implement now and areas for future resources
+
+# New Tools and Updates
+
+## OpenAI Agents SDK
+- Enables creation of autonomous agents with defined goals
+- Supports asynchronous execution and multi-agent communication
+
+## OpenAI Real Time Voice
+```{r}
+knitr::include_url("http://localhost:3000/")
+```
+
+## OpenAI Insights
+- Moving away from traditional chat interface
+- Deep Research capabilities (mixed results)
+- ChatGPT 4.5 not optimal for coding tasks
+
+## Dify
+- Dify 1.0 release 
+- New agentic workflows and marketplace
+- Customizable applications with low/no-code interface
+
+# Claude Code - Usage Tips
+
+## Tip 1: Easily Reset Context
+- Manage context efficiently with structured documentation
+- Key locations:
+  - README.md: project documentation
+  - CLAUDE.md: Claude-specific instructions
+  - ai_docs (optional): specialized documentation
+- Reset with: `Read README.md, CLAUDE.md, ai_docs folder contents`
+
+## Tip 2: CLAUDE.md Configuration
+- Initialize with `/init` command
+- Create custom rules for project-specific behavior
+- Saves time across context resets
+
+## Tip 3: Avoiding Failure Modes
+- Add critical implementation rules to CLAUDE.md:
+  - Work with production systems and data
+  - No isolated testing scripts or workarounds
+  - Maintain architectural integrity
+  - Production-first mentality
+
+## Tip 4: Context Management
+- Use `/compact` command before context falls below 20%
+- Proactive resets maintain efficiency
+
+## Tip 5: Division of Labor
+- Establish clear boundaries between human and AI tasks
+- Reserve GitHub commits for meaningful human interventions
+- Use AI to accelerate original ideas, not replace them
+
+## Tip 6: Experiment and Enjoy
+- Discover interesting applications that align with your interests
+- Pivot early and often to find what works best
+- Focus on tools that deliver desired results
+
+# Working with MCP Servers
+
+- Model Context Protocol servers extend AI capabilities
+- Configuration varies by interface (Claude Desktop, Cline, Cursor)
+- Two primary use cases:
+  1. Access information beyond training data
+  2. Interact with external services
+
+# Recommended MCP Servers
+
+## Perplexity
+- Discovers context newer than model's training data
+- Easy installation via Claude Code or JSON config
+- Optional specialized search tools in unofficial versions
+
+## Firecrawl
+- Extracts text content from websites
+- Configurable parameters for performance optimization
+- Robust scraping capabilities
+
+## AgentQL
+- Advanced web scraping with format-first approach
+- Adapts to structural website changes
+- Extracts precisely the data you need
+
+## Repomix
+- Intelligent navigation of GitHub repositories
+- Token-efficient code exploration
+- Available as web interface and MCP server
+
+# MCP Directories & Sandboxes
+
+- Test MCP tools before installation:
+  - https://mcp.so/
+  - https://glama.ai
+- Sandboxes provide safe testing environments
+
+## OpenAI + MCP Integration
+
+- Fork enabling MCP servers with OpenAI Agents SDK: 
+  - https://github.com/lastmile-ai/openai-agents-mcp
+- Demonstrates competitive environment in AI tooling
+
+# Challenges and Opportunities
+
+Three key organizational challenges:
+
+1. Context management
+2. Fine-tuning datasets
+3. Continuous improvement and internal benchmarks
+
+## Context Management Challenge
+- Providing specific context without token bloat
+- Creating specialized agents as context-aware MCP servers
+- Goal: retrieve information efficiently without context overhead
+- Building collaborative knowledge systems for shared insights
+
+## Architecture and Applications
+- Knowledge acquisition, organization, and synthesis layers
+- Cognitive processing and application interfaces
+- Voice use cases: meeting assistants and brainstorming
+
+## Opportunity: Test-Driven Problem Solving
+- Design tests that define successful outcomes for our workflows
+- Create guardrails and handoffs in agentic workflows
+- Scale solution discovery without bottlenecks
+
+## Fine-tuning and Progress
+- Creating high-quality synthetic datasets
+- MCP servers that build fine-tuning datasets from workflows
+- Integration with knowledge graphs for long-term memory
+
+## Continuous Improvement
+- Developing internal benchmarks for relevant problems
+- Capturing and leveraging daily data generation
+- Memory layers via MCP servers
+
+# Note Taking Approaches
+
+## Personal Work Notes
+- Use Obsidian-compatible formats
+- Create relations between notes for better navigation
+- Goal: instant access to historical information with minimal overhead
+
+## Personal Method
+- Daily notes with infinite scroll and calendar view
+- Entity references using [[entity]] syntax
+- Hierarchical structure with backlinks
+- Targeted search capabilities
+- LLM-assisted information retrieval
+
+## Organizational Notes
+- Record important meetings for perfect recall
+- Save and process meeting transcripts (TimeOS recommended)
+- Integrate with company knowledge base (Zapier automation)
+- Make knowledge available via LLM interface
+- Build competitive advantage through institutional memory
+
+# Workflow Adaptations and Agents
+
+- Enhance existing workflows rather than replacing them
+- Create agents as single Python script plugins for MCP tools
+- Maximize reusability and integration options
+
+# Remaining Agenda
+
+Next: floor to Chris or anyone else who has anything to share or add to the discussion
+
+Final 15 minutes: 
+- strategize as a group around our stack/frameworks/workflows
+- 
+
+# GitHub Repository
+
+This presentation: https://github.com/rickycambrian/AI-Knowledge-Sharing
+
+
+
+

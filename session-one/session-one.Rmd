@@ -1,7 +1,7 @@
 ---
 title: "AI Knowledge Sharing Session"
-date: March 25, 2005
-output: ioslides_presentation
+date: March 25, 2025
+output: html_document
 ---
 
 # Agenda

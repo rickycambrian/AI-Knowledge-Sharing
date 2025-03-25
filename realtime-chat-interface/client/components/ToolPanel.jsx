@@ -282,16 +282,84 @@ export default function ToolPanel({
   return (
     <section className="h-full w-full flex flex-col gap-4">
       <div className="h-full bg-gray-50 rounded-md p-4 overflow-y-auto">
-        <h2 className="text-lg font-bold">AI Knowledge Sharing Tools</h2>
+        <h2 className="text-lg font-bold text-blue-700">AI Knowledge Sharing Tools</h2>
         {isSessionActive ? (
           <>
             {functionCallOutput ? (
               <FunctionCallOutput functionCallOutput={functionCallOutput} />
             ) : (
               <div className="mt-4">
-                <p className="mb-3">Ask about any of these topics:</p>
+                <p className="mb-3 font-bold">Quick Topic Access:</p>
+                <div className="grid grid-cols-2 gap-2">
+                  <button 
+                    className="bg-blue-100 hover:bg-blue-200 text-blue-800 py-2 px-3 rounded-md text-sm"
+                    onClick={() => {
+                      sendClientEvent({
+                        type: "conversation.item.create",
+                        item: {
+                          type: "message",
+                          role: "user",
+                          content: [{ type: "input_text", text: "What are the best practices for using Claude Code?" }],
+                        },
+                      });
+                      sendClientEvent({ type: "response.create" });
+                    }}
+                  >
+                    Claude Code Tips
+                  </button>
+                  <button 
+                    className="bg-green-100 hover:bg-green-200 text-green-800 py-2 px-3 rounded-md text-sm"
+                    onClick={() => {
+                      sendClientEvent({
+                        type: "conversation.item.create",
+                        item: {
+                          type: "message",
+                          role: "user",
+                          content: [{ type: "input_text", text: "Tell me about the different MCP servers and how to use them" }],
+                        },
+                      });
+                      sendClientEvent({ type: "response.create" });
+                    }}
+                  >
+                    MCP Servers
+                  </button>
+                  <button 
+                    className="bg-purple-100 hover:bg-purple-200 text-purple-800 py-2 px-3 rounded-md text-sm"
+                    onClick={() => {
+                      sendClientEvent({
+                        type: "conversation.item.create",
+                        item: {
+                          type: "message",
+                          role: "user",
+                          content: [{ type: "input_text", text: "How can I improve my note-taking with entity linking and knowledge graphs?" }],
+                        },
+                      });
+                      sendClientEvent({ type: "response.create" });
+                    }}
+                  >
+                    Note Taking Methods
+                  </button>
+                  <button 
+                    className="bg-amber-100 hover:bg-amber-200 text-amber-800 py-2 px-3 rounded-md text-sm"
+                    onClick={() => {
+                      sendClientEvent({
+                        type: "conversation.item.create",
+                        item: {
+                          type: "message",
+                          role: "user",
+                          content: [{ type: "input_text", text: "What are the six layers of the knowledge architecture and how do they work together?" }],
+                        },
+                      });
+                      sendClientEvent({ type: "response.create" });
+                    }}
+                  >
+                    Knowledge Architecture
+                  </button>
+                </div>
+                
+                <p className="mt-6 mb-2 font-bold">Available Topics:</p>
                 <div className="bg-white rounded-md p-3 border border-gray-200 max-h-64 overflow-y-auto">
-                  <ul className="list-disc pl-5">
+                  <ul className="list-disc pl-5 text-sm">
                     {availableTopics.slice(0, 7).map((topic, index) => (
                       <li key={index} className="py-1">{topic}</li>
                     ))}

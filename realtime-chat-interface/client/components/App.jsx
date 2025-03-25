@@ -157,21 +157,10 @@ export default function App() {
         setIsSessionActive(true);
         setEvents([]);
         
-        // Send system prompt after connection is established
-        try {
-          const systemPrompt = await fetchSystemPrompt();
-          if (systemPrompt) {
-            console.log('Sending system prompt...');
-            sendClientEvent({
-              type: "session.update",
-              session: {
-                instructions: systemPrompt,
-              },
-            });
-          }
-        } catch (error) {
-          console.error('Error setting system prompt:', error);
-        }
+        // Send a welcome message from the user
+        setTimeout(() => {
+          sendTextMessage("Hi, I'd like to learn about AI knowledge sharing tools and methods.");
+        }, 500);
       });
     }
   }, [dataChannel]);
@@ -179,9 +168,10 @@ export default function App() {
   return (
     <>
       <nav className="absolute top-0 left-0 right-0 h-16 flex items-center">
-        <div className="flex items-center gap-4 w-full m-4 pb-2 border-0 border-b border-solid border-gray-200">
+        <div className="flex items-center gap-4 w-full m-4 pb-2 border-0 border-b border-solid border-gray-200 bg-blue-50">
           <img style={{ width: "24px" }} src={logo} />
-          <h1>AI Knowledge Sharing</h1>
+          <h1 className="text-xl font-bold text-blue-800">AI Knowledge Sharing</h1>
+          <span className="text-sm text-gray-600 ml-2">Your guide to Claude Code, MCP servers, and more</span>
         </div>
       </nav>
       <main className="absolute top-16 left-0 right-0 bottom-0">

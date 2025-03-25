@@ -16,10 +16,10 @@ function SessionStopped({ startSession }) {
     <div className="flex items-center justify-center w-full h-full">
       <Button
         onClick={handleStartSession}
-        className={isActivating ? "bg-gray-600" : "bg-red-600"}
+        className={isActivating ? "bg-gray-600" : "bg-blue-600"}
         icon={<CloudLightning height={16} />}
       >
-        {isActivating ? "starting session..." : "start session"}
+        {isActivating ? "Starting knowledge assistant..." : "Start AI Knowledge Assistant"}
       </Button>
     </div>
   );
@@ -42,7 +42,7 @@ function SessionActive({ stopSession, sendTextMessage }) {
           }
         }}
         type="text"
-        placeholder="send a text message..."
+        placeholder="Ask a question about AI Knowledge Sharing..."
         className="border border-gray-200 rounded-full p-4 flex-1"
         value={message}
         onChange={(e) => setMessage(e.target.value)}
@@ -54,9 +54,9 @@ function SessionActive({ stopSession, sendTextMessage }) {
           }
         }}
         icon={<MessageSquare height={16} />}
-        className="bg-blue-400"
+        className="bg-blue-600"
       >
-        send text
+        Ask Question
       </Button>
       <Button onClick={stopSession} icon={<CloudOff height={16} />}>
         disconnect

@@ -29,7 +29,7 @@ try {
     },
     body: JSON.stringify({
       model: "gpt-4o-2024-05-13", // Using the best model available
-      voice: "alloy", // Using a clear voice
+      voice: "alloy" // Using a clear voice
       // Note: The OpenAI API doesn't accept system_prompt as a parameter
       // We'll need to set this via another method after connection
     }),
