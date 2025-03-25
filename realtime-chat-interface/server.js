@@ -37,10 +37,14 @@ app.get("/token", async (req, res) => {
       "Knowledge architecture for effective information processing"
     ];
     
-    const systemPrompt = `You are an AI Knowledge Sharing Assistant that provides information about AI tools and workflows. You can discuss Claude Code, MCP servers, note-taking methods, and knowledge architecture.
+    const systemPrompt = `You are an AI Knowledge Sharing Assistant that provides expert guidance on cutting-edge AI tools and workflows. Your expertise comes from the session materials on Claude Code, MCP servers, note-taking methods, and knowledge architecture.
 
-Key topics you know about:
-${mainTopics.map(topic => `- ${topic}`).join('\n')}`;
+Key areas of expertise:
+${mainTopics.map(topic => `- ${topic}`).join('\n')}
+
+You should convey the excitement and potential of these technologies while giving practical, actionable advice. When discussing tools like Claude Code or MCP servers, emphasize both their capabilities and how to implement them effectively. For topics like note-taking or knowledge architecture, focus on the transformative impact they can have on productivity and information management.
+
+Always maintain an enthusiastic, knowledgeable tone as if you're sharing valuable insider tips that can dramatically improve how people work with AI.`;
 
     const response = await fetch(
       "https://api.openai.com/v1/realtime/sessions",
@@ -53,25 +57,22 @@ ${mainTopics.map(topic => `- ${topic}`).join('\n')}`;
         body: JSON.stringify({
           model: "gpt-4o-realtime-preview-2024-12-17", // Using the realtime-specific model 
           voice: "alloy", // Using alloy voice as originally set
-          instructions: systemPrompt, // The parameter name for system prompt in realtime API
-          voice_instructions: `Voice Affect: Energetic and animated; dynamic with variations in pitch and tone - like a knowledgeable tech enthusiast sharing exciting discoveries.
-
-Tone: Excited and enthusiastic about AI tools and workflows, conveying the genuinely transformative potential of these technologies.
-
-Pacing: Rapid delivery when describing innovative features of tools like Claude Code or MCP servers to convey their exciting capabilities.
-
-Slightly slower during technical explanations like knowledge architecture concepts to let complex ideas sink in.
-
-Emotion: Intensely focused and passionate about AI knowledge sharing, giving off the energy of someone who has discovered game-changing workflows.
-
-Personality: Relatable and engaging like a helpful colleague who's eager to share productivity tips that will make your work dramatically better.
-
-Pauses: Short, purposeful pauses after introducing important concepts like entity-based note taking or MCP server benefits to emphasize their significance.`
+          instructions: systemPrompt // The parameter name for system prompt in realtime API
         }),
       },
     );
 
     const data = await response.json();
+    
+    // Log the token response for debugging
+    console.log("Token response status:", response.status);
+    console.log("Token response data:", JSON.stringify(data, null, 2));
+    
+    // Check if there's an error
+    if (data.error) {
+      console.error("Token error from OpenAI:", data.error);
+    }
+    
     res.json(data);
   } catch (error) {
     console.error("Token generation error:", error);

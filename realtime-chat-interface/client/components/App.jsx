@@ -12,51 +12,100 @@ export default function App() {
   const audioElement = useRef(null);
 
   async function startSession() {
-    // Get a session token for OpenAI Realtime API
-    const tokenResponse = await fetch("/token");
-    const data = await tokenResponse.json();
-    const EPHEMERAL_KEY = data.client_secret.value;
+    try {
+      // Get a session token for OpenAI Realtime API
+      console.log("Fetching token...");
+      const tokenResponse = await fetch("/token");
+      
+      if (!tokenResponse.ok) {
+        console.error("Token response error:", tokenResponse.status);
+        const errorText = await tokenResponse.text();
+        console.error("Token error details:", errorText);
+        alert(`Failed to get token: ${tokenResponse.status}`);
+        return;
+      }
+      
+      const data = await tokenResponse.json();
+      console.log("Token received:", data);
+      
+      if (!data.client_secret || !data.client_secret.value) {
+        console.error("Invalid token data:", data);
+        if (data.error) {
+          alert(`API Error: ${data.error.message || JSON.stringify(data.error)}`);
+        } else {
+          alert("Invalid token data received");
+        }
+        return;
+      }
+      
+      const EPHEMERAL_KEY = data.client_secret.value;
+      console.log("Ephemeral key obtained");
 
-    // Create a peer connection
-    const pc = new RTCPeerConnection();
+      // Create a peer connection
+      const pc = new RTCPeerConnection();
+      console.log("Peer connection created");
 
-    // Set up to play remote audio from the model
-    audioElement.current = document.createElement("audio");
-    audioElement.current.autoplay = true;
-    pc.ontrack = (e) => (audioElement.current.srcObject = e.streams[0]);
+      // Set up to play remote audio from the model
+      audioElement.current = document.createElement("audio");
+      audioElement.current.autoplay = true;
+      pc.ontrack = (e) => {
+        console.log("Track received", e);
+        audioElement.current.srcObject = e.streams[0];
+      };
 
-    // Add local audio track for microphone input in the browser
-    const ms = await navigator.mediaDevices.getUserMedia({
-      audio: true,
-    });
-    pc.addTrack(ms.getTracks()[0]);
+      // Add local audio track for microphone input in the browser
+      console.log("Requesting microphone access...");
+      const ms = await navigator.mediaDevices.getUserMedia({
+        audio: true,
+      });
+      pc.addTrack(ms.getTracks()[0]);
+      console.log("Audio track added");
 
-    // Set up data channel for sending and receiving events
-    const dc = pc.createDataChannel("oai-events");
-    setDataChannel(dc);
+      // Set up data channel for sending and receiving events
+      const dc = pc.createDataChannel("oai-events");
+      setDataChannel(dc);
+      console.log("Data channel created");
 
-    // Start the session using the Session Description Protocol (SDP)
-    const offer = await pc.createOffer();
-    await pc.setLocalDescription(offer);
+      // Start the session using the Session Description Protocol (SDP)
+      console.log("Creating offer...");
+      const offer = await pc.createOffer();
+      await pc.setLocalDescription(offer);
+      console.log("Local description set");
 
-    const baseUrl = "https://api.openai.com/v1/realtime";
-    const model = "gpt-4o-realtime-preview-2024-12-17";
-    const sdpResponse = await fetch(`${baseUrl}?model=${model}`, {
-      method: "POST",
-      body: offer.sdp,
-      headers: {
-        Authorization: `Bearer ${EPHEMERAL_KEY}`,
-        "Content-Type": "application/sdp",
-      },
-    });
+      const baseUrl = "https://api.openai.com/v1/realtime";
+      const model = "gpt-4o-realtime-preview-2024-12-17";
+      console.log("Sending SDP request...");
+      const sdpResponse = await fetch(`${baseUrl}?model=${model}`, {
+        method: "POST",
+        body: offer.sdp,
+        headers: {
+          Authorization: `Bearer ${EPHEMERAL_KEY}`,
+          "Content-Type": "application/sdp",
+        },
+      });
 
-    const answer = {
-      type: "answer",
-      sdp: await sdpResponse.text(),
-    };
-    await pc.setRemoteDescription(answer);
+      if (!sdpResponse.ok) {
+        console.error("SDP response error:", sdpResponse.status);
+        const errorText = await sdpResponse.text();
+        console.error("SDP error details:", errorText);
+        alert(`Failed to set up WebRTC: ${sdpResponse.status}`);
+        return;
+      }
 
-    peerConnection.current = pc;
+      console.log("SDP response received");
+      const answer = {
+        type: "answer",
+        sdp: await sdpResponse.text(),
+      };
+      await pc.setRemoteDescription(answer);
+      console.log("Remote description set");
+
+      peerConnection.current = pc;
+      console.log("Session setup complete");
+    } catch (error) {
+      console.error("Error in startSession:", error);
+      alert(`Error starting session: ${error.message}`);
+    }
   }
 
   // Stop current session, clean up peer connection and data channel
@@ -159,7 +208,7 @@ export default function App() {
         
         // Send a welcome message from the user
         setTimeout(() => {
-          sendTextMessage("Hi, I'd like to learn about AI knowledge sharing tools and methods.");
+          sendTextMessage("Hi! I'd love to learn about the most exciting AI tools and workflows from the Knowledge Sharing session. What are the game-changing techniques I should know about?");
         }, 500);
       });
     }
