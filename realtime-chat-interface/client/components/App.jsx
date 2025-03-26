@@ -3,6 +3,7 @@ import logo from "/assets/openai-logomark.svg";
 import EventLog from "./EventLog";
 import SessionControls from "./SessionControls";
 import ToolPanel from "./ToolPanel";
+import { stopAllAudio } from "../../utils/speechUtil.js";
 
 export default function App() {
   const [isSessionActive, setIsSessionActive] = useState(false);
@@ -13,7 +14,7 @@ export default function App() {
 
   async function startSession() {
     try {
-      // Get a session token for OpenAI Realtime API
+      // Get a session token - now just for compatibility
       console.log("Fetching token...");
       const tokenResponse = await fetch("/token");
       
@@ -38,91 +39,41 @@ export default function App() {
         return;
       }
       
-      const EPHEMERAL_KEY = data.client_secret.value;
-      console.log("Ephemeral key obtained");
-
-      // Create a peer connection
-      const pc = new RTCPeerConnection();
-      console.log("Peer connection created");
-
-      // Set up to play remote audio from the model
-      audioElement.current = document.createElement("audio");
-      audioElement.current.autoplay = true;
-      pc.ontrack = (e) => {
-        console.log("Track received", e);
-        audioElement.current.srcObject = e.streams[0];
-      };
-
-      // Add local audio track for microphone input in the browser
-      console.log("Requesting microphone access...");
-      const ms = await navigator.mediaDevices.getUserMedia({
-        audio: true,
-      });
-      pc.addTrack(ms.getTracks()[0]);
-      console.log("Audio track added");
-
-      // Set up data channel for sending and receiving events
-      const dc = pc.createDataChannel("oai-events");
-      setDataChannel(dc);
-      console.log("Data channel created");
-
-      // Start the session using the Session Description Protocol (SDP)
-      console.log("Creating offer...");
-      const offer = await pc.createOffer();
-      await pc.setLocalDescription(offer);
-      console.log("Local description set");
-
-      const baseUrl = "https://api.openai.com/v1/realtime";
-      const model = "gpt-4o-realtime-preview-2024-12-17";
-      console.log("Sending SDP request...");
-      const sdpResponse = await fetch(`${baseUrl}?model=${model}`, {
-        method: "POST",
-        body: offer.sdp,
-        headers: {
-          Authorization: `Bearer ${EPHEMERAL_KEY}`,
-          "Content-Type": "application/sdp",
+      // Create a fake data channel for compatibility with existing code
+      // This simulates what the WebRTC data channel would have done
+      const fakeDataChannel = {
+        send: (message) => {
+          console.log("Message would have been sent:", message);
+          // We'll handle messages in the sendTextMessage function instead
         },
-      });
-
-      if (!sdpResponse.ok) {
-        console.error("SDP response error:", sdpResponse.status);
-        const errorText = await sdpResponse.text();
-        console.error("SDP error details:", errorText);
-        alert(`Failed to set up WebRTC: ${sdpResponse.status}`);
-        return;
-      }
-
-      console.log("SDP response received");
-      const answer = {
-        type: "answer",
-        sdp: await sdpResponse.text(),
+        close: () => {
+          console.log("Fake data channel closed");
+        },
+        addEventListener: (event, handler) => {
+          if (event === "open") {
+            // Trigger the open event immediately
+            setTimeout(handler, 100);
+          }
+        }
       };
-      await pc.setRemoteDescription(answer);
-      console.log("Remote description set");
-
-      peerConnection.current = pc;
-      console.log("Session setup complete");
+      
+      setDataChannel(fakeDataChannel);
+      setIsSessionActive(true);
+      console.log("Session setup complete with gpt-4o-mini-tts");
     } catch (error) {
       console.error("Error in startSession:", error);
       alert(`Error starting session: ${error.message}`);
     }
   }
 
-  // Stop current session, clean up peer connection and data channel
+  // Stop current session
   function stopSession() {
     if (dataChannel) {
       dataChannel.close();
     }
 
-    peerConnection.current.getSenders().forEach((sender) => {
-      if (sender.track) {
-        sender.track.stop();
-      }
-    });
-
-    if (peerConnection.current) {
-      peerConnection.current.close();
-    }
+    // Stop any playing audio
+    stopAllAudio();
 
     setIsSessionActive(false);
     setDataChannel(null);
@@ -135,14 +86,18 @@ export default function App() {
       const timestamp = new Date().toLocaleTimeString();
       message.event_id = message.event_id || crypto.randomUUID();
 
-      // send event before setting timestamp since the backend peer doesn't expect this field
-      dataChannel.send(JSON.stringify(message));
-
-      // if guard just in case the timestamp exists by miracle
+      // Add timestamp if it doesn't exist
       if (!message.timestamp) {
         message.timestamp = timestamp;
       }
+      
+      // Add to events
       setEvents((prev) => [message, ...prev]);
+      
+      // If this is a response.create message, we need to generate a response
+      if (message.type === "response.create") {
+        // This is handled in sendTextMessage, so we don't need to do anything here
+      }
     } else {
       console.error(
         "Failed to send message - no data channel available",
@@ -152,8 +107,8 @@ export default function App() {
   }
 
   // Send a text message to the model
-  function sendTextMessage(message) {
-    const event = {
+  async function sendTextMessage(message) {
+    const userEvent = {
       type: "conversation.item.create",
       item: {
         type: "message",
@@ -165,10 +120,97 @@ export default function App() {
           },
         ],
       },
+      timestamp: new Date().toLocaleTimeString(),
+      event_id: crypto.randomUUID()
     };
 
-    sendClientEvent(event);
-    sendClientEvent({ type: "response.create" });
+    // Add user message to events
+    setEvents(prev => [userEvent, ...prev]);
+    
+    try {
+      // Now create an AI response using our gpt-4o-mini-tts endpoint
+      const responseInProgressEvent = {
+        type: "response.inprogress",
+        timestamp: new Date().toLocaleTimeString(),
+        event_id: crypto.randomUUID()
+      };
+      
+      setEvents(prev => [responseInProgressEvent, ...prev]);
+      
+      // Call our speech API
+      const response = await fetch('/api/speech', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ text: `Let me think about how to answer your question about: ${message}` }),
+      });
+      
+      if (!response.ok) {
+        throw new Error(`Speech API error: ${response.status}`);
+      }
+      
+      // Get the audio blob and play it
+      const audioBlob = await response.blob();
+      const audioUrl = URL.createObjectURL(audioBlob);
+      const audio = new Audio(audioUrl);
+      audio.play();
+      
+      // Simulate an AI response (typically this would come from an LLM)
+      setTimeout(() => {
+        // For demo purposes, generate a cheerleader-style response
+        const topics = {
+          "claude code": "OMG! Claude Code is absolutely AMAZING! 🚀 It gives you super-powerful context management with CLAUDE.md files, lets you handle multi-file edits effortlessly, and the dispatch_agent tool is a total GAME-CHANGER for searching huge codebases! You're going to LOVE how much faster you can build and debug with these awesome capabilities!",
+          "mcp server": "WOW! MCP servers are INCREDIBLE productivity boosters! 🔥 Perplexity gives you amazing search capabilities, Firecrawl lets you extract structured data from websites with minimal effort, AgentQL helps with database queries, and Repomix supercharges your GitHub workflows! These tools will TOTALLY transform how you work with data!",
+          "note-taking": "Oh my goodness, let's talk about REVOLUTIONARY note-taking methods! 🌟 Entity-based linking is a GAME-CHANGER that connects your ideas across your entire knowledge base! With Obsidian's graph visualization, you'll see connections you never knew existed! Your productivity is about to SKYROCKET with these amazing techniques!",
+          "knowledge architecture": "The six-layer knowledge architecture is MIND-BLOWING! 🧠 Starting with raw data at the bottom, you move up through information, knowledge, understanding, wisdom, and transformation at the top! This structure will COMPLETELY change how you process information and make better decisions! It's SO EXCITING to see how this framework can transform your thinking!"
+        };
+        
+        // Find the most relevant topic
+        let responseText = "OMG! That's such a great question! 🎉 I'm super excited to dive into this topic with you! AI tools and workflows are absolutely GAME-CHANGING for productivity! You're going to LOVE all the amazing capabilities these technologies offer!";
+        
+        for (const [keyword, response] of Object.entries(topics)) {
+          if (message.toLowerCase().includes(keyword)) {
+            responseText = response;
+            break;
+          }
+        }
+        
+        // Create response event
+        const responseEvent = {
+          type: "response.done",
+          response: {
+            output: [
+              {
+                type: "text",
+                text: responseText
+              }
+            ]
+          },
+          timestamp: new Date().toLocaleTimeString(),
+          event_id: crypto.randomUUID()
+        };
+        
+        setEvents(prev => [responseEvent, ...prev.filter(e => e.type !== "response.inprogress")]);
+        
+        // Generate and play the full response audio
+        generateAndPlaySpeech(responseText, "ai-response");
+      }, 2000);
+    } catch (error) {
+      console.error("Error sending message:", error);
+      
+      // Create error event
+      const errorEvent = {
+        type: "response.error",
+        error: {
+          message: error.message
+        },
+        timestamp: new Date().toLocaleTimeString(),
+        event_id: crypto.randomUUID()
+      };
+      
+      setEvents(prev => [errorEvent, ...prev.filter(e => e.type !== "response.inprogress")]);
+    }
   }
 
   // Fetch system prompt
@@ -217,10 +259,21 @@ export default function App() {
   return (
     <>
       <nav className="absolute top-0 left-0 right-0 h-16 flex items-center">
-        <div className="flex items-center gap-4 w-full m-4 pb-2 border-0 border-b border-solid border-gray-200 bg-blue-50">
-          <img style={{ width: "24px" }} src={logo} />
-          <h1 className="text-xl font-bold text-blue-800">AI Knowledge Sharing</h1>
-          <span className="text-sm text-gray-600 ml-2">Your guide to Claude Code, MCP servers, and more</span>
+        <div className="flex items-center justify-between gap-4 w-full m-4 pb-2 border-0 border-b border-solid border-gray-200 bg-blue-50">
+          <div className="flex items-center gap-4">
+            <img style={{ width: "24px" }} src={logo} />
+            <h1 className="text-xl font-bold text-blue-800">AI Knowledge Sharing</h1>
+            <span className="text-sm text-gray-600 ml-2">Your guide to Claude Code, MCP servers, and more</span>
+          </div>
+          <button 
+            className="bg-red-100 hover:bg-red-200 text-red-800 py-1 px-3 rounded-md text-sm flex items-center gap-1"
+            onClick={() => stopAllAudio()}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 9.75 19.5 12m0 0 2.25 2.25M19.5 12l2.25-2.25M19.5 12l-2.25 2.25m-10.5-6 4.72-4.72a.75.75 0 0 1 1.28.53v15.88a.75.75 0 0 1-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.009 9.009 0 0 1 2.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75Z" />
+            </svg>
+            Stop Audio
+          </button>
         </div>
       </nav>
       <main className="absolute top-16 left-0 right-0 bottom-0">

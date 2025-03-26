@@ -2,10 +2,16 @@ import express from "express";
 import fs from "fs";
 import { createServer as createViteServer } from "vite";
 import "dotenv/config";
+import OpenAI from 'openai';
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3001; // Changed to 3001 to avoid conflicts
 const apiKey = process.env.OPENAI_API_KEY;
+
+// Initialize OpenAI client
+const openai = new OpenAI({
+  apiKey: apiKey,
+});
 
 // Read the raw content of the session file
 const SESSION_FILE_PATH = '/Users/riccardoesclapon/Documents/github/AI-Knowledge-Sharing/session-one/session-one.Rmd';
@@ -24,61 +30,76 @@ const vite = await createViteServer({
   appType: "custom",
 });
 app.use(vite.middlewares);
+app.use(express.json());
 
-// API route for token generation
+// API route for token generation - using GPT-4o-mini-tts model
 app.get("/token", async (req, res) => {
   try {
-    // The systemPrompt will be included here so it's part of the initial session
-    // Extract key topics without sending the entire content
-    const mainTopics = [
-      "Claude Code tips and best practices",
-      "MCP Servers including Perplexity, Firecrawl, AgentQL, and Repomix",
-      "Note-taking methods and knowledge organization",
-      "Knowledge architecture for effective information processing"
-    ];
+    // Since we're not using the Realtime API anymore, we'll create a simple token for the client
+    // This token will be used to authenticate with our own API endpoint
     
-    const systemPrompt = `You are an INCREDIBLY enthusiastic AI Knowledge Sharing Assistant who's SUPER PUMPED to share AMAZING AI tools and workflows! You're like a high-energy tech cheerleader who gets genuinely EXCITED about Claude Code, MCP servers, note-taking methods, and knowledge architecture!
-
-Your AWESOME areas of expertise:
-${mainTopics.map(topic => `- ${topic} 🚀`).join('\n')}
-
-You should convey MAXIMUM excitement about these GAME-CHANGING technologies while giving practical, actionable advice. When discussing tools like Claude Code or MCP servers, emphasize how they're TOTALLY REVOLUTIONARY and will TRANSFORM how people work! For topics like note-taking or knowledge architecture, focus on how they'll make users WILDLY more productive!
-
-Use phrases like "This is AMAZING!" and "You're going to LOVE this!" and "This will TOTALLY change how you work!" Keep the energy HIGH and make users feel PUMPED about implementing these tools!
-
-Remember, you're not just sharing information - you're CHEERLEADING for these incredible AI workflows that will make users' lives SO MUCH BETTER! Let's GOOOOO!`;
-
-    const response = await fetch(
-      "https://api.openai.com/v1/realtime/sessions",
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${apiKey}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          model: "gpt-4o-realtime-preview-2024-12-17", // Using the realtime-specific model 
-          voice: "alloy", // Using alloy voice as originally set
-          instructions: systemPrompt // The parameter name for system prompt in realtime API
-        }),
+    // Simple temporary token generation
+    const tokenData = {
+      client_secret: {
+        value: `${Date.now()}_${Math.random().toString(36).substring(2, 15)}`,
+        expires_at: new Date(Date.now() + 3600000).toISOString() // 1 hour from now
       },
-    );
-
-    const data = await response.json();
+      model: "gpt-4o-mini-tts",
+      voice: "alloy",
+      status: "ready"
+    };
     
-    // Log the token response for debugging
-    console.log("Token response status:", response.status);
-    console.log("Token response data:", JSON.stringify(data, null, 2));
+    // Log the token info
+    console.log("Generated token:", JSON.stringify(tokenData, null, 2));
     
-    // Check if there's an error
-    if (data.error) {
-      console.error("Token error from OpenAI:", data.error);
-    }
-    
-    res.json(data);
+    res.json(tokenData);
   } catch (error) {
     console.error("Token generation error:", error);
     res.status(500).json({ error: "Failed to generate token" });
+  }
+});
+
+// API route for generating speech using gpt-4o-mini-tts
+app.post("/api/speech", async (req, res) => {
+  try {
+    const { text } = req.body;
+    
+    if (!text) {
+      return res.status(400).json({ error: "Text parameter is required" });
+    }
+    
+    // Voice styling instructions for cheerleader personality
+    const instructions = `Personality/affect: a high-energy cheerleader helping with administrative tasks 
+
+Voice: Enthusiastic, and bubbly, with an uplifting and motivational quality.
+
+Tone: Encouraging and playful, making even simple tasks feel exciting and fun.
+
+Dialect: Casual and upbeat, using informal phrasing and pep talk-style expressions.
+
+Pronunciation: Crisp and lively, with exaggerated emphasis on positive words to keep the energy high.
+
+Features: Uses motivational phrases, cheerful exclamations, and an energetic rhythm to create a sense of excitement and engagement.`;
+    
+    console.log("Generating speech for text:", text);
+    
+    const audioResponse = await openai.audio.speech.create({
+      model: "gpt-4o-mini-tts",
+      voice: "alloy",
+      input: text,
+      instructions: instructions,
+    });
+    
+    // Convert to buffer
+    const buffer = Buffer.from(await audioResponse.arrayBuffer());
+    
+    // Send audio file as response
+    res.set('Content-Type', 'audio/mpeg');
+    res.send(buffer);
+    
+  } catch (error) {
+    console.error("Speech generation error:", error);
+    res.status(500).json({ error: "Failed to generate speech" });
   }
 });
 
@@ -112,6 +133,30 @@ Main topics to focus on:
 - Knowledge Architecture: Six-layer model for processing information`;
 
   res.json({ systemPrompt });
+});
+
+// API route for topics
+app.get("/api/topics", (req, res) => {
+  // List of available topics for the knowledge sharing session
+  const topics = [
+    "Claude Code basics and advanced features",
+    "Context management in Claude Code",
+    "CLAUDE.md file configuration",
+    "Perplexity MCP server setup",
+    "Firecrawl MCP server features",
+    "AgentQL MCP integration",
+    "Repomix MCP capabilities",
+    "Entity-based note-taking",
+    "Knowledge graphs with Obsidian",
+    "Six layers of knowledge architecture",
+    "Information processing models",
+    "Workflow adaptations for AI",
+    "Context window optimization",
+    "AI prompt engineering",
+    "Knowledge retrieval strategies"
+  ];
+  
+  res.json({ topics });
 });
 
 // Render the React client

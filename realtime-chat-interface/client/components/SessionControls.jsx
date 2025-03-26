@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { CloudLightning, CloudOff, MessageSquare } from "react-feather";
+import { CloudLightning, CloudOff, MessageSquare, Volume2 } from "react-feather";
 import Button from "./Button";
+import { generateAndPlaySpeech } from "../../utils/speechUtil.js";
 
 function SessionStopped({ startSession }) {
   const [isActivating, setIsActivating] = useState(false);
@@ -27,14 +28,31 @@ function SessionStopped({ startSession }) {
 
 function SessionActive({ stopSession, sendTextMessage }) {
   const [message, setMessage] = useState("");
+  const [isSpeaking, setIsSpeaking] = useState(false);
 
   function handleSendClientEvent() {
     sendTextMessage(message);
     setMessage("");
   }
+  
+  // Function to speak with cheerleader voice
+  async function speakWithCheerleaderVoice() {
+    if (isSpeaking || !message.trim()) return;
+    
+    const cheerleaderIntro = `OMG! That's a GREAT question about ${message.length > 30 ? message.substring(0, 30) + '...' : message}! Let me get you the ABSOLUTE BEST info on this! You're going to LOVE what I have to share! Let's DO this! 🎉`;
+    
+    setIsSpeaking(true);
+    try {
+      await generateAndPlaySpeech(cheerleaderIntro, "question-intro");
+    } catch (error) {
+      console.error("Error with cheerleader voice:", error);
+    } finally {
+      setIsSpeaking(false);
+    }
+  }
 
   return (
-    <div className="flex items-center justify-center w-full h-full gap-4">
+    <div className="flex items-center justify-center w-full h-full gap-2">
       <input
         onKeyDown={(e) => {
           if (e.key === "Enter" && message.trim()) {
@@ -47,6 +65,14 @@ function SessionActive({ stopSession, sendTextMessage }) {
         value={message}
         onChange={(e) => setMessage(e.target.value)}
       />
+      <Button
+        onClick={speakWithCheerleaderVoice}
+        disabled={isSpeaking || !message.trim()}
+        icon={<Volume2 height={16} />}
+        className={`${isSpeaking ? 'bg-pink-400' : 'bg-pink-600'} px-2`}
+      >
+        {isSpeaking ? "Speaking..." : "Preview"}
+      </Button>
       <Button
         onClick={() => {
           if (message.trim()) {

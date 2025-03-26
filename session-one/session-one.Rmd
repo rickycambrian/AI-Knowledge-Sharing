@@ -255,209 +255,6 @@ If anyone is going to be using the OpenAI Agents SDK, I saw a fork someone made 
 
 This also highlights how highly competitive the current environment is, where you can combine the two latest open source innovations from the two leading closed source model providers in Anthropic and OpenAI. It really shows how much they both value positioning themselves well within the open source tools people use.
 
-# Challenges and Opportunities
-
-I see these generalized MCP servers as a helpful step, but ultimately there are challenges and opportunities that I think warrant more specialized workflows.
-
-These are the main challenges I think we need to address as organizations because no product will come along that will solve these in a way that maximizes the benefits we can get:
-
-1. Context management
-
-2. Fine-tuning datasets
-
-3. Continuous improvement and internal benchmarks
-
-
-# Context management challenge
-
-It's challenging to provide specific context and documentation into our LLM conversations, and do so in a way that doesn't bring up the amount of context by a large amount of tokens, and cause us to have to provide that information again.
-
-One example opportunity this gives us, is we can create agents that function as MCP servers that are specialized in answering questions given certain sets of context and tools to explore that context further.
-
-If every chat was accompanied by tools that can retrieve all the right information without adding any tokens into the context, this would be a big win for how quickly and effectively we can work through problems and accelerate our work.
-
-Important takeaway: what we want to do incrementally and consistently as organizations is take how we currently use these tools and figure out how we can get more from the LLMs for less work on our end
-
-- we can create systems that we all individually use, but feed into a single view of the collection of the best information we uncovered using those interfaces
-
-
-## Proposed Architecture
-
-[ here mermaid diagram with proposed architecture - take from app I'm working on]
-
-here add voice use cases - meetings assistants and personal brainstorming chat
-
-```{r architecture-diagram, echo=FALSE, fig.width=10, fig.height=8}
-library(DiagrammeR)
-mermaid('
-flowchart TB
-    subgraph "Knowledge Acquisition Layer"
-        RawInput[Raw Information Input]
-        QueryRefine[Query Refinement]
-        InfoExtract[Information Extraction]
-        StructForm[Structural Formalization]
-    end
-
-    subgraph "Knowledge Organization Layer"
-        EntityForm[Entity Formation]
-        RelationDisc[Relationship Discovery]
-        TemporalCtx[Temporal Contextualization]
-        PatternRec[Pattern Recognition]
-    end
-
-    subgraph "Cognitive Processing Layer"
-        ReasonEngine[Reasoning Engine]
-        InferGen[Inference Generation]
-        HypoForm[Hypothesis Formation]
-        FactValid[Fact Validation]
-    end
-
-    subgraph "Knowledge Synthesis Layer"
-        KnowGraph[Knowledge Graph]
-        MemIndex[Memory Indexing]
-        SemanticNet[Semantic Network]
-        ConceptMap[Conceptual Mapping]
-    end
-
-    subgraph "Application Layer"
-        QueryResp[Query Response]
-        InsightGen[Insight Generation]
-        RecSystem[Recommendation System]
-        ExpInterface[Explanatory Interface]
-    end
-
-    subgraph "Feedback & Evolution Layer"
-        UserFeedback[User Feedback]
-        SelfEval[Self-Evaluation]
-        ConfScoring[Confidence Scoring]
-        KnowRefine[Knowledge Refinement]
-    end
-
-    %% Main knowledge flow
-    RawInput --> InfoExtract
-    InfoExtract --> StructForm
-    StructForm --> EntityForm
-    EntityForm --> RelationDisc
-    RelationDisc --> TemporalCtx
-    TemporalCtx --> KnowGraph
-    KnowGraph --> ReasonEngine
-
-    %% Reasoning processes
-    ReasonEngine --> InferGen
-    ReasonEngine --> HypoForm
-    HypoForm --> FactValid
-    FactValid --> KnowGraph
-
-    %% Memory processes
-    KnowGraph --> MemIndex
-    KnowGraph --> SemanticNet
-    SemanticNet --> ConceptMap
-
-    %% Application processes
-    KnowGraph --> QueryResp
-    SemanticNet --> InsightGen
-    ConceptMap --> RecSystem
-    ReasonEngine --> ExpInterface
-
-    %% Self-improvement loops
-    QueryResp --> UserFeedback
-    UserFeedback --> SelfEval
-    SelfEval --> ConfScoring
-    ConfScoring --> KnowRefine
-    KnowRefine --> KnowGraph
-
-    %% Query refinement loop
-    QueryResp --> QueryRefine
-    QueryRefine --> RawInput
-
-    %% Pattern recognition feedback
-    MemIndex --> PatternRec
-    PatternRec --> RelationDisc
-
-    %% Dashed connections for implicit relationships
-    InferGen -.-> KnowRefine
-    PatternRec -.-> HypoForm
-    SelfEval -.-> ReasonEngine
-
-    %% Highlighting knowledge evolution paths
-    KnowRefine ==> EntityForm
-    KnowRefine ==> RelationDisc
-    UserFeedback ==> InfoExtract
-
-    %% Styling
-    classDef input fill:#6366f1,color:white,stroke:black
-    classDef process fill:#0ea5e9,color:white,stroke:black
-    classDef knowledge fill:#10b981,color:white,stroke:black
-    classDef output fill:#f59e0b,color:white,stroke:black
-    classDef feedback fill:#ec4899,color:white,stroke:black
-
-    class RawInput,QueryRefine input
-    class InfoExtract,StructForm,EntityForm,RelationDisc,TemporalCtx,PatternRec,ReasonEngine,InferGen,HypoForm,FactValid process
-    class KnowGraph,MemIndex,SemanticNet,ConceptMap knowledge
-    class QueryResp,InsightGen,RecSystem,ExpInterface output
-    class UserFeedback,SelfEval,ConfScoring,KnowRefine feedback
-')
-```
-
-^ does not currently show it correctly
-
-## Usage Path
-
-... TODO ADD DETAILS
-
-## Integration Path
-
-... TODO ADD DETAILS
-
-
-# Another Challenge and Opportunity
-
-Sonnet 3.7 has been really good for coding overall, but it has a pretty frequent and bad failure mode where it stops solving the problem you asked it to solve in the correct way, and it starts to put things like mock data to make it work, which I have never found to be a desireable thing to do.
-
-Opportunity: When framing a problem to an LLM/agent, we can start by designing tests we want it to be able to pass. If we can frame its objective in this way with reasonable guardrails, we should be able to solve problems and accomplish tasks at the rate at which we can design tests for new problems we want the agentic systems to solve, and arriving at those solutions can be orchestrated and scaled without bottlenecks.
-
-
-note: can handoffs and guardrails in OpenAI agents sdk help with this challenge?
-
-
-
-# Key Question
-
-What can we do to create extremely minimal context usage in the right parts of our workflows?
-- context and documentation helpers (what we just talked about)
-- code editing agents
-- ... anything else?
-
-
-# Key Problem: continued progress
-
-
-
-## Context
-
-
-## Fine-tuning
-
-- While at SF events, saw some really strong results people have shown in the scientific community creating fine tuned models.
-
-- only bounded by compute, can generally create synthetic data to accomplish certain tasks, and over time we will be able to get more and more value out of those datasets if they are high quality and reflect tasks we care about and how we overcame those hurdles.
-
-- idea: MCP server integrated with our stack (CLAUDE.md defaults) that automatically creates datasets that can be used for fine-tuning. Minimal disruption to workflows, just an extra step when the workflow makes updates to CLAUDE.md it can also bring those updates to a central repository where the results are used for creating fine-tuned datasets as well as adding to a long term memory knowledge graph for our agents
-
-
-## Continuous improvement
-
-IMPORTANT: Internal benchmarks on problems we care about
-
-- every day we are creating a huge amount of useful data which one day will improve our models, that we aren't currently able to take advandage of. Maybe MCP server that acts as memory layer?
-
-
-## Competitive Landscape
-
-
-
-
-
 # Note taking
 
 ## Personal Work Notes
@@ -537,6 +334,210 @@ OLD
 ## Recommendation: workflow adaptations
 
 - Create AI workflows that operate and enhance existing workflows, try not to replace or force adoption of tools in non-organic and useful ways. This takes time and effort, but most worthwhile path for things that stick.
+
+
+
+# Challenges and Opportunities
+
+I see these generalized MCP servers as a helpful step, but ultimately there are challenges and opportunities that I think warrant more specialized workflows.
+
+These are the main challenges I think we need to address as organizations because no product will come along that will solve these in a way that maximizes the benefits we can get:
+
+1. Context management
+
+2. Fine-tuning datasets
+
+3. Continuous improvement and internal benchmarks
+
+
+# Context management challenge
+
+It's challenging to provide specific context and documentation into our LLM conversations, and do so in a way that doesn't bring up the amount of context by a large amount of tokens, and cause us to have to provide that information again.
+
+One example opportunity this gives us, is we can create agents that function as MCP servers that are specialized in answering questions given certain sets of context and tools to explore that context further.
+
+If every chat was accompanied by tools that can retrieve all the right information without adding any tokens into the context, this would be a big win for how quickly and effectively we can work through problems and accelerate our work.
+
+Important takeaway: what we want to do incrementally and consistently as organizations is take how we currently use these tools and figure out how we can get more from the LLMs for less work on our end
+
+- we can create systems that we all individually use, but feed into a single view of the collection of the best information we uncovered using those interfaces
+
+
+<!-- ## Proposed Architecture -->
+
+<!-- [ here mermaid diagram with proposed architecture - take from app I'm working on] -->
+
+<!-- here add voice use cases - meetings assistants and personal brainstorming chat -->
+
+<!-- ```{r architecture-diagram, echo=FALSE, fig.width=10, fig.height=8} -->
+<!-- library(DiagrammeR) -->
+<!-- mermaid(' -->
+<!-- flowchart TB -->
+<!--     subgraph "Knowledge Acquisition Layer" -->
+<!--         RawInput[Raw Information Input] -->
+<!--         QueryRefine[Query Refinement] -->
+<!--         InfoExtract[Information Extraction] -->
+<!--         StructForm[Structural Formalization] -->
+<!--     end -->
+
+<!--     subgraph "Knowledge Organization Layer" -->
+<!--         EntityForm[Entity Formation] -->
+<!--         RelationDisc[Relationship Discovery] -->
+<!--         TemporalCtx[Temporal Contextualization] -->
+<!--         PatternRec[Pattern Recognition] -->
+<!--     end -->
+
+<!--     subgraph "Cognitive Processing Layer" -->
+<!--         ReasonEngine[Reasoning Engine] -->
+<!--         InferGen[Inference Generation] -->
+<!--         HypoForm[Hypothesis Formation] -->
+<!--         FactValid[Fact Validation] -->
+<!--     end -->
+
+<!--     subgraph "Knowledge Synthesis Layer" -->
+<!--         KnowGraph[Knowledge Graph] -->
+<!--         MemIndex[Memory Indexing] -->
+<!--         SemanticNet[Semantic Network] -->
+<!--         ConceptMap[Conceptual Mapping] -->
+<!--     end -->
+
+<!--     subgraph "Application Layer" -->
+<!--         QueryResp[Query Response] -->
+<!--         InsightGen[Insight Generation] -->
+<!--         RecSystem[Recommendation System] -->
+<!--         ExpInterface[Explanatory Interface] -->
+<!--     end -->
+
+<!--     subgraph "Feedback & Evolution Layer" -->
+<!--         UserFeedback[User Feedback] -->
+<!--         SelfEval[Self-Evaluation] -->
+<!--         ConfScoring[Confidence Scoring] -->
+<!--         KnowRefine[Knowledge Refinement] -->
+<!--     end -->
+
+<!--     %% Main knowledge flow -->
+<!--     RawInput --> InfoExtract -->
+<!--     InfoExtract --> StructForm -->
+<!--     StructForm --> EntityForm -->
+<!--     EntityForm --> RelationDisc -->
+<!--     RelationDisc --> TemporalCtx -->
+<!--     TemporalCtx --> KnowGraph -->
+<!--     KnowGraph --> ReasonEngine -->
+
+<!--     %% Reasoning processes -->
+<!--     ReasonEngine --> InferGen -->
+<!--     ReasonEngine --> HypoForm -->
+<!--     HypoForm --> FactValid -->
+<!--     FactValid --> KnowGraph -->
+
+<!--     %% Memory processes -->
+<!--     KnowGraph --> MemIndex -->
+<!--     KnowGraph --> SemanticNet -->
+<!--     SemanticNet --> ConceptMap -->
+
+<!--     %% Application processes -->
+<!--     KnowGraph --> QueryResp -->
+<!--     SemanticNet --> InsightGen -->
+<!--     ConceptMap --> RecSystem -->
+<!--     ReasonEngine --> ExpInterface -->
+
+<!--     %% Self-improvement loops -->
+<!--     QueryResp --> UserFeedback -->
+<!--     UserFeedback --> SelfEval -->
+<!--     SelfEval --> ConfScoring -->
+<!--     ConfScoring --> KnowRefine -->
+<!--     KnowRefine --> KnowGraph -->
+
+<!--     %% Query refinement loop -->
+<!--     QueryResp --> QueryRefine -->
+<!--     QueryRefine --> RawInput -->
+
+<!--     %% Pattern recognition feedback -->
+<!--     MemIndex --> PatternRec -->
+<!--     PatternRec --> RelationDisc -->
+
+<!--     %% Dashed connections for implicit relationships -->
+<!--     InferGen -.-> KnowRefine -->
+<!--     PatternRec -.-> HypoForm -->
+<!--     SelfEval -.-> ReasonEngine -->
+
+<!--     %% Highlighting knowledge evolution paths -->
+<!--     KnowRefine ==> EntityForm -->
+<!--     KnowRefine ==> RelationDisc -->
+<!--     UserFeedback ==> InfoExtract -->
+
+<!--     %% Styling -->
+<!--     classDef input fill:#6366f1,color:white,stroke:black -->
+<!--     classDef process fill:#0ea5e9,color:white,stroke:black -->
+<!--     classDef knowledge fill:#10b981,color:white,stroke:black -->
+<!--     classDef output fill:#f59e0b,color:white,stroke:black -->
+<!--     classDef feedback fill:#ec4899,color:white,stroke:black -->
+
+<!--     class RawInput,QueryRefine input -->
+<!--     class InfoExtract,StructForm,EntityForm,RelationDisc,TemporalCtx,PatternRec,ReasonEngine,InferGen,HypoForm,FactValid process -->
+<!--     class KnowGraph,MemIndex,SemanticNet,ConceptMap knowledge -->
+<!--     class QueryResp,InsightGen,RecSystem,ExpInterface output -->
+<!--     class UserFeedback,SelfEval,ConfScoring,KnowRefine feedback -->
+<!-- ') -->
+<!-- ``` -->
+
+<!-- ^ does not currently show it correctly -->
+
+## Usage Path
+
+... TODO ADD DETAILS
+
+## Integration Path
+
+... TODO ADD DETAILS
+
+
+# Another Challenge and Opportunity
+
+Sonnet 3.7 has been really good for coding overall, but it has a pretty frequent and bad failure mode where it stops solving the problem you asked it to solve in the correct way, and it starts to put things like mock data to make it work, which I have never found to be a desireable thing to do.
+
+Opportunity: When framing a problem to an LLM/agent, we can start by designing tests we want it to be able to pass. If we can frame its objective in this way with reasonable guardrails, we should be able to solve problems and accomplish tasks at the rate at which we can design tests for new problems we want the agentic systems to solve, and arriving at those solutions can be orchestrated and scaled without bottlenecks.
+
+
+note: can handoffs and guardrails in OpenAI agents sdk help with this challenge?
+
+
+
+# Key Question
+
+What can we do to create extremely minimal context usage in the right parts of our workflows?
+- context and documentation helpers (what we just talked about)
+- code editing agents
+- ... anything else?
+
+
+# Key Problem: continued progress
+
+
+
+## Context
+
+
+## Fine-tuning
+
+- While at SF events, saw some really strong results people have shown in the scientific community creating fine tuned models.
+
+- only bounded by compute, can generally create synthetic data to accomplish certain tasks, and over time we will be able to get more and more value out of those datasets if they are high quality and reflect tasks we care about and how we overcame those hurdles.
+
+- idea: MCP server integrated with our stack (CLAUDE.md defaults) that automatically creates datasets that can be used for fine-tuning. Minimal disruption to workflows, just an extra step when the workflow makes updates to CLAUDE.md it can also bring those updates to a central repository where the results are used for creating fine-tuned datasets as well as adding to a long term memory knowledge graph for our agents
+
+
+## Continuous improvement
+
+IMPORTANT: Internal benchmarks on problems we care about
+
+- every day we are creating a huge amount of useful data which one day will improve our models, that we aren't currently able to take advandage of. Maybe MCP server that acts as memory layer?
+
+
+## Competitive Landscape
+
+
+
 
 
 # Agents

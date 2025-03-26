@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { generateAndPlaySpeech, stopAllAudio } from "../../utils/speechUtil.js";
 
 // Define our custom tools for the AI Knowledge Sharing session
 const knowledgeTools = [
@@ -276,8 +277,18 @@ export default function ToolPanel({
     if (!isSessionActive) {
       setFunctionAdded(false);
       setFunctionCallOutput(null);
+      stopAllAudio(); // Stop any playing audio when session ends
     }
   }, [isSessionActive]);
+  
+  // Function to speak a message with the cheerleader voice
+  const speakWithCheerleaderVoice = async (text) => {
+    try {
+      await generateAndPlaySpeech(text, "cheerleader-voice");
+    } catch (error) {
+      console.error("Error speaking with cheerleader voice:", error);
+    }
+  };
 
   return (
     <section className="h-full w-full flex flex-col gap-4">
@@ -289,17 +300,36 @@ export default function ToolPanel({
               <FunctionCallOutput functionCallOutput={functionCallOutput} />
             ) : (
               <div className="mt-4">
-                <p className="mb-3 font-bold">Quick Topic Access:</p>
+                <div className="flex justify-between items-center mb-3">
+                  <p className="font-bold">Quick Topic Access:</p>
+                  
+                  <button 
+                    className="bg-pink-100 hover:bg-pink-200 text-pink-800 py-1 px-3 rounded-md text-sm flex items-center"
+                    onClick={() => {
+                      const cheerleaderText = "Woohoo! Let's get those AI knowledge sessions rocking, superstar! 🎉 We've got Claude Code tips that'll blow your mind, MCP servers that are total game-changers, and note-taking methods that'll transform how you organize information! Which awesome topic are you ready to CRUSH today?! Let's make your AI workflow AMAZING! 💪";
+                      speakWithCheerleaderVoice(cheerleaderText);
+                    }}
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 mr-1">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M19.114 5.636a9 9 0 0 1 0 12.728M16.463 8.288a5.25 5.25 0 0 1 0 7.424M6.75 8.25l4.72-4.72a.75.75 0 0 1 1.28.53v15.88a.75.75 0 0 1-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.009 9.009 0 0 1 2.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75Z" />
+                    </svg>
+                    Hear Cheerleader Intro
+                  </button>
+                </div>
+                
                 <div className="grid grid-cols-2 gap-2">
                   <button 
                     className="bg-blue-100 hover:bg-blue-200 text-blue-800 py-2 px-3 rounded-md text-sm"
                     onClick={() => {
+                      const message = "What are the best practices for using Claude Code?";
+                      speakWithCheerleaderVoice("OMG! Let's dive into Claude Code best practices! You're going to LOVE these tips! 🚀");
+                      
                       sendClientEvent({
                         type: "conversation.item.create",
                         item: {
                           type: "message",
                           role: "user",
-                          content: [{ type: "input_text", text: "What are the best practices for using Claude Code?" }],
+                          content: [{ type: "input_text", text: message }],
                         },
                       });
                       sendClientEvent({ type: "response.create" });
@@ -310,12 +340,15 @@ export default function ToolPanel({
                   <button 
                     className="bg-green-100 hover:bg-green-200 text-green-800 py-2 px-3 rounded-md text-sm"
                     onClick={() => {
+                      const message = "Tell me about the different MCP servers and how to use them";
+                      speakWithCheerleaderVoice("YES! MCP servers are AMAZING! Let's get you all the awesome details about these productivity BOOSTERS! 💪");
+                      
                       sendClientEvent({
                         type: "conversation.item.create",
                         item: {
                           type: "message",
                           role: "user",
-                          content: [{ type: "input_text", text: "Tell me about the different MCP servers and how to use them" }],
+                          content: [{ type: "input_text", text: message }],
                         },
                       });
                       sendClientEvent({ type: "response.create" });
@@ -326,12 +359,15 @@ export default function ToolPanel({
                   <button 
                     className="bg-purple-100 hover:bg-purple-200 text-purple-800 py-2 px-3 rounded-md text-sm"
                     onClick={() => {
+                      const message = "How can I improve my note-taking with entity linking and knowledge graphs?";
+                      speakWithCheerleaderVoice("WOW! Note-taking is about to get a TOTAL MAKEOVER! Let's transform how you organize information! 📝✨");
+                      
                       sendClientEvent({
                         type: "conversation.item.create",
                         item: {
                           type: "message",
                           role: "user",
-                          content: [{ type: "input_text", text: "How can I improve my note-taking with entity linking and knowledge graphs?" }],
+                          content: [{ type: "input_text", text: message }],
                         },
                       });
                       sendClientEvent({ type: "response.create" });
@@ -342,12 +378,15 @@ export default function ToolPanel({
                   <button 
                     className="bg-amber-100 hover:bg-amber-200 text-amber-800 py-2 px-3 rounded-md text-sm"
                     onClick={() => {
+                      const message = "What are the six layers of the knowledge architecture and how do they work together?";
+                      speakWithCheerleaderVoice("INCREDIBLE! The six-layer knowledge architecture is a GAME-CHANGER! Let's unlock this powerful framework together! 🏆");
+                      
                       sendClientEvent({
                         type: "conversation.item.create",
                         item: {
                           type: "message",
                           role: "user",
-                          content: [{ type: "input_text", text: "What are the six layers of the knowledge architecture and how do they work together?" }],
+                          content: [{ type: "input_text", text: message }],
                         },
                       });
                       sendClientEvent({ type: "response.create" });

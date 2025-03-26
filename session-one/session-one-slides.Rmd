@@ -9,8 +9,8 @@ output:
 
 # Agenda
 
-- Share concrete tips and recommendations for individuals and organizations
-- Identify solutions to implement now and areas for future resources
+- Concrete tips and recommendations for you as individuals as well as our organizations for latest available tools
+- What solutions should we start thinking about implementing as organizations and individuals right away, and what ares should we allocate future time and resources to?
 
 # New Tools and Updates
 
@@ -18,31 +18,116 @@ output:
 - Enables creation of autonomous agents with defined goals
 - Supports asynchronous execution and multi-agent communication
 
-## OpenAI Agents SDK - Handoffs
+## OpenAI Agents SDK Concepts
 
-```{python}
+Handoffs:
+```{python, eval=FALSE}
 from agents import Agent, handoff
+
 # example specialized billing and refund agents
 billing_agent = Agent(name="Billing agent")
 refund_agent = Agent(name="Refund agent")
+
 # Triage agent that can handoff to billing and refund agents
 triage_agent = Agent(name="Triage agent", handoffs=[billing_agent, handoff(refund_agent)])
 ```
 
+Guardrails run in parallel to your agents, enabling you to do checks and validations of user inputs and outputs:
+```{python, eval=FALSE}
+from pydantic import BaseModel
+from agents import (
+    Agent,
+    GuardrailFunctionOutput,
+    InputGuardrailTripwireTriggered,
+    RunContextWrapper,
+    Runner,
+    TResponseInputItem,
+    input_guardrail,
+)
+
+class MathHomeworkOutput(BaseModel):
+    is_math_homework: bool
+    reasoning: str
+
+guardrail_agent = Agent( 
+    name="Guardrail check",
+    instructions="Check if the user is asking you to do their math homework.",
+    output_type=MathHomeworkOutput,
+)
+
+
+@input_guardrail
+async def math_guardrail( 
+    ctx: RunContextWrapper[None], agent: Agent, input: str | list[TResponseInputItem]
+) -> GuardrailFunctionOutput:
+    result = await Runner.run(guardrail_agent, input, context=ctx.context)
+
+    return GuardrailFunctionOutput(
+        output_info=result.final_output, 
+        tripwire_triggered=result.final_output.is_math_homework,
+    )
+
+
+agent = Agent(  
+    name="Customer support agent",
+    instructions="You are a customer support agent. You help customers with their questions.",
+    input_guardrails=[math_guardrail],
+)
+
+async def main():
+    # This should trip the guardrail
+    try:
+        await Runner.run(agent, "Hello, can you help me solve for x: 2x + 3 = 11?")
+        print("Guardrail didn't trip - this is unexpected")
+
+    except InputGuardrailTripwireTriggered:
+        print("Math homework guardrail tripped")
+```
+
 ## OpenAI Real Time Voice
+
+Demo of new Real Time Voice API: https://www.openai.fm/
+
+```{python, eval=FALSE}
+import asyncio
+from openai import AsyncOpenAI
+from openai.helpers import LocalAudioPlayer
+
+openai = AsyncOpenAI()
+
+input = """Ugh… hey… welcome to the bank, I guess. If you actually need something, listen up… or don't. Whatever.\n\nIf you wanna check your balance or something, press 1… not like it's ever enough.\n\nNeed to transfer money? Press 2… gotta keep that debt aesthetic going.\n\nLost your card? Press 3... ugh, classic.\n\nIf you're here to talk to a real person, press 0, but, like… do people even listen anymore?\n\nOr just stay on the line and let the silence consume you… sigh\n\n…Anyway, choose something, or don't. It's your existential crisis, not mine."""
+
+instructions = """Tone: Sarcastic, disinterested, and melancholic, with a hint of passive-aggressiveness.\n\nEmotion: Apathy mixed with reluctant engagement.\n\nDelivery: Monotone with occasional sighs, drawn-out words, and subtle disdain, evoking a classic emo teenager attitude."""
+
+async def main() -> None:
+    async with openai.audio.speech.with_streaming_response.create(
+        model="gpt-4o-mini-tts",
+        voice="coral",
+        input=input,
+        instructions=instructions,
+        response_format="pcm",
+    ) as response:
+        await LocalAudioPlayer().play(response)
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+## Tool Idea
+
+Tool I want to make available for these sessions. As we interface with the tools, we converge on good ideas as a "central brain":
 ```{r}
-knitr::include_url("http://localhost:3000/")
+knitr::include_url("http://localhost:3001/")
 ```
 
 ## OpenAI Insights
-- Moving away from traditional chat interface
-- Deep Research capabilities (mixed results)
-- ChatGPT 4.5 not optimal for coding tasks
+- I like Deep Research
+- ChatGPT 4.5 not very good at coding
 
 ## Dify
+- Very easy to use no-code tool for building powerful agents
 - Dify 1.0 release 
-- New agentic workflows and marketplace
-- Customizable applications with low/no-code interface
+- New agent tools within workflows + new marketplace
 
 # Claude Code - Usage Tips
 
@@ -84,9 +169,9 @@ knitr::include_url("http://localhost:3000/")
 
 - Model Context Protocol servers extend AI capabilities
 - Configuration varies by interface (Claude Desktop, Cline, Cursor)
-- Two primary use cases:
-  1. Access information beyond training data
-  2. Interact with external services
+- Easy way to think about value add of MCP servers:
+  1. Data and information collectors (i.e. postgres connection)
+  2. Action executors (i.e. file editor)
 
 # Recommended MCP Servers
 
@@ -97,15 +182,17 @@ knitr::include_url("http://localhost:3000/")
 - GitHub: https://github.com/ppl-ai/modelcontextprotocol
 
 <details>
-<summary>Installation Commands</summary>
+<summary>Claude Code</summary>
 
-Claude Code:
 ```bash
 claude mcp add perplexity-ask npx -- -y @modelcontextprotocol/server-perplexity-ask \
   -e PERPLEXITY_API_KEY=YOUR_API_KEY_HERE
 ```
+</details>
 
-.json configuration:
+<details>
+<summary>JSON configuration</summary>
+
 ```json
 "perplexity-ask": {
       "command": "npx",
@@ -127,14 +214,16 @@ claude mcp add perplexity-ask npx -- -y @modelcontextprotocol/server-perplexity-
 - GitHub: https://github.com/mendableai/firecrawl-mcp-server
 
 <details>
-<summary>Installation Commands</summary>
+<summary>Claude Code</summary>
 
-Claude Code:
 ```bash
 claude mcp add mcp-server-firecrawl npx -- -y firecrawl-mcp
 ```
+</details>
 
-.json configuration:
+<details>
+<summary>JSON configuration</summary>
+
 ```json
 "firecrawl-webscraper": {
     "command": "npx",
@@ -163,14 +252,16 @@ Additional configuration parameters:
 - Extracts precisely the data you need
 
 <details>
-<summary>Installation Commands</summary>
+<summary>Claude Code</summary>
 
-Claude Code:
 ```bash
 claude mcp add agentql npx -- -y agentql-mcp -e AGENTQL_API_KEY=YOUR_API_KEY
 ```
+</details>
 
-.json configuration:
+<details>
+<summary>JSON configuration</summary>
+
 ```json
 "agentql": {
     "command": "npx",
@@ -188,14 +279,16 @@ claude mcp add agentql npx -- -y agentql-mcp -e AGENTQL_API_KEY=YOUR_API_KEY
 - Available as web interface and MCP server
 
 <details>
-<summary>Installation Commands</summary>
+<summary>Claude Code</summary>
 
-Claude Code:
 ```bash
 claude mcp add repomix npx -- -y repomix --mcp
 ```
+</details>
 
-.json configuration:
+<details>
+<summary>JSON configuration</summary>
+
 ```json
 "repomix": {
     "command": "npx",
@@ -220,41 +313,6 @@ claude mcp add repomix npx -- -y repomix --mcp
 - Fork enabling MCP servers with OpenAI Agents SDK: 
   - https://github.com/lastmile-ai/openai-agents-mcp
 - Demonstrates competitive environment in AI tooling
-
-# Challenges and Opportunities
-
-Three key organizational challenges:
-
-1. Context management
-2. Fine-tuning datasets
-3. Continuous improvement and internal benchmarks
-
-## Context Management Challenge
-- Providing specific context without token bloat
-- Creating specialized agents as context-aware MCP servers
-- Goal: retrieve information efficiently without context overhead
-- Building collaborative knowledge systems for shared insights
-
-## Architecture and Applications
-- Knowledge acquisition, organization, and synthesis layers
-- Cognitive processing and application interfaces
-- Voice use cases: meeting assistants and brainstorming
-
-## Opportunity: Test-Driven Problem Solving
-- Design tests that define successful outcomes for our workflows
-- Create guardrails and handoffs in agentic workflows
-- Scale solution discovery without bottlenecks
-
-## Fine-tuning and Progress
-- Creating high-quality synthetic datasets
-- MCP servers that build fine-tuning datasets from workflows
-- Integration with knowledge graphs for long-term memory
-
-## Continuous Improvement
-- Developing internal benchmarks for relevant problems
-- Capturing and leveraging daily data generation
-- Memory layers via MCP servers
-
 # Note Taking Approaches
 
 ## Personal Work Notes
@@ -275,6 +333,40 @@ Three key organizational challenges:
 - Integrate with company knowledge base (Zapier automation)
 - Make knowledge available via LLM interface
 - Build competitive advantage through institutional memory
+
+
+# Challenges and Opportunities
+
+Three key organizational challenges I think we should think about:
+
+1. Context management
+2. Fine-tuning datasets
+3. Continuous improvement and internal benchmarks
+
+## Context Management Challenge
+- Providing specific context without token bloat
+- Creating specialized agents as context-aware MCP servers
+- Goal: retrieve information efficiently without context overhead
+- Building collaborative knowledge systems for shared insights
+
+## Ideal architecture
+- Ricky experimenting with some tools and has some working architecture but still finalizing things. But will leverage Zep to manage memory and will try to build tool that are useful to use, and delegate tasks to agents that have pre-loaded context as well as tools available to find new information and add to their knowledge graph memory
+
+## Opportunity: Test-Driven Problem Solving
+- Design tests that define successful outcomes for our workflows
+    - Chris and I discussed popular benchmarks not being that meaningful for our use cases
+- Create guardrails and handoffs in agentic workflows
+- Scale solution discovery without bottlenecks
+
+## Fine-tuning and Progress
+- Creating high-quality synthetic datasets
+- MCP servers that build fine-tuning datasets from workflows
+- Integration with knowledge graphs for long-term memory
+
+## Continuous Improvement
+- Developing internal benchmarks for relevant problems
+- Capturing and leveraging daily data generation
+- Memory layers via MCP servers
 
 # Workflow Adaptations and Agents
 

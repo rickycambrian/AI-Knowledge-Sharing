@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="generator" content="pandoc">
-  <meta name="dcterms.date" content="2005-03-25" />
+  <meta name="dcterms.date" content="2025-03-25" />
   <title>AI Knowledge Sharing Session</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -1839,16 +1839,17 @@ document.addEventListener('DOMContentLoaded', function(e) {
 
 <section>
     <h1 class="title">AI Knowledge Sharing Session</h1>
-    <h3 class="date">March 25, 2005</h3>
+    <h3 class="date">March 25, 2025</h3>
 </section>
 
 <section id="agenda" class="title-slide slide level1">
 <h1>Agenda</h1>
 <ul>
-<li>Share concrete tips and recommendations for individuals and
-organizations</li>
-<li>Identify solutions to implement now and areas for future
-resources</li>
+<li>Concrete tips and recommendations for you as individuals as well as
+our organizations for latest available tools</li>
+<li>What solutions should we start thinking about implementing as
+organizations and individuals right away, and what ares should we
+allocate future time and resources to?</li>
 </ul>
 </section>
 
@@ -1864,26 +1865,115 @@ resources</li>
 <li>Supports asynchronous execution and multi-agent communication</li>
 </ul>
 </section>
+<section id="openai-agents-sdk-concepts" class="slide level2">
+<h2>OpenAI Agents SDK Concepts</h2>
+<p>Handoffs:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> agents <span class="im">import</span> Agent, handoff</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># example specialized billing and refund agents</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>billing_agent <span class="op">=</span> Agent(name<span class="op">=</span><span class="st">&quot;Billing agent&quot;</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>refund_agent <span class="op">=</span> Agent(name<span class="op">=</span><span class="st">&quot;Refund agent&quot;</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Triage agent that can handoff to billing and refund agents</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>triage_agent <span class="op">=</span> Agent(name<span class="op">=</span><span class="st">&quot;Triage agent&quot;</span>, handoffs<span class="op">=</span>[billing_agent, handoff(refund_agent)])</span></code></pre></div>
+<p>Guardrails run in parallel to your agents, enabling you to do checks
+and validations of user inputs and outputs:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pydantic <span class="im">import</span> BaseModel</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> agents <span class="im">import</span> (</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    Agent,</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    GuardrailFunctionOutput,</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    InputGuardrailTripwireTriggered,</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    RunContextWrapper,</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    Runner,</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    TResponseInputItem,</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    input_guardrail,</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> MathHomeworkOutput(BaseModel):</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    is_math_homework: <span class="bu">bool</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    reasoning: <span class="bu">str</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>guardrail_agent <span class="op">=</span> Agent( </span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    name<span class="op">=</span><span class="st">&quot;Guardrail check&quot;</span>,</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>    instructions<span class="op">=</span><span class="st">&quot;Check if the user is asking you to do their math homework.&quot;</span>,</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    output_type<span class="op">=</span>MathHomeworkOutput,</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="at">@input_guardrail</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="cf">async</span> <span class="kw">def</span> math_guardrail( </span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>    ctx: RunContextWrapper[<span class="va">None</span>], agent: Agent, <span class="bu">input</span>: <span class="bu">str</span> <span class="op">|</span> <span class="bu">list</span>[TResponseInputItem]</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> GuardrailFunctionOutput:</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>    result <span class="op">=</span> <span class="cf">await</span> Runner.run(guardrail_agent, <span class="bu">input</span>, context<span class="op">=</span>ctx.context)</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> GuardrailFunctionOutput(</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>        output_info<span class="op">=</span>result.final_output, </span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>        tripwire_triggered<span class="op">=</span>result.final_output.is_math_homework,</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>agent <span class="op">=</span> Agent(  </span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>    name<span class="op">=</span><span class="st">&quot;Customer support agent&quot;</span>,</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>    instructions<span class="op">=</span><span class="st">&quot;You are a customer support agent. You help customers with their questions.&quot;</span>,</span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>    input_guardrails<span class="op">=</span>[math_guardrail],</span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a><span class="cf">async</span> <span class="kw">def</span> main():</span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>    <span class="co"># This should trip the guardrail</span></span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>    <span class="cf">try</span>:</span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>        <span class="cf">await</span> Runner.run(agent, <span class="st">&quot;Hello, can you help me solve for x: 2x + 3 = 11?&quot;</span>)</span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">&quot;Guardrail didn&#39;t trip - this is unexpected&quot;</span>)</span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>    <span class="cf">except</span> InputGuardrailTripwireTriggered:</span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">&quot;Math homework guardrail tripped&quot;</span>)</span></code></pre></div>
+</section>
 <section id="openai-real-time-voice" class="slide level2">
 <h2>OpenAI Real Time Voice</h2>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_url</span>(<span class="st">&quot;http://localhost:3000/&quot;</span>)</span></code></pre></div>
-<iframe src="http://localhost:3000/" width="768" height="400px" data-external="1">
+<p>Demo of new Real Time Voice API: <a href="https://www.openai.fm/" class="uri">https://www.openai.fm/</a></p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> asyncio</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> openai <span class="im">import</span> AsyncOpenAI</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> openai.helpers <span class="im">import</span> LocalAudioPlayer</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>openai <span class="op">=</span> AsyncOpenAI()</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="bu">input</span> <span class="op">=</span> <span class="st">&quot;&quot;&quot;Ugh… hey… welcome to the bank, I guess. If you actually need something, listen up… or don&#39;t. Whatever.</span><span class="ch">\n\n</span><span class="st">If you wanna check your balance or something, press 1… not like it&#39;s ever enough.</span><span class="ch">\n\n</span><span class="st">Need to transfer money? Press 2… gotta keep that debt aesthetic going.</span><span class="ch">\n\n</span><span class="st">Lost your card? Press 3... ugh, classic.</span><span class="ch">\n\n</span><span class="st">If you&#39;re here to talk to a real person, press 0, but, like… do people even listen anymore?</span><span class="ch">\n\n</span><span class="st">Or just stay on the line and let the silence consume you… sigh</span><span class="ch">\n\n</span><span class="st">…Anyway, choose something, or don&#39;t. It&#39;s your existential crisis, not mine.&quot;&quot;&quot;</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>instructions <span class="op">=</span> <span class="st">&quot;&quot;&quot;Tone: Sarcastic, disinterested, and melancholic, with a hint of passive-aggressiveness.</span><span class="ch">\n\n</span><span class="st">Emotion: Apathy mixed with reluctant engagement.</span><span class="ch">\n\n</span><span class="st">Delivery: Monotone with occasional sighs, drawn-out words, and subtle disdain, evoking a classic emo teenager attitude.&quot;&quot;&quot;</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="cf">async</span> <span class="kw">def</span> main() <span class="op">-&gt;</span> <span class="va">None</span>:</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">async</span> <span class="cf">with</span> openai.audio.speech.with_streaming_response.create(</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>        model<span class="op">=</span><span class="st">&quot;gpt-4o-mini-tts&quot;</span>,</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>        voice<span class="op">=</span><span class="st">&quot;coral&quot;</span>,</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>        <span class="bu">input</span><span class="op">=</span><span class="bu">input</span>,</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>        instructions<span class="op">=</span>instructions,</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>        response_format<span class="op">=</span><span class="st">&quot;pcm&quot;</span>,</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>    ) <span class="im">as</span> response:</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>        <span class="cf">await</span> LocalAudioPlayer().play(response)</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">&quot;__main__&quot;</span>:</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>    asyncio.run(main())</span></code></pre></div>
+</section>
+<section id="tool-idea" class="slide level2">
+<h2>Tool Idea</h2>
+<p>Tool I want to make available for these sessions. As we interface
+with the tools, we converge on good ideas as a “central brain”:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_url</span>(<span class="st">&quot;http://localhost:3001/&quot;</span>)</span></code></pre></div>
+<iframe src="http://localhost:3001/" width="768" height="400px" data-external="1">
 </iframe>
 </section>
 <section id="openai-insights" class="slide level2">
 <h2>OpenAI Insights</h2>
 <ul>
-<li>Moving away from traditional chat interface</li>
-<li>Deep Research capabilities (mixed results)</li>
-<li>ChatGPT 4.5 not optimal for coding tasks</li>
+<li>I like Deep Research</li>
+<li>ChatGPT 4.5 not very good at coding</li>
 </ul>
 </section>
 <section id="dify" class="slide level2">
 <h2>Dify</h2>
 <ul>
+<li>Very easy to use no-code tool for building powerful agents</li>
 <li>Dify 1.0 release</li>
-<li>New agentic workflows and marketplace</li>
-<li>Customizable applications with low/no-code interface</li>
+<li>New agent tools within workflows + new marketplace</li>
 </ul>
 </section></section>
 <section>
@@ -1956,10 +2046,10 @@ interests</li>
 <li>Model Context Protocol servers extend AI capabilities</li>
 <li>Configuration varies by interface (Claude Desktop, Cline,
 Cursor)</li>
-<li>Two primary use cases:
+<li>Easy way to think about value add of MCP servers:
 <ol type="1">
-<li>Access information beyond training data</li>
-<li>Interact with external services</li>
+<li>Data and information collectors (i.e. postgres connection)</li>
+<li>Action executors (i.e. file editor)</li>
 </ol></li>
 </ul>
 </section>
@@ -1975,7 +2065,30 @@ Cursor)</li>
 <li>Discovers context newer than model’s training data</li>
 <li>Easy installation via Claude Code or JSON config</li>
 <li>Optional specialized search tools in unofficial versions</li>
+<li>GitHub: <a href="https://github.com/ppl-ai/modelcontextprotocol" class="uri">https://github.com/ppl-ai/modelcontextprotocol</a></li>
 </ul>
+<details>
+<summary>
+Claude Code
+</summary>
+<div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">claude</span> mcp add perplexity-ask npx <span class="at">--</span> <span class="at">-y</span> @modelcontextprotocol/server-perplexity-ask <span class="dt">\</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">-e</span> PERPLEXITY_API_KEY=YOUR_API_KEY_HERE</span></code></pre></div>
+</details>
+<details>
+<summary>
+JSON configuration
+</summary>
+<div class="sourceCode" id="cb6"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="er">&quot;perplexity-ask&quot;:</span> <span class="fu">{</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;npx&quot;</span><span class="fu">,</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;args&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;-y&quot;</span><span class="ot">,</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;@modelcontextprotocol/server-perplexity-ask&quot;</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>      <span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;env&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;PERPLEXITY_API_KEY&quot;</span><span class="fu">:</span> <span class="st">&quot;YOUR_API_KEY_HERE&quot;</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>      <span class="fu">}</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span></code></pre></div>
+</details>
 </section>
 <section id="firecrawl" class="slide level2">
 <h2>Firecrawl</h2>
@@ -1983,7 +2096,33 @@ Cursor)</li>
 <li>Extracts text content from websites</li>
 <li>Configurable parameters for performance optimization</li>
 <li>Robust scraping capabilities</li>
+<li>GitHub: <a href="https://github.com/mendableai/firecrawl-mcp-server" class="uri">https://github.com/mendableai/firecrawl-mcp-server</a></li>
 </ul>
+<details>
+<summary>
+Claude Code
+</summary>
+<div class="sourceCode" id="cb7"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">claude</span> mcp add mcp-server-firecrawl npx <span class="at">--</span> <span class="at">-y</span> firecrawl-mcp</span></code></pre></div>
+</details>
+<details>
+<summary>
+JSON configuration
+</summary>
+<div class="sourceCode" id="cb8"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="er">&quot;firecrawl-webscraper&quot;:</span> <span class="fu">{</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;npx&quot;</span><span class="fu">,</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;args&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;-y&quot;</span><span class="ot">,</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;firecrawl-mcp&quot;</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;env&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;FIRECRAWL_API_KEY&quot;</span><span class="fu">:</span> <span class="st">&quot;your-api-key-here&quot;</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span></code></pre></div>
+Additional configuration parameters: - FIRECRAWL_RETRY_MAX_ATTEMPTS -
+FIRECRAWL_RETRY_INITIAL_DELAY - FIRECRAWL_RETRY_MAX_DELAY -
+FIRECRAWL_RETRY_BACKOFF_FACTOR - FIRECRAWL_CREDIT_WARNING_THRESHOLD -
+FIRECRAWL_CREDIT_CRITICAL_THRESHOLD
+</details>
 </section>
 <section id="agentql" class="slide level2">
 <h2>AgentQL</h2>
@@ -1992,6 +2131,24 @@ Cursor)</li>
 <li>Adapts to structural website changes</li>
 <li>Extracts precisely the data you need</li>
 </ul>
+<details>
+<summary>
+Claude Code
+</summary>
+<div class="sourceCode" id="cb9"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">claude</span> mcp add agentql npx <span class="at">--</span> <span class="at">-y</span> agentql-mcp <span class="at">-e</span> AGENTQL_API_KEY=YOUR_API_KEY</span></code></pre></div>
+</details>
+<details>
+<summary>
+JSON configuration
+</summary>
+<div class="sourceCode" id="cb10"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="er">&quot;agentql&quot;:</span> <span class="fu">{</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;npx&quot;</span><span class="fu">,</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;args&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;-y&quot;</span><span class="ot">,</span> <span class="st">&quot;agentql-mcp&quot;</span><span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;env&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;AGENTQL_API_KEY&quot;</span><span class="fu">:</span> <span class="st">&quot;YOUR_API_KEY&quot;</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span></code></pre></div>
+</details>
 </section>
 <section id="repomix" class="slide level2">
 <h2>Repomix</h2>
@@ -2000,6 +2157,25 @@ Cursor)</li>
 <li>Token-efficient code exploration</li>
 <li>Available as web interface and MCP server</li>
 </ul>
+<details>
+<summary>
+Claude Code
+</summary>
+<div class="sourceCode" id="cb11"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ex">claude</span> mcp add repomix npx <span class="at">--</span> <span class="at">-y</span> repomix <span class="at">--mcp</span></span></code></pre></div>
+</details>
+<details>
+<summary>
+JSON configuration
+</summary>
+<div class="sourceCode" id="cb12"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="er">&quot;repomix&quot;:</span> <span class="fu">{</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;npx&quot;</span><span class="fu">,</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;args&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;-y&quot;</span><span class="ot">,</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;repomix&quot;</span><span class="ot">,</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;--mcp&quot;</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    <span class="ot">]</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span></code></pre></div>
+</details>
 </section></section>
 <section>
 <section id="mcp-directories-sandboxes" class="title-slide slide level1">
@@ -2020,64 +2196,9 @@ Cursor)</li>
 <ul>
 <li><a href="https://github.com/lastmile-ai/openai-agents-mcp" class="uri">https://github.com/lastmile-ai/openai-agents-mcp</a></li>
 </ul></li>
-<li>Demonstrates competitive environment in AI tooling</li>
+<li>Demonstrates competitive environment in AI tooling # Note Taking
+Approaches</li>
 </ul>
-</section></section>
-<section>
-<section id="challenges-and-opportunities" class="title-slide slide level1">
-<h1>Challenges and Opportunities</h1>
-<p>Three key organizational challenges:</p>
-<ol type="1">
-<li>Context management</li>
-<li>Fine-tuning datasets</li>
-<li>Continuous improvement and internal benchmarks</li>
-</ol>
-</section>
-<section id="context-management-challenge" class="slide level2">
-<h2>Context Management Challenge</h2>
-<ul>
-<li>Providing specific context without token bloat</li>
-<li>Creating specialized agents as context-aware MCP servers</li>
-<li>Goal: retrieve information efficiently without context overhead</li>
-<li>Building collaborative knowledge systems for shared insights</li>
-</ul>
-</section>
-<section id="architecture-and-applications" class="slide level2">
-<h2>Architecture and Applications</h2>
-<ul>
-<li>Knowledge acquisition, organization, and synthesis layers</li>
-<li>Cognitive processing and application interfaces</li>
-<li>Voice use cases: meeting assistants and brainstorming</li>
-</ul>
-</section>
-<section id="opportunity-test-driven-problem-solving" class="slide level2">
-<h2>Opportunity: Test-Driven Problem Solving</h2>
-<ul>
-<li>Design tests that define successful outcomes for our workflows</li>
-<li>Create guardrails and handoffs in agentic workflows</li>
-<li>Scale solution discovery without bottlenecks</li>
-</ul>
-</section>
-<section id="fine-tuning-and-progress" class="slide level2">
-<h2>Fine-tuning and Progress</h2>
-<ul>
-<li>Creating high-quality synthetic datasets</li>
-<li>MCP servers that build fine-tuning datasets from workflows</li>
-<li>Integration with knowledge graphs for long-term memory</li>
-</ul>
-</section>
-<section id="continuous-improvement" class="slide level2">
-<h2>Continuous Improvement</h2>
-<ul>
-<li>Developing internal benchmarks for relevant problems</li>
-<li>Capturing and leveraging daily data generation</li>
-<li>Memory layers via MCP servers</li>
-</ul>
-</section></section>
-<section>
-<section id="note-taking-approaches" class="title-slide slide level1">
-<h1>Note Taking Approaches</h1>
-
 </section>
 <section id="personal-work-notes" class="slide level2">
 <h2>Personal Work Notes</h2>
@@ -2106,6 +2227,65 @@ overhead</li>
 <li>Integrate with company knowledge base (Zapier automation)</li>
 <li>Make knowledge available via LLM interface</li>
 <li>Build competitive advantage through institutional memory</li>
+</ul>
+</section></section>
+<section>
+<section id="challenges-and-opportunities" class="title-slide slide level1">
+<h1>Challenges and Opportunities</h1>
+<p>Three key organizational challenges I think we should think
+about:</p>
+<ol type="1">
+<li>Context management</li>
+<li>Fine-tuning datasets</li>
+<li>Continuous improvement and internal benchmarks</li>
+</ol>
+</section>
+<section id="context-management-challenge" class="slide level2">
+<h2>Context Management Challenge</h2>
+<ul>
+<li>Providing specific context without token bloat</li>
+<li>Creating specialized agents as context-aware MCP servers</li>
+<li>Goal: retrieve information efficiently without context overhead</li>
+<li>Building collaborative knowledge systems for shared insights</li>
+</ul>
+</section>
+<section id="ideal-architecture" class="slide level2">
+<h2>Ideal architecture</h2>
+<ul>
+<li>Ricky experimenting with some tools and has some working
+architecture but still finalizing things. But will leverage Zep to
+manage memory and will try to build tool that are useful to use, and
+delegate tasks to agents that have pre-loaded context as well as tools
+available to find new information and add to their knowledge graph
+memory</li>
+</ul>
+</section>
+<section id="opportunity-test-driven-problem-solving" class="slide level2">
+<h2>Opportunity: Test-Driven Problem Solving</h2>
+<ul>
+<li>Design tests that define successful outcomes for our workflows
+<ul>
+<li>Chris and I discussed popular benchmarks not being that meaningful
+for our use cases</li>
+</ul></li>
+<li>Create guardrails and handoffs in agentic workflows</li>
+<li>Scale solution discovery without bottlenecks</li>
+</ul>
+</section>
+<section id="fine-tuning-and-progress" class="slide level2">
+<h2>Fine-tuning and Progress</h2>
+<ul>
+<li>Creating high-quality synthetic datasets</li>
+<li>MCP servers that build fine-tuning datasets from workflows</li>
+<li>Integration with knowledge graphs for long-term memory</li>
+</ul>
+</section>
+<section id="continuous-improvement" class="slide level2">
+<h2>Continuous Improvement</h2>
+<ul>
+<li>Developing internal benchmarks for relevant problems</li>
+<li>Capturing and leveraging daily data generation</li>
+<li>Memory layers via MCP servers</li>
 </ul>
 </section></section>
 <section id="workflow-adaptations-and-agents" class="title-slide slide level1">
